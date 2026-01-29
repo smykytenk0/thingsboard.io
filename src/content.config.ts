@@ -2,15 +2,12 @@ import { docsLoader, i18nLoader } from '@astrojs/starlight/loaders';
 import { docsSchema, i18nSchema } from '@astrojs/starlight/schema';
 import { defineCollection, z, type CollectionEntry } from 'astro:content';
 import { file } from 'astro/loaders';
-import { AstroDocsI18nSchema } from './content/i18n-schema';
 import { logoKeys } from './data/logos';
 
 export const baseSchema = z.object({
 	type: z.literal('base').optional().default('base'),
-	i18nReady: z.boolean().default(false),
 	githubURL: z.string().url().optional(),
 	hasREADME: z.boolean().optional(),
-	// Extends Starlight’s default `hero` schema with custom fields.
 	hero: z
 		.object({
 			facepile: z.object({
@@ -47,7 +44,6 @@ export const mediaSchema = baseSchema.extend({
 	logo: z.enum(logoKeys),
 });
 
-// Our other schemas (integration, migration, tutorial, recipe)
 export const integrationSchema = baseSchema.extend({
 	type: z.literal('integration'),
 	title: z
@@ -138,13 +134,6 @@ export const isMigrationEntry = createIsDocsEntry('migration');
 
 export const isRecipeEntry = createIsDocsEntry('recipe');
 
-export function createIsLangEntry(lang: string) {
-	return (entry: CollectionEntry<'docs'>): boolean => entry.id.startsWith(lang + '/');
-}
-
-export const isEnglishEntry = createIsLangEntry('en');
-export const isKoreanEntry = createIsLangEntry('ko');
-
 export const collections = {
 	docs: defineCollection({
 		loader: docsLoader(),
@@ -152,14 +141,12 @@ export const collections = {
 	}),
 	i18n: defineCollection({
 		loader: i18nLoader(),
-		schema: i18nSchema({ extend: AstroDocsI18nSchema }),
+		schema: i18nSchema(),
 	}),
-	// Contributors to the docs repo, updated weekly, sorted number of commits in descending order.
 	contributors: defineCollection({
 		loader: file('src/data/contributors.json'),
 		schema: contributorSchema,
 	}),
-	// Latest versions of official Astro npm packages.
 	packages: defineCollection({
 		loader: async () => {
 			const packages = [
@@ -181,7 +168,6 @@ export const collections = {
 				'@astrojs/vue',
 				'astro',
 			];
-			// See https://github.com/antfu/fast-npm-meta
 			const url = `https://npm.antfu.dev/${packages.join('+')}`;
 			const data = await fetch(url).then((res) => res.json());
 			return data.map((pkg: any) => ({ id: pkg.name, version: pkg.version }));

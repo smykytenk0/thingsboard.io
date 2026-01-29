@@ -1,6 +1,0 @@
-{
-  "plugins": ["mdx"],
-  "rules": {
-    "preset-ja-spacing": true
-  }
-}

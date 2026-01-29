@@ -1,0 +1,133 @@
+---
+import { allPages } from '~/content';
+import { getVersionFromURL, productVersions, switchVersionWithFallback, type ProductVersion } from '~/util/path-utils';
+
+const currentVersion = getVersionFromURL(Astro.url.pathname);
+
+// Build a set of all existing page IDs for fast lookup
+const existingPageIds = new Set(allPages.map((page) => page.id));
+
+const options = (Object.entries(productVersions) as [ProductVersion, { label: string; prefix: string }][]).map(
+	([key, { label }]) => ({
+		value: switchVersionWithFallback(Astro.url.pathname, key, existingPageIds),
+		selected: key === currentVersion,
+		label,
+	})
+);
+---
+
+<version-select>
+	<label>
+		<span class="sr-only">Product Version</span>
+		<svg aria-hidden="true" class="icon label-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+			<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+		</svg>
+		<select autocomplete="off">
+			{options.map(({ value, selected, label }) => (
+				<option value={value} selected={selected}>{label}</option>
+			))}
+		</select>
+		<svg aria-hidden="true" class="icon caret" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+			<path d="M7 10l5 5 5-5z"></path>
+		</svg>
+	</label>
+</version-select>
+
+<script>
+	class VersionSelect extends HTMLElement {
+		constructor() {
+			super();
+			const select = this.querySelector('select');
+			if (select) {
+				select.addEventListener('change', (e) => {
+					if (e.currentTarget instanceof HTMLSelectElement) {
+						window.location.pathname = e.currentTarget.value;
+					}
+				});
+			}
+		}
+	}
+	customElements.define('version-select', VersionSelect);
+</script>
+
+<style lang="scss">
+	version-select {
+		display: block;
+		width: 100%;
+	}
+
+	label {
+		--sl-label-icon-size: 0.875rem;
+		--sl-caret-size: 1.25rem;
+		position: relative;
+		display: flex;
+		align-items: center;
+		width: 100%;
+		color: var(--sl-color-gray-1);
+		cursor: pointer;
+		border: 1px solid var(--sl-color-hairline-light);
+		border-radius: 0.5rem;
+		background-color: var(--sl-color-gray-7, var(--sl-color-gray-6));
+	}
+
+	label:hover {
+		color: var(--sl-color-white);
+		background-color: var(--sl-color-gray-6);
+	}
+
+	:global([data-theme='dark']) label {
+		background-color: var(--sl-color-black);
+		
+		&:hover {
+			background-color: var(--sl-color-gray-6);
+		}
+	}
+
+	.icon {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		pointer-events: none;
+	}
+
+	.label-icon {
+		font-size: var(--sl-label-icon-size);
+		inset-inline-start: 0.75rem;
+	}
+
+	.caret {
+		font-size: var(--sl-caret-size);
+		inset-inline-end: 0.5rem;
+	}
+
+	select {
+		border: 0;
+		width: 100%;
+		padding: 0.625rem 2.25rem 0.625rem 2.25rem;
+		background-color: transparent;
+		text-overflow: ellipsis;
+		color: inherit;
+		cursor: pointer;
+		appearance: none;
+		font-weight: 600;
+		font-size: var(--sl-text-sm);
+		line-height: var(--sl-line-height-headings);
+	}
+
+	option {
+		background-color: var(--sl-color-bg-nav);
+		color: var(--sl-color-gray-1);
+	}
+
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border-width: 0;
+	}
+</style>

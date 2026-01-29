@@ -1,10 +1,10 @@
 ---
 import { Icon } from '@astrojs/starlight/components';
 
-const { editUrl, entry, locale, isFallback } = Astro.locals.starlightRoute;
+const { editUrl, entry } = Astro.locals.starlightRoute;
 
 const githubEditUrl =
-	entry.data.githubURL && (locale === 'en' || isFallback)
+	entry.data.githubURL
 		? `${entry.data.githubURL}${entry.data.hasREADME ? 'README.md' : ''}`
 		: editUrl;
 ---

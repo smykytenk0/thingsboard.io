@@ -1,9 +1,7 @@
-// TODO: Move this data to our i18n system to support localized category labels.
 const defaultCategory = 'Learn';
 
 // Order is important here. Pages are tested to see if they *start* with one of
-// these paths and will return early when one matches. This means more specific
-// paths need to be earlier in the array, e.g. `reference/errors/` before `reference/`.
+// these paths and will return early when one matches.
 const categories = [
 	['guides/rss/', 'Recipes'],
 	['guides/backend/', 'Recipes'],
@@ -25,9 +23,9 @@ const categories = [
  * @returns The category for the current page as used by Algolia DocSearch to group search results.
  */
 export function getPageCategory(url: { pathname: string }) {
-	const langAgnosticPath = url.pathname.replace(/\/\w\w(-\w\w)?\//, '');
-	for (const [path, label] of categories) {
-		if (langAgnosticPath.startsWith(path)) return label;
+	const path = url.pathname.replace(/^\/docs\//, '');
+	for (const [prefix, label] of categories) {
+		if (path.startsWith(prefix)) return label;
 	}
 	return defaultCategory;
 }

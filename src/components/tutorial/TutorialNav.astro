@@ -1,7 +1,6 @@
 ---
 import { render } from 'astro:content';
 import { tutorialPages as pages } from '~/content';
-import { getLanguageFromURL, stripLangFromSlug } from '~/util/path-utils';
 import { getTutorialPages, getTutorialUnits } from '../../util/getTutorialPages';
 import TabbedContent from '../tabs/TabbedContent.astro';
 import TabListItem from '../tabs/TabListItem.astro';
@@ -10,15 +9,14 @@ import Progress from './Progress.astro';
 import UnitProgressIcon from './UnitProgressIcon.astro';
 
 const currentUrl = Astro.url.pathname.replace(/\/$/, '');
-const lang = getLanguageFromURL(Astro.url.pathname);
 
-const tutorialPages = getTutorialPages(pages, lang);
+const tutorialPages = getTutorialPages(pages);
 const units = getTutorialUnits(tutorialPages);
 
 const makeUnitId = (index: number) =>
 	`${Astro.locals.starlightRoute.id}__tutorial-unit-nav-panel-${index}`;
 const isCurrentUnit = (unit: (typeof units)[number]) =>
-	unit.lessons.some((lesson) => currentUrl.endsWith(stripLangFromSlug(lesson.id)));
+	unit.lessons.some((lesson) => currentUrl.endsWith(lesson.id));
 ---
 
 <div class="tutorial-nav">
@@ -39,14 +37,13 @@ const isCurrentUnit = (unit: (typeof units)[number]) =>
 						<h2 class="heading">{unit.title}</h2>
 						<ol class="lessons">
 							{unit.lessons.map(async (lesson, index) => {
-								const slugWithoutLang = stripLangFromSlug(lesson.id);
 								return (
 									<li>
 										<div>
 											<a
 												class="header-link"
-												href={`/${lang}/${slugWithoutLang}/`}
-												aria-current={currentUrl.endsWith(slugWithoutLang)}
+												href={`/docs/${lesson.id}/`}
+												aria-current={currentUrl.endsWith(lesson.id)}
 											>
 												<Progress {index} path={'/' + lesson.id} />
 												{lesson.data.title}

@@ -1,52 +1,48 @@
 ---
-import { englishPages } from '~/content';
+import { allPages } from '~/content';
 import {
 	type IntegrationCategory,
 	type IntegrationEntry,
 	isIntegrationEntry,
 } from '~/content.config';
 import { isLogoKey } from '~/data/logos';
-import { getLanguageFromURL } from '~/util/path-utils';
 import CardsNav from './NavGrid/CardsNav.astro';
 
 interface Props {
 	category?: IntegrationCategory;
 }
 
-const lang = getLanguageFromURL(Astro.url.pathname);
-
 function categoryLinksFromPages(pages: IntegrationEntry[], category: IntegrationCategory) {
 	return pages
 		.filter((page) => page.data.category === category)
 		.map((page) => {
 			const [scope, name] = page.data.title.split(' ').shift()!.split('/');
-			const pageUrl = page.id.replace('en/', `/${lang}/`) + '/';
 			return {
 				title:
 					'<span class="scope">' +
 					scope +
 					'/</span><wbr>' +
 					name.replaceAll('-', '&#8288;-&#8288;'),
-				href: pageUrl,
+				href: '/docs/' + page.id + '/',
 				logo: isLogoKey(name),
 			};
 		});
 }
 
-const enPages = englishPages.filter(isIntegrationEntry);
+const integrationPages = allPages.filter(isIntegrationEntry);
 
 const allCategories = {
 	renderer: {
 		title: Astro.locals.t('integrations.renderers'),
-		links: categoryLinksFromPages(enPages, 'renderer'),
+		links: categoryLinksFromPages(integrationPages, 'renderer'),
 	},
 	adapter: {
 		title: Astro.locals.t('integrations.adapters'),
-		links: categoryLinksFromPages(enPages, 'adapter'),
+		links: categoryLinksFromPages(integrationPages, 'adapter'),
 	},
 	other: {
 		title: Astro.locals.t('integrations.others'),
-		links: categoryLinksFromPages(enPages, 'other'),
+		links: categoryLinksFromPages(integrationPages, 'other'),
 	},
 };
 const category = allCategories[Astro.props.category!];

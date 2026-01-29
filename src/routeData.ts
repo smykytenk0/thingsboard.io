@@ -1,41 +1,63 @@
 import type { APIContext } from 'astro';
 import { defineRouteMiddleware, type StarlightRouteData } from '@astrojs/starlight/route-data';
 import { tutorialPages as pages } from '~/content';
-import { stripLangFromSlug } from '~/util/path-utils';
+import { getVersionFromSlug, type ProductVersion } from '~/util/path-utils';
 import { getOgImageUrl } from '~/util/getOgImageUrl';
 import { getTutorialPages } from '~/util/getTutorialPages';
 
 export const onRequest = defineRouteMiddleware((context) => {
 	updateHead(context);
+	filterSidebarByVersion(context.locals.starlightRoute);
 	updateTutorialPagination(context.locals.starlightRoute);
 });
 
+/**
+ * Filter sidebar entries to only show items for the current product version.
+ */
+function filterSidebarByVersion(starlightRoute: StarlightRouteData) {
+	const version = getVersionFromSlug(starlightRoute.id);
+
+	starlightRoute.sidebar = starlightRoute.sidebar.filter((entry) =>
+		sidebarEntryMatchesVersion(entry, version)
+	);
+}
+
+function sidebarEntryMatchesVersion(
+	entry: StarlightRouteData['sidebar'][number],
+	version: ProductVersion
+): boolean {
+	if (entry.type === 'link') {
+		return linkMatchesVersion(entry.href, version);
+	}
+	if (entry.type === 'group') {
+		entry.entries = entry.entries.filter((child) =>
+			sidebarEntryMatchesVersion(child, version)
+		);
+		return entry.entries.length > 0;
+	}
+	return true;
+}
+
+function linkMatchesVersion(href: string, version: ProductVersion): boolean {
+	const path = href.replace(/^\/docs\/?/, '');
+	if (version === 'pe') return path.startsWith('pe/');
+	if (version === 'paas') return path.startsWith('paas/');
+	return !path.startsWith('pe/') && !path.startsWith('paas/');
+}
+
 function updateHead(context: APIContext) {
-	const { head, entry, isFallback, lang, entryMeta } = context.locals.starlightRoute;
+	const { head, entry } = context.locals.starlightRoute;
 
 	const title = head.find((item) => item.tag === 'title');
 	const frontmatterTitle = entry.data.head.find((item) => item.tag === 'title');
 
-	// Update the title of tutorial entry which do not provide a custom title in their frontmatter.
 	if (isTutorialEntry(entry) && title && !frontmatterTitle) {
-		// Check if a prefix translation exists for the page content language, without any possible
-		// fallback.
-		const isPrefixTranslated = context.locals.t.exists('tutorial.title.prefix', {
-			lngs: [entryMeta.lang],
+		title.content = context.locals.t('tutorial.title.prefix', {
+			title: title.content,
 		});
-
-		if (isPrefixTranslated) {
-			// If a prefix translation exists, use it to format the title.
-			title.content = context.locals.t('tutorial.title.prefix', {
-				title: title.content,
-				// Explicitly use the language based on the page content, which can be different from the
-				// page language for fallback pages.
-				lngs: [entryMeta.lang],
-			});
-		}
 	}
 
-	const ogImageUrl = getOgImageUrl(context.url.pathname, !!isFallback);
+	const ogImageUrl = getOgImageUrl(context.url.pathname, false);
 	const imageSrc = ogImageUrl ?? '/default-og-image.png';
 	const canonicalImageSrc = new URL(imageSrc, context.site);
 	const is404 = context.url.pathname.endsWith('/404/');
@@ -44,10 +66,6 @@ function updateHead(context: APIContext) {
 	head.push({ tag: 'meta', attrs: { name: 'twitter:image', content: canonicalImageSrc.href } });
 	head.push({ tag: 'meta', attrs: { name: 'twitter:site', content: 'astrodotbuild' } });
 
-	// Algolia docsearch language facet
-	head.push({ tag: 'meta', attrs: { name: 'docsearch:language', content: lang } });
-
-	// Fathom analytics
 	head.push({
 		tag: 'script',
 		attrs: {
@@ -60,18 +78,17 @@ function updateHead(context: APIContext) {
 }
 
 function updateTutorialPagination(starlightRoute: StarlightRouteData) {
-	const { entry, locale, pagination } = starlightRoute;
+	const { entry, pagination } = starlightRoute;
 
 	if (!isTutorialEntry(entry)) return;
 
-	const tutorialPages = getTutorialPages(pages, locale!);
+	const tutorialPages = getTutorialPages(pages);
 	const i = tutorialPages.findIndex((p) => p.id === entry.id);
 
 	if (tutorialPages[i - 1]) {
 		const prevPage = tutorialPages[i - 1];
-
 		pagination.prev = {
-			href: `/${locale}/${stripLangFromSlug(prevPage.id)}/`,
+			href: `/docs/${prevPage.id}/`,
 			isCurrent: false,
 			label: prevPage.data.title,
 			type: 'link',
@@ -82,9 +99,8 @@ function updateTutorialPagination(starlightRoute: StarlightRouteData) {
 
 	if (tutorialPages[i + 1]) {
 		const nextPage = tutorialPages[i + 1];
-
 		pagination.next = {
-			href: `/${locale}/${stripLangFromSlug(nextPage.id)}/`,
+			href: `/docs/${nextPage.id}/`,
 			isCurrent: false,
 			label: nextPage.data.title,
 			type: 'link',
@@ -95,5 +111,5 @@ function updateTutorialPagination(starlightRoute: StarlightRouteData) {
 }
 
 function isTutorialEntry(entry: StarlightRouteData['entry']) {
-	return entry.id.split('/')[1] === 'tutorial';
+	return entry.id.startsWith('tutorial/');
 }

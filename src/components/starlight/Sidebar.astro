@@ -4,9 +4,8 @@ import SidebarPersister from '@astrojs/starlight/components/SidebarPersister.ast
 import SidebarSublist from '@astrojs/starlight/components/SidebarSublist.astro';
 import type { StarlightRouteData } from '@astrojs/starlight/route-data';
 import { stripLeadingAndTrailingSlashes } from 'node_modules/@astrojs/starlight/utils/path';
-import { allPages } from '~/content';
 import { isSubPage } from '~/util/isSubPage';
-import { stripLangFromSlug } from '~/util/path-utils';
+import VersionSwitcher from '~/components/VersionSwitcher.astro';
 import Sponsors from '../LeftSidebar/Sponsors.astro';
 import TabbedContent from '../tabs/TabbedContent.astro';
 import TabListItem from '../tabs/TabListItem.astro';
@@ -24,10 +23,7 @@ function markEntries(i: SidebarEntry) {
 		i.entries.forEach(markEntries);
 	} else {
 		const itemSlug = stripLeadingAndTrailingSlashes(i.href);
-		const itemSlugWithoutLang = stripLangFromSlug(itemSlug);
-		const isFallback = !allPages.some((entry) => entry.id === itemSlug);
-		if (isFallback) i.attrs.class = 'fallback';
-		i.isCurrent ||= isSubPage(id, itemSlugWithoutLang);
+		i.isCurrent ||= isSubPage(id, itemSlug);
 	}
 }
 sidebar.forEach(markEntries);
@@ -57,6 +53,10 @@ const isCurrent = (sidebar: SidebarEntry[]): boolean =>
 		.map((entry) => (entry.type === 'link' ? entry.isCurrent : isCurrent(entry.entries)))
 		.some((entry) => entry === true);
 ---
+
+<div class="version-switcher-wrapper">
+	<VersionSwitcher />
+</div>
 
 <SidebarPersister>
 	<TabbedContent class="tabbed-sidebar">
@@ -88,12 +88,10 @@ const isCurrent = (sidebar: SidebarEntry[]): boolean =>
 </div>
 
 <style>
-	/** Add "EN" to the end of sidebar items with the `fallback` class. */
-	:global(.fallback)::after {
-		content: 'EN';
-		vertical-align: super;
-		font-size: 0.75em;
-		font-weight: 700;
+	.version-switcher-wrapper {
+		padding: 0.5rem 0;
+		margin-bottom: 0.75rem;
+		border-bottom: 1px solid var(--sl-color-hairline-light);
 	}
 
 	/** Align sponsors at sidebar bottom when there is room. */

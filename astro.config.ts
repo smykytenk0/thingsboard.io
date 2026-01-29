@@ -6,11 +6,8 @@ import remarkSmartypants from 'remark-smartypants';
 import { sidebar } from './astro.sidebar';
 import { devServerFileWatcher } from './config/integrations/dev-server-file-watcher';
 import { sitemap } from './config/integrations/sitemap';
-import { localesConfig } from './config/locales';
 import { starlightPluginLlmsTxt } from './config/plugins/llms-txt';
-import { starlightPluginSmokeTest } from './config/plugins/smoke-test';
 import { rehypeTasklistEnhancer } from './config/plugins/rehype-tasklist-enhancer';
-import { remarkFallbackLang } from './config/plugins/remark-fallback-lang';
 
 /* https://docs.netlify.com/configure-builds/environment-variables/#read-only-variables */
 const NETLIFY_PREVIEW_SITE = process.env.CONTEXT !== 'production' && process.env.DEPLOY_PRIME_URL;
@@ -20,11 +17,11 @@ const site = NETLIFY_PREVIEW_SITE || 'https://docs.astro.build/';
 // https://astro.build/config
 export default defineConfig({
 	site,
+	base: '/docs',
 	integrations: [
 		devServerFileWatcher([
 			'./config/**', // Custom plugins and integrations
 			'./astro.sidebar.ts', // Sidebar configuration file
-			'./src/content/nav/*.ts', // Sidebar labels
 		]),
 		starlight({
 			title: 'Docs',
@@ -34,6 +31,7 @@ export default defineConfig({
 			components: {
 				EditLink: './src/components/starlight/EditLink.astro',
 				Hero: './src/components/starlight/Hero.astro',
+				Header: './src/components/starlight/Header.astro',
 				MarkdownContent: './src/components/starlight/MarkdownContent.astro',
 				MobileTableOfContents: './src/components/starlight/MobileTableOfContents.astro',
 				TableOfContents: './src/components/starlight/TableOfContents.astro',
@@ -49,8 +47,10 @@ export default defineConfig({
 			editLink: {
 				baseUrl: 'https://github.com/withastro/docs/edit/main',
 			},
-			defaultLocale: 'en',
-			locales: localesConfig,
+			defaultLocale: 'root',
+			locales: {
+				root: { label: 'English', lang: 'en' },
+			},
 			sidebar,
 			social: [
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/astro' },
@@ -58,7 +58,6 @@ export default defineConfig({
 			],
 			pagefind: false,
 			head: [
-				// Add ICO favicon fallback for Safari.
 				{
 					tag: 'link',
 					attrs: {
@@ -69,7 +68,7 @@ export default defineConfig({
 				},
 			],
 			disable404Route: true,
-			plugins: [starlightPluginSmokeTest(), starlightPluginLlmsTxt()],
+			plugins: [starlightPluginLlmsTxt()],
 		}),
 		sitemap(),
 	],
@@ -77,17 +76,13 @@ export default defineConfig({
 	scopedStyleStrategy: 'where',
 	compressHTML: false,
 	markdown: {
-		// Override with our own config
 		smartypants: false,
 		remarkPlugins: [
-			// @ts-expect-error — `remark-smartypants` type is not matching Astro’s for some reason even though they both use unified’s `Plugin` type
+			// @ts-expect-error — `remark-smartypants` type is not matching Astro's for some reason even though they both use unified's `Plugin` type
 			[remarkSmartypants, { dashes: false }],
-			// Add our custom plugin that marks links to fallback language pages
-			remarkFallbackLang(),
 		],
 		rehypePlugins: [
 			rehypeSlug,
-			// Tweak GFM task list syntax
 			rehypeTasklistEnhancer(),
 		],
 	},
