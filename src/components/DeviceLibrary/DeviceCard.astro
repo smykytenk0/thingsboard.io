@@ -1,0 +1,108 @@
+---
+import FilterChip from './FilterChip.astro';
+
+interface Props {
+	id: string;
+	title: string;
+	vendor?: string;
+	imageSrc: string;
+	hardwareType: string;
+	connectivity: string[];
+	industry: string[];
+	useCase: string[];
+	href: string;
+}
+
+const { id, title, vendor, imageSrc, hardwareType, connectivity, industry, useCase, href } = Astro.props;
+---
+
+<a
+	href={href}
+	class="device-card"
+	data-device-id={id}
+	data-hardware-type={hardwareType}
+	data-connectivity={JSON.stringify(connectivity)}
+	data-industry={JSON.stringify(industry)}
+	data-use-case={JSON.stringify(useCase)}
+>
+	<div class="device-image">
+		<img src={imageSrc} alt={title} loading="lazy" />
+	</div>
+	<div class="device-content">
+		<h3 class="device-title">{title}</h3>
+		{vendor && <p class="device-vendor">{vendor}</p>}
+		<div class="device-chips">
+			{industry.slice(0, 3).map((ind) => <FilterChip label={ind} />)}
+			{industry.length > 3 && <FilterChip label={`+${industry.length - 3}`} />}
+		</div>
+	</div>
+</a>
+
+<style>
+	.device-card {
+		background: var(--sl-color-bg-nav);
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		overflow: hidden;
+		transition:
+			transform 0.2s,
+			box-shadow 0.2s;
+		display: flex;
+		flex-direction: column;
+		text-decoration: none;
+		color: inherit;
+	}
+
+	.device-card:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	}
+
+	.device-card[hidden] {
+		display: none;
+	}
+
+	.device-image {
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		background: var(--sl-color-gray-6);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+	}
+
+	.device-image img {
+		max-width: 100%;
+		max-height: 100%;
+		object-fit: contain;
+	}
+
+	.device-content {
+		padding: 1rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		flex: 1;
+	}
+
+	.device-title {
+		font-size: 1rem;
+		font-weight: 600;
+		margin: 0;
+		color: var(--sl-color-text);
+	}
+
+	.device-vendor {
+		font-size: 0.875rem;
+		color: var(--sl-color-gray-2);
+		margin: 0;
+	}
+
+	.device-chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem;
+		margin-top: auto;
+	}
+</style>

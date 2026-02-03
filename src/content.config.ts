@@ -1,7 +1,7 @@
 import { docsLoader, i18nLoader } from '@astrojs/starlight/loaders';
 import { docsSchema, i18nSchema } from '@astrojs/starlight/schema';
 import { defineCollection, z, type CollectionEntry } from 'astro:content';
-import { file } from 'astro/loaders';
+import { file, glob } from 'astro/loaders';
 import { logoKeys } from './data/logos';
 
 export const baseSchema = z.object({
@@ -71,6 +71,27 @@ export const recipeSchema = baseSchema.extend({
 	type: z.literal('recipe'),
 	description: z.string(),
 	altTitle: z.string().optional(),
+});
+
+export const deviceSchema = z.object({
+	title: z.string(),
+	vendor: z.string().optional(),
+	deviceImageFileName: z.string(),
+	hardwareType: z.string(),
+	connectivity: z
+		.array(z.string())
+		.or(z.string())
+		.transform((v) => (Array.isArray(v) ? v : [v])),
+	industry: z
+		.array(z.string())
+		.or(z.string())
+		.transform((v) => (Array.isArray(v) ? v : [v])),
+	useCase: z
+		.array(z.string())
+		.or(z.string())
+		.transform((v) => (Array.isArray(v) ? v : [v])),
+	chip: z.string().optional(),
+	category: z.string().optional(),
 });
 
 export const docsCollectionSchema = z.union([
@@ -182,5 +203,9 @@ export const collections = {
 			return data.map((contributor: any) => ({ id: contributor.username, ...contributor }));
 		},
 		schema: z.object({ avatar_url: z.string() }),
+	}),
+	devices: defineCollection({
+		loader: glob({ pattern: '**/*.mdx', base: './src/content/devices' }),
+		schema: deviceSchema,
 	}),
 };

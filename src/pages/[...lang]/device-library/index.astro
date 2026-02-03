@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import DeviceLibrary from '~/components/DeviceLibrary/DeviceLibrary.astro';
+
+import { DEFAULT_LOCALE } from '~/util/language-router';
+import { locales, type Lang } from '~/content/devices/i18n.ts';
+
+export function getStaticPaths() {
+	return Object.keys(locales).map((langKey) => {
+		const langParam = langKey === DEFAULT_LOCALE ? undefined : langKey;
+		return { params: { lang: langParam } };
+	});
+}
+
+const { lang: langParam } = Astro.params;
+const lang = (langParam || DEFAULT_LOCALE) as Lang;
+const { title } = locales[lang];
+
+// Get devices for the current language
+const allDevices = await getCollection('devices');
+const devices = allDevices
+	.filter((device) => device.id.startsWith(`${lang}/`))
+	.map((device) => ({
+		id: device.id,
+		title: device.data.title,
+		vendor: device.data.vendor,
+		imageSrc: `/src/assets/devices/${device.data.deviceImageFileName}`,
+		hardwareType: device.data.hardwareType,
+		connectivity: device.data.connectivity,
+		industry: device.data.industry,
+		useCase: device.data.useCase,
+	}));
+---
+
+<StarlightPage frontmatter={{ title, template: 'splash' }}>
+	<DeviceLibrary devices={devices} lang={lang} />
+</StarlightPage>
+
+<style is:global>
+	.device-library-page .main-pane {
+		max-width: 100%;
+	}
+	.content-panel {
+		--sl-content-width: 100%;
+	}
+</style>

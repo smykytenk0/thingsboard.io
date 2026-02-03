@@ -1,31 +1,8 @@
 ---
-import { allPages } from '~/content';
-import {
-	getLanguageFromURL,
-	getVersionFromURL,
-	getPageSlugFromURL,
-	getVersionPrefix,
-	supportedLanguages,
-	switchLanguageWithFallback,
-	type SupportedLanguage,
-} from '~/util/path-utils';
+import { getLanguageOptions } from '~/util/language-router';
 
-const currentLang = getLanguageFromURL(Astro.url.pathname);
-
-// Build a set of all existing page IDs for fast lookup
-const existingPageIds = new Set(allPages.map((page) => page.id));
-
-const options = (Object.entries(supportedLanguages) as [SupportedLanguage, { label: string; prefix: string }][]).map(
-	([key, { label }]) => {
-		const { url, isFallback } = switchLanguageWithFallback(Astro.url.pathname, key, existingPageIds);
-		return {
-			value: url,
-			selected: key === currentLang,
-			label: isFallback ? `${label} (EN)` : label,
-			isFallback,
-		};
-	}
-);
+const pathname = Astro.url.pathname;
+const options = getLanguageOptions(pathname);
 ---
 
 <language-select>

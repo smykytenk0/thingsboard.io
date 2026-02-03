@@ -1,0 +1,241 @@
+---
+import DeviceCard from './DeviceCard.astro';
+import FilterSidebar from './FilterSidebar.astro';
+
+interface Device {
+	id: string;
+	title: string;
+	vendor?: string;
+	imageSrc: string;
+	hardwareType: string;
+	connectivity: string[];
+	industry: string[];
+	useCase: string[];
+}
+
+interface Props {
+	devices: Device[];
+	lang: 'en' | 'uk';
+}
+
+const { devices, lang } = Astro.props;
+
+const translations = {
+	en: {
+		filters: 'Filters',
+		clearAll: 'Clear all',
+		hardwareType: 'Hardware Type',
+		connectivity: 'Connectivity',
+		industry: 'Industry',
+		useCase: 'Use Case',
+		noResults: 'No devices match your filters.',
+		devicesFound: 'devices found',
+	},
+	uk: {
+		filters: 'Фільтри',
+		clearAll: 'Очистити все',
+		hardwareType: 'Тип обладнання',
+		connectivity: 'Підключення',
+		industry: 'Галузь',
+		useCase: 'Сфера застосування',
+		noResults: 'Жоден пристрій не відповідає вашим фільтрам.',
+		devicesFound: 'пристроїв знайдено',
+	},
+};
+
+const t = translations[lang] || translations.en;
+
+// Extract unique filter values with counts
+function getFilterValues(key: keyof Device): { value: string; count: number }[] {
+	const counts = new Map<string, number>();
+	devices.forEach((device) => {
+		const values = device[key];
+		if (Array.isArray(values)) {
+			values.forEach((v) => counts.set(v, (counts.get(v) || 0) + 1));
+		} else if (typeof values === 'string') {
+			counts.set(values, (counts.get(values) || 0) + 1);
+		}
+	});
+	return Array.from(counts.entries())
+		.map(([value, count]) => ({ value, count }))
+		.sort((a, b) => a.value.localeCompare(b.value));
+}
+
+const filterGroups = [
+	{ name: t.hardwareType, key: 'hardwareType', values: getFilterValues('hardwareType') },
+	{ name: t.connectivity, key: 'connectivity', values: getFilterValues('connectivity') },
+	{ name: t.industry, key: 'industry', values: getFilterValues('industry') },
+	{ name: t.useCase, key: 'useCase', values: getFilterValues('useCase') },
+];
+
+// Generate href for each device
+function getDeviceHref(deviceId: string): string {
+	// deviceId format: "en/eg8200-gateway" or "uk/eg8200-gateway"
+	const [deviceLang, ...slugParts] = deviceId.split('/');
+	const slug = slugParts.join('/');
+	const basePath = deviceLang === 'en' ? '/device-library' : `/${deviceLang}/device-library`;
+	return `${basePath}/${slug}/`;
+}
+---
+
+<div class="device-library" data-no-results={t.noResults} data-devices-found={t.devicesFound}>
+	<FilterSidebar filters={filterGroups} translations={{ filters: t.filters, clearAll: t.clearAll }} />
+
+	<div class="device-library-main">
+		<div class="device-count">
+			<span id="device-count">{devices.length}</span>
+			{t.devicesFound}
+		</div>
+		<div class="device-grid" id="device-grid">
+			{
+				devices.map((device) => (
+					<DeviceCard
+						id={device.id}
+						title={device.title}
+						vendor={device.vendor}
+						imageSrc={device.imageSrc}
+						hardwareType={device.hardwareType}
+						connectivity={device.connectivity}
+						industry={device.industry}
+						useCase={device.useCase}
+						href={getDeviceHref(device.id)}
+					/>
+				))
+			}
+		</div>
+		<div class="no-results" id="no-results" hidden>
+			{t.noResults}
+		</div>
+	</div>
+</div>
+
+<script>
+	function initDeviceLibrary() {
+		const container = document.querySelector('.device-library');
+		if (!container) return;
+
+		const deviceGrid = container.querySelector('#device-grid');
+		const deviceCountEl = container.querySelector('#device-count');
+		const noResultsEl = container.querySelector('#no-results');
+		const clearFiltersBtn = container.querySelector('#clear-filters');
+		const filterCheckboxes = container.querySelectorAll<HTMLInputElement>(
+			'.filter-sidebar input[type="checkbox"]'
+		);
+
+		if (!deviceGrid || !deviceCountEl || !noResultsEl) return;
+
+		const devices = deviceGrid.querySelectorAll<HTMLElement>('.device-card');
+
+		function getActiveFilters(): Record<string, string[]> {
+			const filters: Record<string, string[]> = {};
+			filterCheckboxes.forEach((checkbox) => {
+				if (checkbox.checked) {
+					const key = checkbox.name;
+					if (!filters[key]) filters[key] = [];
+					filters[key].push(checkbox.value);
+				}
+			});
+			return filters;
+		}
+
+		function matchesFilter(device: HTMLElement, filters: Record<string, string[]>): boolean {
+			for (const [key, values] of Object.entries(filters)) {
+				if (values.length === 0) continue;
+
+				let deviceValues: string[];
+				if (key === 'hardwareType') {
+					deviceValues = [device.dataset.hardwareType || ''];
+				} else {
+					const dataAttr = device.dataset[key as 'connectivity' | 'industry' | 'useCase'];
+					try {
+						deviceValues = dataAttr ? JSON.parse(dataAttr) : [];
+					} catch {
+						deviceValues = [];
+					}
+				}
+
+				const hasMatch = values.some((v) => deviceValues.includes(v));
+				if (!hasMatch) return false;
+			}
+			return true;
+		}
+
+		function applyFilters() {
+			const filters = getActiveFilters();
+			let visibleCount = 0;
+
+			devices.forEach((device) => {
+				const isVisible = matchesFilter(device, filters);
+				device.hidden = !isVisible;
+				if (isVisible) visibleCount++;
+			});
+
+			deviceCountEl!.textContent = String(visibleCount);
+			(noResultsEl as HTMLElement).hidden = visibleCount > 0;
+		}
+
+		filterCheckboxes.forEach((checkbox) => {
+			checkbox.addEventListener('change', applyFilters);
+		});
+
+		clearFiltersBtn?.addEventListener('click', () => {
+			filterCheckboxes.forEach((checkbox) => {
+				checkbox.checked = false;
+			});
+			applyFilters();
+		});
+	}
+
+	// Run on page load
+	initDeviceLibrary();
+
+	// Re-run on Astro page transitions
+	document.addEventListener('astro:page-load', initDeviceLibrary);
+</script>
+
+<style>
+	.device-library {
+		display: flex;
+		gap: 2rem;
+		align-items: flex-start;
+	}
+
+	.device-library-main {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.device-count {
+		margin-bottom: 1rem;
+		font-size: 0.875rem;
+		color: var(--sl-color-gray-2);
+	}
+
+	.device-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+		gap: 1.5rem;
+		--sl-content-gap-y: 0;
+	}
+
+	.no-results {
+		text-align: center;
+		padding: 3rem 1rem;
+		color: var(--sl-color-gray-2);
+		font-size: 1rem;
+	}
+
+	.no-results[hidden] {
+		display: none;
+	}
+
+	@media (max-width: 768px) {
+		.device-library {
+			flex-direction: column;
+		}
+
+		.device-grid {
+			grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+		}
+	}
+</style>
