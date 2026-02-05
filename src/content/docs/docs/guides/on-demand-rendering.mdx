@@ -137,7 +137,7 @@ The `'server'` output mode does not bring any additional functionality. It only 
 
 With HTML streaming, a document is broken up into chunks, sent over the network in order, and rendered on the page in that order. Astro uses HTML streaming in on-demand rendering to send each component to the browser as it renders them. This makes sure the user sees your HTML as fast as possible, although network conditions can cause large documents to be downloaded slowly, and waiting for data fetches can block page rendering.
 
-<RecipeLinks slugs={["recipes/streaming-improve-page-performance"]}/>
+<RecipeLinks slugs={["docs/recipes/streaming-improve-page-performance"]}/>
 
 :::caution
 Features that modify the [Response headers](https://developer.mozilla.org/en-US/docs/Glossary/Response_header) are only available at the **page level**. (You can't use them inside of components, including layout components.) By the time Astro runs your component code, it has already sent the Response headers and they cannot be modified.

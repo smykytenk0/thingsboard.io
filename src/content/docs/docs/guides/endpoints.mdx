@@ -101,7 +101,7 @@ But, unlike in `static` mode, when you enable on-demand rendering for a route, t
 
 Your routes will be rendered on demand by default in `server` mode. In `static` mode, you must opt out of prerendering for each custom endpoint with `export const prerender = false`.
 
-<RecipeLinks slugs={["recipes/call-endpoints" ]}/>
+<RecipeLinks slugs={["docs/recipes/call-endpoints" ]}/>
 
 :::note
 Be sure to [enable an on-demand rendering mode](/guides/on-demand-rendering/) before trying these examples, and opt out of prerendering in `static` mode.
@@ -191,7 +191,7 @@ export const ALL = (({ request }) => {
 
 If you define a `GET` function but no `HEAD` function, Astro will automatically handle `HEAD` requests by calling the `GET` function and stripping the body from the response.
 
-<RecipeLinks slugs={["recipes/captcha", "recipes/build-forms-api" ]}/>
+<RecipeLinks slugs={["docs/recipes/captcha", "docs/recipes/build-forms-api" ]}/>
 
 ### `request`
 

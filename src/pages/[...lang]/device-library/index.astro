@@ -1,7 +1,7 @@
 ---
-import { getCollection } from 'astro:content';
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
 import DeviceLibrary from '~/components/DeviceLibrary/DeviceLibrary.astro';
+import allDevices from '~/data/devices.json';
 
 import { DEFAULT_LOCALE } from '~/util/language-router';
 import { locales, type Lang } from '~/content/devices/i18n.ts';
@@ -17,13 +17,6 @@ const { lang: langParam } = Astro.params;
 const lang = (langParam || DEFAULT_LOCALE) as Lang;
 const { title } = locales[lang];
 
-// Get devices for the current language
-const apiUrl = new URL('/api/devices.json', Astro.url.origin);
-
-const response = await fetch(apiUrl);
-const allDevices = await response.json();
-
-// const allDevices = await getCollection('devices');
 const devices = allDevices
 	.filter((device) => device.id.startsWith(`${lang}/`))
 	.map((device) => ({
