@@ -104,7 +104,20 @@ export const peSidebar: SidebarConfig = [
 	{
 		label: 'Getting Started',
 		translations: { uk: 'Початок роботи' },
-		items: ['docs/pe/getting-started'],
+		items: [
+			'docs/pe/getting-started',
+			{
+				label: 'Key concepts',
+				translations: { uk: 'Новий проект' },
+				items: [
+					'docs/pe/concepts/multi-tenancy',
+					// 'docs/concepts/digital-twin-model',
+					// 'docs/concepts/data-processing',
+					// 'docs/concepts/alerts-and-notifications',
+					// 'docs/concepts/data-visualization'
+				],
+		  }
+		],
 	},
 	{
 		label: 'PE Features',

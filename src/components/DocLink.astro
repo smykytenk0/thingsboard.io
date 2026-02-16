@@ -1,0 +1,15 @@
+---
+import { Products, productDocsPrefix} from '~/models/site.models';
+
+interface Props {
+	title: string;
+	product: Products;
+	path: string;
+	bold?: boolean;
+	target?: '_blank' | '_self' | '_parent' | '_top';
+}
+const { title, product, path, bold = true, target } = Astro.props;
+const href=`/docs/${productDocsPrefix[product]}${path}`
+---
+
+<a href={href} target={target}>{bold ? (<b><slot /></b>):(<slot />)}</a>
