@@ -47,16 +47,12 @@ export const opensourceSidebar: SidebarConfig = [
 		translations: { uk: 'Посібники' },
 		items: [
 			{
-				label: 'Routing',
-				translations: { uk: 'Маршрутизація' },
+				label: 'Digital Twins',
 				items: [
-					'docs/basics/astro-pages',
-					'docs/guides/routing',
-					'docs/guides/endpoints',
-					'docs/guides/middleware',
-					'docs/guides/internationalization',
-					'docs/guides/prefetch',
-					'docs/guides/view-transitions',
+					'docs/user-guide/digital-twins/entities',
+					'docs/user-guide/digital-twins/relations',
+					'docs/user-guide/digital-twins/attributes',
+					'docs/user-guide/digital-twins/time-series-data',
 				],
 			},
 			{
@@ -125,6 +121,21 @@ export const peSidebar: SidebarConfig = [
 					'docs/pe/concepts/data-visualization'
 				],
 		  }
+		],
+	},
+	{
+		label: 'Guides',
+		translations: { uk: 'Посібники' },
+		items: [
+			{
+				label: 'Digital Twins',
+				items: [
+					'docs/pe/user-guide/digital-twins/entities',
+					'docs/pe/user-guide/digital-twins/relations',
+					'docs/pe/user-guide/digital-twins/attributes',
+					'docs/pe/user-guide/digital-twins/time-series-data',
+				],
+			},
 		],
 	},
 	{
