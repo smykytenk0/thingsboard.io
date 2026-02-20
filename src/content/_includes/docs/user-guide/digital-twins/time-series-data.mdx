@@ -3,7 +3,7 @@ import { Products } from '~/models/site.models';
 
 **Time-series data** is a sequence of timestamped key-value pairs published by a device or computed by the platform. It represents continuously changing measurements — sensor readings, counters, state changes — where **every data point matters**, not just the latest.
 
-Compared to <DocLink product={props.product} path='TODO'>attributes</DocLink>:
+Compared to <DocLink product={props.product} path='user-guide/digital-twins/attributes'>attributes</DocLink>:
 
 | | Attributes | Time-series |
 |--|--|--|
@@ -36,7 +36,7 @@ Each time-series entry consists of:
 Devices publish time-series data using the telemetry upload API over multiple protocols:
 - **MQTT** — topic `v1/devices/me/telemetry`
 - **HTTP** — `POST /api/v1/{accessToken}/telemetry`
-- **CoAP**, **LwM2M**, and others via <DocLink product={props.product} path='TODO'>integrations</DocLink>
+- **CoAP**, **LwM2M**, and others via <DocLink product={props.product} path='user-guide/integrations'>integrations</DocLink>
 
 **Batch upload** — send multiple readings with different timestamps in a single request:
 ```json
@@ -82,10 +82,10 @@ Each widget datasource can be configured with a **time window** and **aggregatio
 
 ## Rule Engine
 
-The <DocLink product={props.product} path='TODO'>Rule Engine</DocLink> processes every incoming telemetry message. Common scenarios:
+The <DocLink product={props.product} path='user-guide/rule-engine'>Rule Engine</DocLink> processes every incoming telemetry message. Common scenarios:
 
 **Generate alarms from telemetry values**
-Use <DocLink product={props.product} path='TODO'>alarm rules</DocLink> in device profiles for threshold-based alarms, or <DocLink product={props.product} path='TODO'>filter nodes</DocLink> with custom JavaScript for complex multi-key conditions.
+Use <DocLink product={props.product} path='user-guide/alarm-rules'>alarm rules</DocLink> in device profiles for threshold-based alarms, or <DocLink product={props.product} path='TODO'>filter nodes</DocLink> with custom JavaScript for complex multi-key conditions.
 
 **Enrich telemetry with attributes**
 Use <DocLink product={props.product} path='TODO'>enrichment nodes</DocLink> to attach related attribute values (e.g., thresholds, location) to the telemetry message before further processing.

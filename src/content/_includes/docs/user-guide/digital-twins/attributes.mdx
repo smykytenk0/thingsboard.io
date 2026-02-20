@@ -104,7 +104,7 @@ Attributes can be read and written programmatically via the <DocLink product={pr
 
 ## Dashboards
 
-Attributes can be visualized and edited in <DocLink product={props.product} path='TODO'>dashboards</DocLink> using:
+Attributes can be visualized and edited in <DocLink product={props.product} path='user-guide/dashboards'>dashboards</DocLink> using:
 - **Gauges** (digital and analog) — display numeric attribute values such as temperature, speed, or pressure
 - **Cards** — present multiple attribute values in a compact layout
 - **Entity table** — compare attributes across multiple entities
@@ -112,10 +112,10 @@ Attributes can be visualized and edited in <DocLink product={props.product} path
 
 ## Rule Engine
 
-The <DocLink product={props.product} path='TODO'>Rule Engine</DocLink> processes attribute updates and uses attribute values in four common scenarios:
+The <DocLink product={props.product} path='user-guide/rule-engine'>Rule Engine</DocLink> processes attribute updates and uses attribute values in four common scenarios:
 
 **Generate alarms from attribute values**
-Configure conditions using <DocLink product={props.product} path='TODO'>alarm rules</DocLink> in device profiles, or use <DocLink product={props.product} path='TODO'>filter nodes</DocLink> with custom JavaScript for advanced logic.
+Configure conditions using <DocLink product={props.product} path='user-guide/alarm-rules'>alarm rules</DocLink> in device profiles, or use <DocLink product={props.product} path='TODO'>filter nodes</DocLink> with custom JavaScript for advanced logic.
 
 **Modify client-side attributes before persistence**
 Use a <DocLink product={props.product} path='TODO'>message type switch</DocLink> node to intercept "Post attributes" messages, then apply <DocLink product={props.product} path='TODO'>transformation nodes</DocLink> to validate, normalize, or enrich the payload before saving.
@@ -128,6 +128,6 @@ Use <DocLink product={props.product} path='TODO'>enrichment nodes</DocLink> to i
 
 ## Performance
 
-Enable **Attributes Cache** (`cache.attributes.enabled` in <DocLink product={props.product} path='TODO'>configuration properties</DocLink>) to load each attribute from the database only once and serve subsequent reads from cache.
+Enable **Attributes Cache** (`cache.attributes.enabled` in <DocLink product={props.product} path='reference/configuration-reference'>configuration properties</DocLink>) to load each attribute from the database only once and serve subsequent reads from cache.
 
 > If using Redis or Valkey, set `maxmemory-policy` to `allkeys-random` to prevent the cache from exhausting available memory.

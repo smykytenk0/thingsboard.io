@@ -5,14 +5,14 @@ ThingsBoard RPC (Remote Procedure Call) enables bidirectional command exchange b
 
 ## Server-Side RPC
 
-The platform sends a command to a device — turn a relay on, change a setpoint, trigger a reboot. Commands can be sent from a <DocLink product={props.product} path='TODO'>dashboard widget</DocLink>, the <DocLink product={props.product} path='TODO'>Rule Engine</DocLink>, or directly via REST API.
+The platform sends a command to a device — turn a relay on, change a setpoint, trigger a reboot. Commands can be sent from a <DocLink product={props.product} path='user-guide/dashboards'>dashboard widget</DocLink>, the <DocLink product={props.product} path='user-guide/rule-engine'>Rule Engine</DocLink>, or directly via REST API.
 
 ### One-Way vs. Two-Way
 
 | | One-Way | Two-Way |
 |-|---------|---------|
 | **Device reply** | Not expected | Required within timeout |
-| **Use case** | Fire-and-forget commands (turn on LED) | Commands that need confirmation or a result (get sensor reading) |
+| **Use case** | Fire-and-forget commands (turn on LED) | Commands that need confirmation or a result |
 | **REST response** | `200 OK` when ThingsBoard sent the command to the device — no visibility into whether the device processed it or succeeded | Device's reply payload |
 
 ### Lightweight vs. Persistent
@@ -72,7 +72,7 @@ Persistent commands move through a state machine. Each transition fires a Rule E
 
 ## Client-Side RPC
 
-A device initiates a request to the platform — for example to fetch the current time, get a weather forecast, or query an access control decision. The platform processes it through the <DocLink product={props.product} path='TODO'>Rule Engine</DocLink> and replies.
+A device initiates a request to the platform — for example to fetch the current time, get a weather forecast, or query an access control decision. The platform processes it through the <DocLink product={props.product} path='user-guide/rule-engine'>Rule Engine</DocLink> and replies.
 
 ### How It Works
 
@@ -119,7 +119,7 @@ Each request carries a `method` string and a `params` JSON object. The Rule Engi
 
 See the transport-specific guides for exact topics, subscribe paths, and request/response examples:
 
-- <DocLink product={props.product} path='TODO'>MQTT RPC API</DocLink>
+- <DocLink product={props.product} path='reference/mqtt-api/rpc'>MQTT RPC API</DocLink>
 - <DocLink product={props.product} path='TODO'>HTTP RPC API</DocLink>
 - <DocLink product={props.product} path='TODO'>CoAP RPC API</DocLink>
 - <DocLink product={props.product} path='TODO'>LwM2M RPC</DocLink> — server-side only

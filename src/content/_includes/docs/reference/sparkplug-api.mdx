@@ -15,7 +15,7 @@ The EoN Node is any MQTT v3.1.1 or v5.0 client that manages a session and acts a
 
 ### Sparkplug B Device
 
-A single EoN Node may represent multiple physical devices. ThingsBoard decodes metrics from the Sparkplug payload and stores them as device <DocLink product={props.product} path='TODO'>Attributes</DocLink> or <DocLink product={props.product} path='TODO'>Time-Series Data</DocLink>. You can push updates back to device metrics via shared attribute changes or RPC commands.
+A single EoN Node may represent multiple physical devices. ThingsBoard decodes metrics from the Sparkplug payload and stores them as device <DocLink product={props.product} path='user-guide/digital-twins/attributes'>Attributes</DocLink> or <DocLink product={props.product} path='user-guide/digital-twins/time-series-data'>Time-Series Data</DocLink>. You can push updates back to device metrics via shared attribute changes or RPC commands.
 
 ## Topic Structure
 
@@ -144,7 +144,7 @@ To send an explicit command type, use this format as the attribute value:
 
 ### Via RPC Command
 
-Send a server-side RPC using the REST API, a dashboard widget, or a Rule Chain node. See <DocLink product={props.product} path='TODO'>Command & Control</DocLink> for the full RPC reference.
+Send a server-side RPC using the REST API, a dashboard widget, or a Rule Chain node. See <DocLink product={props.product} path='user-guide/command-and-control'>Command & Control</DocLink> for the full RPC reference.
 
 | Property | Value |
 |----------|-------|

@@ -3,7 +3,7 @@ import { Steps, Aside } from '@astrojs/starlight/components';
 
 **Provisioning** is how devices get registered in ThingsBoard with credentials before they start sending data. There are two types: an admin imports devices in bulk upfront, or devices register themselves automatically on first boot. Both result in the device existing in ThingsBoard with credentials ready to use.
 
-This is distinct from <DocLink product={props.product} path='TODO'>Claiming</DocLink>: provisioning creates the device and gives it credentials; claiming transfers an already-provisioned device to a specific customer.
+This is distinct from <DocLink product={props.product} path='user-guide/claiming'>Claiming</DocLink>: provisioning creates the device and gives it credentials; claiming transfers an already-provisioned device to a specific customer.
 
 ## Bulk Provisioning
 
@@ -89,7 +89,7 @@ Once provisioned, the device's `provisionState` server-side attribute is set to 
 
 ### Configure in Device Profile
 
-<DocLink product={props.product} path='TODO'>Open the device profile</DocLink>, go to the **Device Provisioning** tab, select a strategy, and copy the generated **Provision device key** and **Provision device secret** — these go into the device firmware.
+<DocLink product={props.product} path='user-guide/device-profiles'>Open the device profile</DocLink>, go to the **Device Provisioning** tab, select a strategy, and copy the generated **Provision device key** and **Provision device secret** — these go into the device firmware.
 
 <Aside type="note">
   Each device profile has its own key/secret pair. All devices using the same profile share the same provisioning credentials but receive unique device credentials in return.
@@ -99,6 +99,6 @@ Once provisioned, the device's `provisionState` server-side attribute is set to 
 
 Provisioning requests can be sent over MQTT, HTTP, and CoAP. See the transport-specific guides for exact topics, endpoints, and complete request/response examples:
 
-- <DocLink product={props.product} path='TODO'>MQTT Provisioning API</DocLink> — also supports X.509 certificate chain provisioning (v3.5+)
+- <DocLink product={props.product} path='reference/mqtt-api/provisioning'>MQTT Provisioning API</DocLink> — also supports X.509 certificate chain provisioning (v3.5+)
 - <DocLink product={props.product} path='TODO'>HTTP Provisioning API</DocLink> — supports Access Token and MQTT Basic
 - <DocLink product={props.product} path='TODO'>CoAP Provisioning API</DocLink> — supports Access Token

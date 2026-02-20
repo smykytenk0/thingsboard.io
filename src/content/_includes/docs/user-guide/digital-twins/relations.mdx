@@ -1,7 +1,7 @@
 import DocLink from '@components/DocLink.astro';
 import { Products } from '~/models/site.models';
 
-**Relations** connect two entities within the same <DocLink product={props.product} path='TODO'>Tenant</DocLink>, modeling real-world relationships such as hierarchy, ownership, or dependency.
+**Relations** connect two entities within the same <DocLink product={props.product} path='user-guide/multi-tenancy'>Tenant</DocLink>, modeling real-world relationships such as hierarchy, ownership, or dependency.
 
 Each relation has:
 - A **direction**: _From_ (source) → _To_ (target)
@@ -60,15 +60,15 @@ The _Contains_ relation models parent–child structures. For example:
 
 ### Dashboards
 
-Relations power <DocLink product={props.product} path='TODO'>entity aliases</DocLink> that dynamically resolve related entities — enabling reusable dashboards that adapt automatically to different customers and deployments. Widgets can display telemetry, attributes, and alarms from related entities and visualize hierarchies without hardcoded identifiers.
+Relations power <DocLink product={props.product} path='user-guide/aliases'>entity aliases</DocLink> that dynamically resolve related entities — enabling reusable dashboards that adapt automatically to different customers and deployments. Widgets can display telemetry, attributes, and alarms from related entities and visualize hierarchies without hardcoded identifiers.
 
 ### Rule Engine
 
-The <DocLink product={props.product} path='TODO'>Rule Engine</DocLink> uses relations to route messages, enrich telemetry, and propagate data. Key nodes: <DocLink product={props.product} path='TODO'>Check relation presence</DocLink>, <DocLink product={props.product} path='TODO'>Related device attributes</DocLink>, <DocLink product={props.product} path='TODO'>Related entity data</DocLink>, <DocLink product={props.product} path='TODO'>Duplicate to related</DocLink>.
+The <DocLink product={props.product} path='user-guide/rule-engine'>Rule Engine</DocLink> uses relations to route messages, enrich telemetry, and propagate data. Key nodes: <DocLink product={props.product} path='TODO'>Check relation presence</DocLink>, <DocLink product={props.product} path='TODO'>Related device attributes</DocLink>, <DocLink product={props.product} path='TODO'>Related entity data</DocLink>, <DocLink product={props.product} path='TODO'>Duplicate to related</DocLink>.
 
 ### Calculated Fields
 
-<DocLink product={props.product} path='TODO'>Calculated fields</DocLink> can traverse relations to compute values dynamically:
+<DocLink product={props.product} path='user-guide/calculated-fields'>Calculated fields</DocLink> can traverse relations to compute values dynamically:
 - <DocLink product={props.product} path='TODO'>Propagation</DocLink> — transform and push data to related entities
 - <DocLink product={props.product} path='TODO'>Related entities aggregation</DocLink> — compute min/max/avg/sum/count across related entities
 - <DocLink product={props.product} path='TODO'>Geofencing</DocLink> — detect enter/exit events relative to related geozones
