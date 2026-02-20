@@ -141,7 +141,6 @@ const recipeItems = (prefix: string) => [
 
 const referenceItems = (prefix: string) => [
 	`${prefix}/configuration-reference`,
-	`${prefix}/sparkplug-api`,
 	{
 		label: 'MQTT API',
 		items: [
@@ -153,6 +152,7 @@ const referenceItems = (prefix: string) => [
 			`${prefix}/mqtt-api/provisioning`,
 		],
 	},
+	`${prefix}/sparkplug-api`,
 ];
 
 export const opensourceSidebar: SidebarConfig = [
