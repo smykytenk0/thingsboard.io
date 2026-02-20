@@ -142,6 +142,17 @@ const recipeItems = (prefix: string) => [
 const referenceItems = (prefix: string) => [
 	`${prefix}/configuration-reference`,
 	{
+		label: 'HTTP API',
+		items: [
+			`${prefix}/http-api/getting-connected`,
+			`${prefix}/http-api/telemetry`,
+			`${prefix}/http-api/attributes`,
+			`${prefix}/http-api/rpc`,
+			`${prefix}/http-api/claiming`,
+			`${prefix}/http-api/provisioning`,
+		],
+	},
+	{
 		label: 'MQTT API',
 		items: [
 			`${prefix}/mqtt-api/getting-connected`,
