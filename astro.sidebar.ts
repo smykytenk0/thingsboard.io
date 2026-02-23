@@ -175,9 +175,28 @@ const referenceItems = (prefix: string) => [
 					`${prefix}/mqtt-api/rpc`,
 					`${prefix}/mqtt-api/claiming`,
 					`${prefix}/mqtt-api/provisioning`,
+					`${prefix}/sparkplug-api`,
 				],
 			},
-			`${prefix}/sparkplug-api`,
+			{
+				label: 'LwM2M API',
+			items: [
+				`${prefix}/lwm2m-api/getting-started`,
+				`${prefix}/lwm2m-api/data-model`,
+				`${prefix}/lwm2m-api/rpc-commands`,
+				`${prefix}/lwm2m-api/ota-updates`,
+			],
+		},
+		],
+	},
+	{
+		label: 'Gateway API',
+		items: [
+			`${prefix}/gateway-api/overview`,
+			`${prefix}/gateway-api/telemetry`,
+			`${prefix}/gateway-api/attributes`,
+			`${prefix}/gateway-api/rpc`,
+			`${prefix}/gateway-api/claiming`,
 		],
 	},
 ];
