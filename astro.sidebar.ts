@@ -278,7 +278,7 @@ export const opensourceSidebar: SidebarConfig = [
 					'docs/concepts/multi-tenancy',
 					'docs/concepts/digital-twin-model',
 					'docs/concepts/data-processing',
-					'docs/concepts/alerts-and-notifications',
+					'docs/concepts/alarms-and-notifications',
 					'docs/concepts/data-visualization'
 				]
 			}
@@ -326,7 +326,7 @@ export const peSidebar: SidebarConfig = [
 					'docs/pe/concepts/multi-tenancy',
 					'docs/pe/concepts/digital-twin-model',
 					'docs/pe/concepts/data-processing',
-					'docs/pe/concepts/alerts-and-notifications',
+					'docs/pe/concepts/alarms-and-notifications',
 					'docs/pe/concepts/data-visualization'
 				],
 			}
@@ -342,7 +342,20 @@ export const peSidebar: SidebarConfig = [
 		label: 'Recipes',
 		collapsed: true,
 		translations: { uk: 'Рецепти' },
-		items: recipeItems('docs/pe/recipes'),
+		items: [
+			...recipeItems('docs/pe/recipes'),
+			{
+				label: 'Access Control',
+				collapsed: true,
+				items: [
+					'docs/pe/recipes/rbac-read-only-analyst',
+					'docs/pe/recipes/rbac-customer-scoped-access',
+					'docs/pe/recipes/rbac-generic-role-scope',
+					'docs/pe/recipes/rbac-isolated-device-groups',
+					'docs/pe/recipes/rbac-smart-buildings',
+				],
+			},
+		],
 	},
 	{
 		label: 'Reference',
