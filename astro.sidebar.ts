@@ -28,12 +28,12 @@ const guideItems = (prefix: string) => [
 		],
 	},
 	{
-		label: 'Dashboards',
+		label: 'Data Visualization',
 		collapsed: true,
 		items: [
+			{ label: 'Key concepts', slug: `${prefix}/data-visualization` },
 			`${prefix}/dashboards`,
 			`${prefix}/widgets`,
-			`${prefix}/widget-library`,
 			`${prefix}/aliases`,
 			`${prefix}/layouts`,
 			`${prefix}/actions`,
@@ -198,6 +198,7 @@ const referenceItems = (prefix: string) => [
 		label: 'Widgets',
 		collapsed: true,
 		items: [
+			`${prefix}/widgets/widget-library`,
 			`${prefix}/widgets/chart-widget`,
 			`${prefix}/widgets/map-widgets`,
 			`${prefix}/widgets/entity-table-widget`,
