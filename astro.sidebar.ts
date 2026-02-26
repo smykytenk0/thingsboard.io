@@ -416,113 +416,72 @@ const referenceItems = (prefix: string) => [
 	},
 ];
 
-export const opensourceSidebar: SidebarConfig = [
+const mainSidebarItems = (
+	prefix: string,
+	extraRecipeItems: SidebarConfig = [],
+): SidebarConfig => [
 	{
 		label: 'Getting Started',
 		translations: { uk: 'Початок роботи' },
 		items: [
-			'docs',
+			prefix,
 			{
 				label: 'Welcome to IoT!',
 				translations: { uk: 'Новий проект' },
 				items: [
-					'docs/why-thingsboard',
-					'docs/tutorial/getting-started'
-				]
+					`${prefix}/why-thingsboard`,
+					`${prefix}/tutorial/getting-started`,
+				],
 			},
 			{
 				label: 'Key concepts',
 				translations: { uk: 'Новий проект' },
 				items: [
-					'docs/concepts/multi-tenancy',
-					'docs/concepts/digital-twin-model',
-					'docs/concepts/data-processing',
-					'docs/concepts/alarms-and-notifications',
-					'docs/concepts/data-visualization'
-				]
-			}
+					`${prefix}/concepts/multi-tenancy`,
+					`${prefix}/concepts/digital-twin-model`,
+					`${prefix}/concepts/data-processing`,
+					`${prefix}/concepts/alarms-and-notifications`,
+					`${prefix}/concepts/data-visualization`,
+				],
+			},
 		],
 	},
 	{
 		label: 'Guides',
 		collapsed: true,
 		translations: { uk: 'Посібники' },
-		items: guideItems('docs/user-guide')
+		items: guideItems(`${prefix}/user-guide`),
 	},
 	{
 		label: 'Recipes',
 		collapsed: true,
 		translations: { uk: 'Рецепти' },
-		items: recipeItems('docs/recipes')
+		items: [...recipeItems(`${prefix}/recipes`), ...extraRecipeItems],
 	},
 	{
 		label: 'Reference',
 		collapsed: true,
 		translations: { uk: 'Довідник' },
-		items: referenceItems('docs/reference')
-	}
+		items: referenceItems(`${prefix}/reference`),
+	},
 ];
 
+export const opensourceSidebar: SidebarConfig = mainSidebarItems('docs');
+
 /** Professional Edition documentation sidebar (pages at /docs/pe/) */
-export const peSidebar: SidebarConfig = [
+export const peSidebar: SidebarConfig = mainSidebarItems('docs/pe', [
 	{
-		label: 'Getting Started',
-		translations: { uk: 'Початок роботи' },
+		label: 'Access Control',
+		collapsed: true,
 		items: [
-			'docs/pe',
-			{
-				label: 'Welcome to IoT!',
-				translations: { uk: 'Новий проект' },
-				items: [
-					'docs/pe/why-thingsboard',
-					'docs/pe/tutorial/getting-started',
-				],
-			},
-			{
-				label: 'Key concepts',
-				translations: { uk: 'Новий проект' },
-				items: [
-					'docs/pe/concepts/multi-tenancy',
-					'docs/pe/concepts/digital-twin-model',
-					'docs/pe/concepts/data-processing',
-					'docs/pe/concepts/alarms-and-notifications',
-					'docs/pe/concepts/data-visualization'
-				],
-			}
+			'docs/pe/recipes/rbac-read-only-analyst',
+			'docs/pe/recipes/rbac-customer-scoped-access',
+			'docs/pe/recipes/rbac-generic-role-scope',
+			'docs/pe/recipes/rbac-isolated-device-groups',
+			'docs/pe/recipes/rbac-smart-buildings',
 		],
 	},
-	{
-		label: 'Guides',
-		collapsed: true,
-		translations: { uk: 'Посібники' },
-		items: guideItems('docs/pe/user-guide'),
-	},
-	{
-		label: 'Recipes',
-		collapsed: true,
-		translations: { uk: 'Рецепти' },
-		items: [
-			...recipeItems('docs/pe/recipes'),
-			{
-				label: 'Access Control',
-				collapsed: true,
-				items: [
-					'docs/pe/recipes/rbac-read-only-analyst',
-					'docs/pe/recipes/rbac-customer-scoped-access',
-					'docs/pe/recipes/rbac-generic-role-scope',
-					'docs/pe/recipes/rbac-isolated-device-groups',
-					'docs/pe/recipes/rbac-smart-buildings',
-				],
-			},
-		],
-	},
-	{
-		label: 'Reference',
-		collapsed: true,
-		translations: { uk: 'Довідник' },
-		items: referenceItems('docs/pe/reference'),
-	},
-];
+]);
 
 /** Cloud (PaaS) documentation sidebar (pages at /docs/paas/) */
 export const paasSidebar: SidebarConfig = [
