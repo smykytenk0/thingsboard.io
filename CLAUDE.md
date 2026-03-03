@@ -482,7 +482,7 @@ import YouTubeVideo from '~/components/YouTubeVideo.astro';
 
 ### Code Block Meta Options (pluginMaxLines)
 
-`config/plugins/expressive-code-max-lines.ts` — custom Expressive Code plugin that adds independent meta options to fenced code blocks.
+`config/plugins/expressive-code-max-lines.mjs` — custom Expressive Code plugin that adds independent meta options to fenced code blocks.
 
 **Meta options:**
 
@@ -523,7 +523,7 @@ import YouTubeVideo from '~/components/YouTubeVideo.astro';
 - HAST uses `properties.className` (array), not `properties.class` — the plugin uses a local `appendClassName` helper
 - Data attribute stored as `dataMaxLines` in HAST properties → rendered as `data-max-lines` in HTML → read as `el.dataset.maxLines` in JS
 - Hook order: `pluginFrames` wraps `blockAst` in `<figure.frame>` before our hook runs, so `renderData.blockAst` is already the final `<figure>`
-- `@expressive-code/core` is not hoisted in pnpm flat `node_modules`, so the plugin defines minimal local types instead of importing from that package
+- The plugin file is `.mjs` (not `.ts`) because `ec.config.mjs` is executed directly by Node.js on CI without Vite — TypeScript extensions cause `ERR_UNKNOWN_FILE_EXTENSION`
 
 ### Tabbed Code Blocks
 
