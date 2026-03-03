@@ -172,21 +172,26 @@ const installationItems = (prefix: string) => {
 		{ label: 'Installation options', slug: `${prefix}/installation` },
 		{ label: 'Upgrade instructions', slug: `${prefix}/installation/upgrade-instructions` },
 		{
-			label: 'Standalone',
+			label: 'On-premises',
 			items: [
-				`${prefix}/installation/docker`,
-				`${prefix}/installation/docker-windows`,
-				`${prefix}/installation/ubuntu`,
-				`${prefix}/installation/rhel`,
-				`${prefix}/installation/rpi`,
-			],
-		},
-		{
-			label: 'Cluster',
-			items: [
-				`${prefix}/installation/docker-compose-setup`,
-				`${prefix}/installation/minikube-cluster-setup`,
-				`${prefix}/installation/openshift-cluster-setup`,
+				{
+					label: 'Standalone',
+					items: [
+						`${prefix}/installation/docker`,
+						`${prefix}/installation/docker-windows`,
+						`${prefix}/installation/ubuntu`,
+						`${prefix}/installation/rhel`,
+						`${prefix}/installation/rpi`,
+					],
+				},
+				{
+					label: 'Cluster',
+					items: [
+						`${prefix}/installation/docker-compose-setup`,
+						`${prefix}/installation/minikube-cluster-setup`,
+						`${prefix}/installation/openshift-cluster-setup`,
+					],
+				},
 			],
 		},
 		{
@@ -200,6 +205,16 @@ const installationItems = (prefix: string) => {
 						...(isPE ? [`${prefix}/installation/aws`] : []),
 						`${prefix}/installation/aws-monolith`,
 						`${prefix}/installation/aws-microservices`,
+					],
+				},
+				{
+					label: 'Google Cloud',
+					items: [
+						{ label: 'GCP Installation Options', slug: `${prefix}/installation/gcp-index` },
+						`${prefix}/installation/gcp${isPE ? '-vm' : ''}`,
+						...(isPE ? [`${prefix}/installation/gcp`] : []),
+						`${prefix}/installation/gcp-monolith`,
+						`${prefix}/installation/gcp-microservices`,
 					],
 				},
 				`${prefix}/installation/digital-ocean`,
