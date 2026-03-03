@@ -170,7 +170,6 @@ const installationItems = (prefix: string) => {
 	const isPE = prefix.includes('/pe');
 	return [
 		{ label: 'Installation options', slug: `${prefix}/installation` },
-		{ label: 'Upgrade instructions', slug: `${prefix}/installation/upgrade-instructions` },
 		{
 			label: 'On-premises',
 			items: [
@@ -230,6 +229,17 @@ const installationItems = (prefix: string) => {
 			],
 		},
 		{ label: 'Building from Sources', slug: `${prefix}/installation/building-from-source` },
+		...(isPE
+			? [
+					{
+						label: 'Upgrade',
+						items: [
+							`${prefix}/installation/upgrade-instructions`,
+							`${prefix}/installation/upgrade-from-ce`,
+						],
+					},
+				]
+			: [{ label: 'Upgrade instructions', slug: `${prefix}/installation/upgrade-instructions` }]),
 	];
 };
 
