@@ -271,6 +271,17 @@ const recipeItems = (prefix: string) => [
 
 const referenceItems = (prefix: string, extraConfigItems: SidebarConfig = []) => [
 	{
+		label: 'Architecture',
+		collapsed: true,
+		items: [
+			{ label: 'Overview', slug: `${prefix}/architecture` },
+			`${prefix}/architecture/monolithic`,
+			`${prefix}/architecture/microservices`,
+			`${prefix}/architecture/deployment-scenarios`,
+			`${prefix}/architecture/performance`,
+		],
+	},
+	{
 		label: 'Configuration',
 		collapsed: true,
 		items: [
