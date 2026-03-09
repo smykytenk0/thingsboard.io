@@ -726,8 +726,9 @@ import YouTubeVideo from '~/components/YouTubeVideo.astro';
 | `maxLines=N` | number | Limits the visible height to N lines; enables vertical scroll when content overflows |
 | `collapsible` | boolean flag | Adds an ▼ Expand / ▲ Collapse button below the block (requires `maxLines`) |
 | `wrap` | boolean flag | Wraps long lines instead of horizontal scroll; copy button copies original text unchanged |
+| `download='filename.ext'` | string | Adds a download button (Tabler icon) next to the copy button; clicking saves the code as a file |
 
-`maxLines` and `collapsible` are independent — `maxLines` alone gives a scrollable block without a button; adding `collapsible` enables the toggle. `wrap` can be used alone or combined with `maxLines`.
+`maxLines` and `collapsible` are independent — `maxLines` alone gives a scrollable block without a button; adding `collapsible` enables the toggle. `wrap` can be used alone or combined with `maxLines`. `download` can be combined with any other option.
 
 **Usage in MDX fenced code blocks:**
 
@@ -751,6 +752,14 @@ import YouTubeVideo from '~/components/YouTubeVideo.astro';
 ```bash wrap maxLines=5
 // wrap + maxLines can be combined
 ```
+
+```json download='config.json'
+// download button appears next to the copy button; saves code as config.json
+```
+
+```js maxLines=8 collapsible download='decoder.js' title="decoder.js"
+// all options can be combined
+```
 ````
 
 **Implementation notes:**
@@ -759,6 +768,7 @@ import YouTubeVideo from '~/components/YouTubeVideo.astro';
 - Data attribute stored as `dataMaxLines` in HAST properties → rendered as `data-max-lines` in HTML → read as `el.dataset.maxLines` in JS
 - Hook order: `pluginFrames` wraps `blockAst` in `<figure.frame>` before our hook runs, so `renderData.blockAst` is already the final `<figure>`
 - The plugin file is `.mjs` (not `.ts`) because `ec.config.mjs` is executed directly by Node.js on CI without Vite — TypeScript extensions cause `ERR_UNKNOWN_FILE_EXTENSION`
+- **`download` implementation:** `pluginDownload()` sets `data-ec-download="filename"` on the `<figure>`; client JS finds `.copy button[data-code]` and injects a `<button class="ec-download-btn">` with a Tabler SVG icon before it inside the same `.copy` flex container. EC's existing `.copy button` CSS (hover effects, opacity) applies automatically. `button::after` (EC's copy icon mask) is suppressed via `content: none`. EC encodes newlines as `\x7F` in `data-code` — the download handler decodes them back to `\n` before saving.
 
 ### Tabbed Code Blocks
 
