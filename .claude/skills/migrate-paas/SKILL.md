@@ -157,7 +157,22 @@ When includes contain `localhost` or hardcoded hostnames in code examples, comma
 
 ---
 
-## Step 4: Update sidebar (`astro.sidebar.ts`)
+## Step 4: Fix broken links in shared includes
+
+**Before creating stubs**, scan every shared include that will be reused by the new PaaS pages for `path='TODO'` or `path='user-guide/TBD/'` placeholder links. Fixing them in the include fixes CE, PE, and PaaS pages simultaneously.
+
+For each TODO link:
+
+1. Glob for the target page: `src/content/docs/docs/{guessed-path}.mdx` and `src/content/docs/docs/pe/{guessed-path}.mdx`.
+2. **If the page exists** — replace `path='TODO'` with the correct path (no leading slash, no trailing slash).
+3. **If the page does not exist** — convert the `<DocLink>` to bold text: `**Link Text**`.
+4. **Cross-product links** (e.g., IoT Gateway pages) — use a hardcoded product prop: `<DocLink product={Products.GW} path='config/mqtt'>`. Add the `Products` import (`import { Products } from '~/models/site.models';`) if not already present.
+5. For external URLs (cloud signup, etc.), use `<a href="...">` — not `<DocLink>`.
+6. Use `bold={false}` on `<DocLink>` when the link appears in running text and bold styling would be distracting.
+
+---
+
+## Step 5: Update sidebar (`astro.sidebar.ts`)
 
 Add entries to `paasSidebar` and `paasEuSidebar`. Mirror the PE sidebar structure:
 
@@ -178,19 +193,6 @@ export const paasSidebar: SidebarConfig = [
 Same for `paasEuSidebar` with `docs/paas/eu/` prefix.
 
 **Do NOT use `mainSidebarItems()` for PaaS** — the PaaS sidebar is manually defined because not all CE/PE sections apply (no Installation tab, for example).
-
----
-
-## Step 5: Fix broken links
-
-After creating stubs and adapting includes:
-
-1. Search all affected includes for `path='TODO'` or `path='user-guide/TBD/'` placeholder links.
-2. Find the actual target page using glob: `src/content/docs/docs/pe/{guessed-path}.mdx`.
-3. Replace with the correct path (no leading slash, no trailing slash).
-4. For links that have no target page yet, convert to bold text: `**Link Text**` (remove the `<DocLink>`).
-5. For external URLs (cloud signup, etc.), use `<a href="...">` — not `<DocLink>`.
-6. Use `bold={false}` on `<DocLink>` when the link appears in running text and bold styling would be distracting.
 
 ---
 
