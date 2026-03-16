@@ -1472,7 +1472,12 @@ export const edgeSidebar: SidebarConfig = [
 			{
 				label: 'Key concepts',
 				items: [
-					'docs/edge/key-concepts/edge-management',
+					'docs/edge/key-concepts/edge-instance',
+					'docs/edge/key-concepts/entities',
+					'docs/edge/key-concepts/telemetry-synchronization',
+					'docs/edge/key-concepts/attributes',
+					'docs/edge/key-concepts/data-processing',
+					'docs/edge/key-concepts/alarms',
 				],
 			},
 		],
@@ -1480,6 +1485,79 @@ export const edgeSidebar: SidebarConfig = [
 	{
 		label: 'Installation',
 		items: edgeInstallationItems('docs/edge'),
+	},
+	{
+		label: 'Guides',
+		items: [
+			{
+				label: 'Edge configuration',
+				collapsed: true,
+				items: [
+					'docs/edge/user-guide/edge-management',
+					{
+						label: 'Connect Edge behind a proxy',
+						collapsed: true,
+						items: [
+							'docs/edge/user-guide/edge-proxy/debian',
+							'docs/edge/user-guide/edge-proxy/docker',
+						],
+					},
+					'docs/edge/user-guide/grpc-ssl',
+					'docs/edge/user-guide/iot-gateway',
+				],
+			},
+			{
+				label: 'Entities & visualization',
+				collapsed: true,
+				items: [
+					'docs/edge/user-guide/device-connectivity',
+					'docs/edge/user-guide/device-management',
+					'docs/edge/user-guide/asset-management',
+					'docs/edge/user-guide/provision-customers-and-users',
+					'docs/edge/user-guide/ota-updates',
+					'docs/edge/user-guide/dashboards',
+				],
+			},
+			{
+				label: 'Attributes & telemetry',
+				collapsed: true,
+				items: [
+					'docs/edge/user-guide/attributes',
+					'docs/edge/user-guide/telemetry-synchronization',
+					'docs/edge/user-guide/attribute-sync',
+				],
+			},
+			{
+				label: 'Data processing',
+				collapsed: true,
+				items: [
+					'docs/edge/user-guide/rule-chain-templates',
+					'docs/edge/user-guide/rpc',
+					'docs/edge/user-guide/manage-alarms',
+					'docs/edge/user-guide/queues',
+				],
+			},
+			{
+				label: 'Troubleshooting',
+				collapsed: true,
+				items: [
+					'docs/edge/user-guide/edge-status-events',
+					'docs/edge/user-guide/logs',
+					'docs/edge/user-guide/grpc-keepalive',
+					'docs/edge/user-guide/message-statistics',
+					'docs/edge/user-guide/prometheus-metrics',
+				],
+			},
+			{
+				label: 'Releases',
+				collapsed: true,
+				items: [
+					{ label: 'Releases table', slug: 'docs/edge/releases/releases-table' },
+					'docs/edge/releases/release-policy',
+					'docs/edge/releases/roadmap',
+				],
+			},
+		],
 	},
 ];
 
@@ -1497,7 +1575,12 @@ export const edgePeSidebar: SidebarConfig = [
 			{
 				label: 'Key concepts',
 				items: [
-					'docs/edge/pe/key-concepts/edge-management',
+					'docs/edge/pe/key-concepts/edge-instance',
+					'docs/edge/pe/key-concepts/entities',
+					'docs/edge/pe/key-concepts/telemetry-synchronization',
+					'docs/edge/pe/key-concepts/attributes',
+					'docs/edge/pe/key-concepts/data-processing',
+					'docs/edge/pe/key-concepts/alarms',
 				],
 			},
 		],
@@ -1505,6 +1588,79 @@ export const edgePeSidebar: SidebarConfig = [
 	{
 		label: 'Installation',
 		items: edgeInstallationItems('docs/edge/pe'),
+	},
+	{
+		label: 'Guides',
+		items: [
+			{
+				label: 'Edge configuration',
+				collapsed: true,
+				items: [
+					'docs/edge/pe/user-guide/edge-management',
+					{
+						label: 'Connect Edge behind a proxy',
+						collapsed: true,
+						items: [
+							'docs/edge/pe/user-guide/edge-proxy/debian',
+							'docs/edge/pe/user-guide/edge-proxy/docker',
+						],
+					},
+					'docs/edge/pe/user-guide/grpc-ssl',
+					'docs/edge/pe/user-guide/iot-gateway',
+				],
+			},
+			{
+				label: 'Entities & visualization',
+				collapsed: true,
+				items: [
+					'docs/edge/pe/user-guide/device-connectivity',
+					'docs/edge/pe/user-guide/device-management',
+					'docs/edge/pe/user-guide/asset-management',
+					'docs/edge/pe/user-guide/provision-customers-and-users',
+					'docs/edge/pe/user-guide/ota-updates',
+					'docs/edge/pe/user-guide/dashboards',
+				],
+			},
+			{
+				label: 'Attributes & telemetry',
+				collapsed: true,
+				items: [
+					'docs/edge/pe/user-guide/attributes',
+					'docs/edge/pe/user-guide/telemetry-synchronization',
+					'docs/edge/pe/user-guide/attribute-sync',
+				],
+			},
+			{
+				label: 'Data processing',
+				collapsed: true,
+				items: [
+					'docs/edge/pe/user-guide/rule-chain-templates',
+					'docs/edge/pe/user-guide/rpc',
+					'docs/edge/pe/user-guide/manage-alarms',
+					'docs/edge/pe/user-guide/queues',
+				],
+			},
+			{
+				label: 'Troubleshooting',
+				collapsed: true,
+				items: [
+					'docs/edge/pe/user-guide/edge-status-events',
+					'docs/edge/pe/user-guide/logs',
+					'docs/edge/pe/user-guide/grpc-keepalive',
+					'docs/edge/pe/user-guide/message-statistics',
+					'docs/edge/pe/user-guide/prometheus-metrics',
+				],
+			},
+			{
+				label: 'Releases',
+				collapsed: true,
+				items: [
+					{ label: 'Releases table', slug: 'docs/edge/pe/releases/releases-table' },
+					'docs/edge/pe/releases/release-policy',
+					'docs/edge/pe/releases/roadmap',
+				],
+			},
+		],
 	},
 ];
 
