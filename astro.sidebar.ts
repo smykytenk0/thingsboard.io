@@ -1933,8 +1933,18 @@ export const peSidebarTabLinks: SidebarTabLinks = {
 	'Reference': '/docs/pe/reference/',
 };
 
-export const paasSidebarTabLinks: SidebarTabLinks = {};
-export const paasEuSidebarTabLinks: SidebarTabLinks = {};
+export const paasSidebarTabLinks: SidebarTabLinks = {
+	'Getting Started': '/docs/paas/',
+	'Guides': '/docs/paas/user-guide/',
+	'APIs & SDKs': '/docs/paas/reference/apis-and-sdks/',
+	'Reference': '/docs/paas/reference/',
+};
+export const paasEuSidebarTabLinks: SidebarTabLinks = {
+	'Getting Started': '/docs/paas/eu/',
+	'Guides': '/docs/paas/eu/user-guide/',
+	'APIs & SDKs': '/docs/paas/eu/reference/apis-and-sdks/',
+	'Reference': '/docs/paas/eu/reference/',
+};
 export const edgeSidebarTabLinks: SidebarTabLinks = {};
 export const edgePeSidebarTabLinks: SidebarTabLinks = {};
 export const gwSidebarTabLinks: SidebarTabLinks = {
