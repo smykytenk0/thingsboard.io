@@ -92,19 +92,19 @@ const { href, text = 'Read more', ariaLabel, variant = 'default', class: classNa
 			}
 		}
 
-		// PE variant – green
+		// PE variant – accessible dark green (5.89:1 on white)
 		&--pe {
-			color: $color-pe;
+			color: $color-pe-link;
 
 			.arrow {
-				color: $color-pe;
+				color: $color-pe-link;
 			}
 
 			&:hover {
-				color: $color-pe-hover;
+				color: $color-pe-dark;
 
 				.arrow {
-					color: $color-pe-hover;
+					color: $color-pe-dark;
 				}
 			}
 		}
