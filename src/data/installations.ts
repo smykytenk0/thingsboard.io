@@ -569,7 +569,7 @@ export const products: ProductData[] = [
 				},
 				{
 					title: 'Detection Anomalies',
-					href: '/docs/trendz/anomaly/anomaly-detection-overview/',
+					href: '/docs/trendz/anomaly/overview/',
 					description:
 						'Detect anomalies with automated tools based on built-in machine learning algorithms. Prioritise them and focus on real problems with anomaly scoring.',
 				},
