@@ -121,6 +121,7 @@ const guideItems = (prefix: string, { isPE = false } = {}) => [
 			`${prefix}/local-ai-ollama`,
 			`${prefix}/mcp-server`,
 			`${prefix}/n8n-node`,
+			`${prefix}/cli`,
 		],
 	},
 	{
@@ -483,9 +484,15 @@ const apisAndSdksItems = (prefix: string) => [
 		],
 	},
 	{
-		label: 'Server-side REST Clients',
+		label: 'Clients & CLI',
 		collapsed: true,
-		items: [`${prefix}/reference/java-rest-client`, `${prefix}/reference/python-rest-client`],
+		items: [
+			// Using slug-based entries (not raw `link:`) so the per-version sidebar filter in
+			// routeData.ts keeps each entry inside its own sidebar only — avoids cross-sidebar duplication.
+			`${prefix}/user-guide/cli`,
+			`${prefix}/reference/java-client`,
+			`${prefix}/reference/python-client`,
+		],
 	},
 	{
 		label: 'Mobile',
@@ -1864,6 +1871,7 @@ export const paasSidebar: SidebarConfig = [
 					'docs/paas/user-guide/local-ai-ollama',
 					'docs/paas/user-guide/mcp-server',
 					'docs/paas/user-guide/n8n-node',
+					'docs/paas/user-guide/cli',
 				],
 			},
 			{
@@ -2209,6 +2217,7 @@ export const paasEuSidebar: SidebarConfig = [
 					'docs/paas/eu/user-guide/local-ai-ollama',
 					'docs/paas/eu/user-guide/mcp-server',
 					'docs/paas/eu/user-guide/n8n-node',
+					'docs/paas/eu/user-guide/cli',
 				],
 			},
 			{
@@ -2599,9 +2608,13 @@ export const edgeSidebar: SidebarConfig = [
 				],
 			},
 			{
-				label: 'Server-side REST Clients',
+				label: 'Clients & CLI',
 				collapsed: true,
-				items: ['docs/edge/reference/java-rest-client', 'docs/edge/reference/python-rest-client'],
+				items: [
+					'docs/edge/user-guide/cli',
+					'docs/edge/reference/java-client',
+					'docs/edge/reference/python-client',
+				],
 			},
 			{
 				label: 'MCP Server',
@@ -3036,11 +3049,12 @@ export const edgePeSidebar: SidebarConfig = [
 				],
 			},
 			{
-				label: 'Server-side REST Clients',
+				label: 'Clients & CLI',
 				collapsed: true,
 				items: [
-					'docs/edge/pe/reference/java-rest-client',
-					'docs/edge/pe/reference/python-rest-client',
+					'docs/edge/pe/user-guide/cli',
+					'docs/edge/pe/reference/java-client',
+					'docs/edge/pe/reference/python-client',
 				],
 			},
 			{
