@@ -1622,7 +1622,16 @@ const mainSidebarItems = (
 	},
 	{
 		label: 'Build with AI',
-		link: `${prefix}/iot-solutions-with-ai`,
+		items: [
+			`${prefix}/iot-solutions-with-ai`,
+			`${prefix}/user-guide/cli`,
+			`${prefix}/user-guide/ai-solution-creator`,
+			`${prefix}/user-guide/ai-assistant`,
+			`${prefix}/user-guide/ai-models`,
+			`${prefix}/user-guide/local-ai-ollama`,
+			`${prefix}/user-guide/mcp-server`,
+			`${prefix}/user-guide/n8n-node`,
+		],
 	},
 	{
 		label: 'Recipes',
@@ -1993,7 +2002,16 @@ export const paasSidebar: SidebarConfig = [
 	},
 	{
 		label: 'Build with AI',
-		link: 'docs/paas/iot-solutions-with-ai',
+		items: [
+			'docs/paas/iot-solutions-with-ai',
+			'docs/paas/user-guide/cli',
+			'docs/paas/user-guide/ai-solution-creator',
+			'docs/paas/user-guide/ai-assistant',
+			'docs/paas/user-guide/ai-models',
+			'docs/paas/user-guide/local-ai-ollama',
+			'docs/paas/user-guide/mcp-server',
+			'docs/paas/user-guide/n8n-node',
+		],
 	},
 	{
 		label: 'Recipes',
@@ -2349,7 +2367,16 @@ export const paasEuSidebar: SidebarConfig = [
 	},
 	{
 		label: 'Build with AI',
-		link: 'docs/paas/eu/iot-solutions-with-ai',
+		items: [
+			'docs/paas/eu/iot-solutions-with-ai',
+			'docs/paas/eu/user-guide/cli',
+			'docs/paas/eu/user-guide/ai-solution-creator',
+			'docs/paas/eu/user-guide/ai-assistant',
+			'docs/paas/eu/user-guide/ai-models',
+			'docs/paas/eu/user-guide/local-ai-ollama',
+			'docs/paas/eu/user-guide/mcp-server',
+			'docs/paas/eu/user-guide/n8n-node',
+		],
 	},
 	{
 		label: 'Recipes',
@@ -4048,6 +4075,7 @@ export type SidebarTabLinks = Partial<Record<string, string>>;
 export const opensourceSidebarTabLinks: SidebarTabLinks = {
 	'Getting Started': '/docs/',
 	Guides: '/docs/user-guide/',
+	'Build with AI': '/docs/iot-solutions-with-ai/',
 	Recipes: '/docs/recipes/',
 	Installation: '/docs/installation/',
 	'APIs & SDKs': '/docs/apis-and-sdks/',
@@ -4056,6 +4084,7 @@ export const opensourceSidebarTabLinks: SidebarTabLinks = {
 export const peSidebarTabLinks: SidebarTabLinks = {
 	'Getting Started': '/docs/pe/',
 	Guides: '/docs/pe/user-guide/',
+	'Build with AI': '/docs/pe/iot-solutions-with-ai/',
 	Recipes: '/docs/pe/recipes/',
 	Installation: '/docs/pe/installation/',
 	'APIs & SDKs': '/docs/pe/apis-and-sdks/',
@@ -4065,6 +4094,7 @@ export const peSidebarTabLinks: SidebarTabLinks = {
 export const paasSidebarTabLinks: SidebarTabLinks = {
 	'Getting Started': '/docs/paas/',
 	Guides: '/docs/paas/user-guide/',
+	'Build with AI': '/docs/paas/iot-solutions-with-ai/',
 	Recipes: '/docs/paas/recipes/',
 	'APIs & SDKs': '/docs/paas/apis-and-sdks/',
 	Reference: '/docs/paas/reference/',
@@ -4072,6 +4102,7 @@ export const paasSidebarTabLinks: SidebarTabLinks = {
 export const paasEuSidebarTabLinks: SidebarTabLinks = {
 	'Getting Started': '/docs/paas/eu/',
 	Guides: '/docs/paas/eu/user-guide/',
+	'Build with AI': '/docs/paas/eu/iot-solutions-with-ai/',
 	Recipes: '/docs/paas/eu/recipes/',
 	'APIs & SDKs': '/docs/paas/eu/apis-and-sdks/',
 	Reference: '/docs/paas/eu/reference/',
