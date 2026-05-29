@@ -112,19 +112,6 @@ const guideItems = (prefix: string, { isPE = false } = {}) => [
 		],
 	},
 	{
-		label: 'AI',
-		collapsed: true,
-		items: [
-			`${prefix}/ai-models`,
-			`${prefix}/ai-solution-creator`,
-			`${prefix}/ai-predictive-maintenance`,
-			`${prefix}/local-ai-ollama`,
-			`${prefix}/mcp-server`,
-			`${prefix}/n8n-node`,
-			`${prefix}/cli`,
-		],
-	},
-	{
 		label: 'Integrations',
 		collapsed: true,
 		items: [
@@ -1623,15 +1610,34 @@ const mainSidebarItems = (
 	{
 		label: 'Build with AI',
 		items: [
-			`${prefix}/iot-solutions-with-ai`,
-			`${prefix}/user-guide/cli`,
+			{
+				label: 'ThingsBoard CLI',
+				collapsed: false,
+				items: [
+					`${prefix}/user-guide/cli`,
+					`${prefix}/user-guide/cli-solutions`,
+					`${prefix}/user-guide/cli-extensions`,
+				],
+			},
 			`${prefix}/user-guide/ai-solution-creator`,
 			`${prefix}/user-guide/ai-assistant`,
-			`${prefix}/user-guide/ai-models`,
-			`${prefix}/user-guide/ai-predictive-maintenance`,
-			`${prefix}/user-guide/local-ai-ollama`,
-			`${prefix}/user-guide/mcp-server`,
-			`${prefix}/user-guide/n8n-node`,
+			{
+				label: 'Process IoT Data with AI',
+				collapsed: false,
+				items: [
+					`${prefix}/user-guide/ai-models`,
+					`${prefix}/user-guide/local-ai-ollama`,
+					`${prefix}/user-guide/ai-predictive-maintenance`,
+				],
+			},
+			{
+				label: 'Workflow Automation',
+				collapsed: false,
+				items: [
+					`${prefix}/user-guide/mcp-server`,
+					`${prefix}/user-guide/n8n-node`,
+				],
+			},
 		],
 	},
 	{
@@ -1876,19 +1882,6 @@ export const paasSidebar: SidebarConfig = [
 				],
 			},
 			{
-				label: 'AI',
-				collapsed: true,
-				items: [
-					'docs/paas/user-guide/ai-models',
-					'docs/paas/user-guide/ai-solution-creator',
-					'docs/paas/user-guide/ai-predictive-maintenance',
-					'docs/paas/user-guide/local-ai-ollama',
-					'docs/paas/user-guide/mcp-server',
-					'docs/paas/user-guide/n8n-node',
-					'docs/paas/user-guide/cli',
-				],
-			},
-			{
 				label: 'Integrations',
 				collapsed: true,
 				items: [
@@ -2004,15 +1997,34 @@ export const paasSidebar: SidebarConfig = [
 	{
 		label: 'Build with AI',
 		items: [
-			'docs/paas/iot-solutions-with-ai',
-			'docs/paas/user-guide/cli',
+			{
+				label: 'ThingsBoard CLI',
+				collapsed: false,
+				items: [
+					'docs/paas/user-guide/cli',
+					'docs/paas/user-guide/cli-solutions',
+					'docs/paas/user-guide/cli-extensions',
+				],
+			},
 			'docs/paas/user-guide/ai-solution-creator',
 			'docs/paas/user-guide/ai-assistant',
-			'docs/paas/user-guide/ai-models',
-			'docs/paas/user-guide/ai-predictive-maintenance',
-			'docs/paas/user-guide/local-ai-ollama',
-			'docs/paas/user-guide/mcp-server',
-			'docs/paas/user-guide/n8n-node',
+			{
+				label: 'Process IoT Data with AI',
+				collapsed: false,
+				items: [
+					'docs/paas/user-guide/ai-models',
+					'docs/paas/user-guide/local-ai-ollama',
+					'docs/paas/user-guide/ai-predictive-maintenance',
+				],
+			},
+			{
+				label: 'Workflow Automation',
+				collapsed: false,
+				items: [
+					'docs/paas/user-guide/mcp-server',
+					'docs/paas/user-guide/n8n-node',
+				],
+			},
 		],
 	},
 	{
@@ -2236,19 +2248,6 @@ export const paasEuSidebar: SidebarConfig = [
 				],
 			},
 			{
-				label: 'AI',
-				collapsed: true,
-				items: [
-					'docs/paas/eu/user-guide/ai-models',
-					'docs/paas/eu/user-guide/ai-solution-creator',
-					'docs/paas/eu/user-guide/ai-predictive-maintenance',
-					'docs/paas/eu/user-guide/local-ai-ollama',
-					'docs/paas/eu/user-guide/mcp-server',
-					'docs/paas/eu/user-guide/n8n-node',
-					'docs/paas/eu/user-guide/cli',
-				],
-			},
-			{
 				label: 'Integrations',
 				collapsed: true,
 				items: [
@@ -2370,15 +2369,34 @@ export const paasEuSidebar: SidebarConfig = [
 	{
 		label: 'Build with AI',
 		items: [
-			'docs/paas/eu/iot-solutions-with-ai',
-			'docs/paas/eu/user-guide/cli',
+			{
+				label: 'ThingsBoard CLI',
+				collapsed: false,
+				items: [
+					'docs/paas/eu/user-guide/cli',
+					'docs/paas/eu/user-guide/cli-solutions',
+					'docs/paas/eu/user-guide/cli-extensions',
+				],
+			},
 			'docs/paas/eu/user-guide/ai-solution-creator',
 			'docs/paas/eu/user-guide/ai-assistant',
-			'docs/paas/eu/user-guide/ai-models',
-			'docs/paas/eu/user-guide/ai-predictive-maintenance',
-			'docs/paas/eu/user-guide/local-ai-ollama',
-			'docs/paas/eu/user-guide/mcp-server',
-			'docs/paas/eu/user-guide/n8n-node',
+			{
+				label: 'Process IoT Data with AI',
+				collapsed: false,
+				items: [
+					'docs/paas/eu/user-guide/ai-models',
+					'docs/paas/eu/user-guide/local-ai-ollama',
+					'docs/paas/eu/user-guide/ai-predictive-maintenance',
+				],
+			},
+			{
+				label: 'Workflow Automation',
+				collapsed: false,
+				items: [
+					'docs/paas/eu/user-guide/mcp-server',
+					'docs/paas/eu/user-guide/n8n-node',
+				],
+			},
 		],
 	},
 	{
