@@ -89,7 +89,7 @@
 		gap: 16px;
 		width: 100%;
 
-		@include trendz-up(sm) {
+		@include trendz-up(md) {
 			flex-direction: row;
 			justify-content: center;
 			align-items: center;
@@ -115,6 +115,11 @@
 			border-color 0.3s;
 		border: 1.5px solid #fff;
 		box-sizing: border-box;
+
+		@include trendz-down(xs) {
+			padding-left: 16px;
+			padding-right: 16px;
+		}
 
 		&--primary {
 			background: #fff;

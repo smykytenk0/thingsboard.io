@@ -208,6 +208,11 @@ const sphereImg = await getImage({
 			border-color: var(--color-trendz-accent-hover);
 			color: #ffffff;
 		}
+
+		@include trendz-down(xs) {
+			padding-left: 16px;
+			padding-right: 16px;
+		}
 	}
 
 	.btn-outline {
@@ -232,6 +237,11 @@ const sphereImg = await getImage({
 			background: var(--color-trendz-accent);
 			color: #ffffff;
 		}
+
+		@include trendz-down(xs) {
+			padding-left: 16px;
+			padding-right: 16px;
+		}
 	}
 
 	// Heading slides in from left on page load (matches Animate.css fadeInLeft)
@@ -242,7 +252,20 @@ const sphereImg = await getImage({
 		animation-fill-mode: both;
 	}
 
-	// 600px+ — hero image visible below content, buttons go horizontal
+	@include trendz-down(xs) {
+		#trendz-hero .hero-container #hero-content {
+			align-items: center;
+			text-align: center;
+			
+			padding: 20px 0;
+
+			:global(.trendz-chip) {
+				margin-left: auto;
+				margin-right: auto;
+			}
+		}
+	}
+
 	@include trendz-up(sm) {
 		#trendz-hero .hero-container {
 			margin: 0 40px;
@@ -253,16 +276,6 @@ const sphereImg = await getImage({
 
 				.pe-subTitle {
 					margin-bottom: 40px;
-				}
-
-				.btn-block {
-					padding: 0;
-					flex-direction: row;
-					width: unset;
-
-					div {
-						width: unset;
-					}
 				}
 			}
 
@@ -291,14 +304,6 @@ const sphereImg = await getImage({
 				right: 10%;
 			}
 		}
-
-		.btn-accent {
-			width: auto;
-		}
-
-		.btn-outline {
-			width: auto;
-		}
 	}
 
 	// 960px+ — max-width container, larger fonts, more icons appear
@@ -307,6 +312,18 @@ const sphereImg = await getImage({
 			margin: auto;
 			width: calc(100% - 100px);
 			max-width: 1200px;
+
+			#hero-content {
+				.btn-block {
+					padding: 0;
+					flex-direction: row;
+					width: unset;
+
+					div {
+						width: unset;
+					}
+				}
+			}
 
 			.hero-image {
 				padding: 12% 4% 10% 4%;
@@ -347,6 +364,14 @@ const sphereImg = await getImage({
 				bottom: 20%;
 				right: 0;
 			}
+		}
+
+		.btn-accent {
+			width: auto;
+		}
+
+		.btn-outline {
+			width: auto;
 		}
 	}
 
