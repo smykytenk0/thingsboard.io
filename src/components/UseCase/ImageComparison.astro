@@ -5,9 +5,14 @@ interface Props {
 	baseImage: string;
 	baseImageAlt?: string;
 	baseImageTitle?: string;
-	overlayImage: string;
+	/** Required unless custom HTML is passed via the `overlay` slot */
+	overlayImage?: string;
 	overlayImageAlt?: string;
 	overlayImageTitle?: string;
+	/** Intrinsic size of the images (sets the aspect ratio before they load) */
+	width?: number;
+	height?: number;
+	class?: string;
 }
 
 const {
@@ -15,13 +20,26 @@ const {
 	baseImageAlt = 'Base image',
 	overlayImage,
 	overlayImageAlt = 'Overlay image',
+	width = 1920,
+	height = 1080,
+	class: className,
 } = Astro.props;
+
+const hasOverlaySlot = Astro.slots.has('overlay');
 ---
 
-<section class="uc-img-comparison" id="uc-comparison">
-	<SmartImage src={baseImage} alt={baseImageAlt} width={1920} height={1080} />
+<section class:list={['uc-img-comparison', className]} id="uc-comparison">
+	<SmartImage src={baseImage} alt={baseImageAlt} width={width} height={height} />
 	<div class="uc-img-overlay">
-		<SmartImage src={overlayImage} alt={overlayImageAlt} width={1920} height={1080} />
+		{
+			hasOverlaySlot ? (
+				<slot name="overlay" />
+			) : (
+				overlayImage && (
+					<SmartImage src={overlayImage} alt={overlayImageAlt} width={width} height={height} />
+				)
+			)
+		}
 	</div>
 	<div class="uc-img-slider"></div>
 </section>

@@ -1,0 +1,2019 @@
+---
+import UseCaseLayout from '../../layouts/UseCaseLayout.astro';
+import NButton from '../../components/Landing/NButton.astro';
+import ImageComparison from '../../components/UseCase/ImageComparison.astro';
+import SmartImage from '../../components/SmartImage.astro';
+import leadGlow from '~/assets/images/usecases/poc/custom-dev-lead-bg.svg';
+import glowPurple from '~/assets/images/usecases/poc/audience-glow-purple.svg';
+import glowBlue from '~/assets/images/usecases/poc/audience-glow-blue.svg';
+import glowYellow from '~/assets/images/usecases/poc/audience-glow-yellow.svg';
+
+const title = 'A working IoT application in 10 business days — for a fixed price';
+const description =
+	'One complete use case, built end to end: real data from your device or system, a clear operational interface, and automatic alerts when something needs attention. Complete for the agreed use case. Expandable when you need more.';
+
+const clientsDir = '/src/assets/images/usecases/poc/clients';
+const clients = [
+	{ name: 'Magenta Business', file: 'magenta-business.svg', width: 86, height: 25 },
+	{ name: 'Super Bock Group', file: 'super-bock-group.svg', width: 79, height: 35 },
+	{ name: 'Kalitec', file: 'kalitec.svg', width: 94, height: 25 },
+	{ name: 'Suessco', file: 'suessco.svg', width: 119, height: 21 },
+	{ name: 'OXI', file: 'oxi.svg', width: 57, height: 21 },
+	{ name: 'IONA Tech', file: 'iona-tech-logo.svg', width: 83, height: 27 },
+	{ name: 'ASG Tech', file: 'asg-tech.svg', width: 169, height: 31 },
+];
+
+// Icons are Material Icons (24px viewBox): build, engineering, hub
+const audience = [
+	{
+		title: 'Turn device data into something people can use',
+		text: 'Your hardware already produces the data. We turn it into a working application where customers or operators can see readings, review history, receive alerts and access the information they need.',
+		glow: glowPurple,
+		icon: [
+			'M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z',
+		],
+	},
+	{
+		title: 'See what is happening across your equipment',
+		text: 'Bring the data from your machines, sites or assets into one application. See current conditions, spot problems, review what happened and give the right people access.',
+		glow: glowBlue,
+		icon: [
+			'M9,15c-2.67,0-8,1.34-8,4v2h16v-2C17,16.34,11.67,15,9,15z',
+			'M22.1,6.84c0.01-0.11,0.02-0.22,0.02-0.34c0-0.12-0.01-0.23-0.03-0.34l0.74-0.58c0.07-0.05,0.08-0.15,0.04-0.22l-0.7-1.21 c-0.04-0.08-0.14-0.1-0.21-0.08L21.1,4.42c-0.18-0.14-0.38-0.25-0.59-0.34l-0.13-0.93C20.36,3.06,20.29,3,20.2,3h-1.4 c-0.09,0-0.16,0.06-0.17,0.15L18.5,4.08c-0.21,0.09-0.41,0.21-0.59,0.34l-0.87-0.35c-0.08-0.03-0.17,0-0.21,0.08l-0.7,1.21 c-0.04,0.08-0.03,0.17,0.04,0.22l0.74,0.58c-0.02,0.11-0.03,0.23-0.03,0.34c0,0.11,0.01,0.23,0.03,0.34l-0.74,0.58 c-0.07,0.05-0.08,0.15-0.04,0.22l0.7,1.21c0.04,0.08,0.14,0.1,0.21,0.08l0.87-0.35c0.18,0.14,0.38,0.25,0.59,0.34l0.13,0.93 C18.64,9.94,18.71,10,18.8,10h1.4c0.09,0,0.16-0.06,0.17-0.15l0.13-0.93c0.21-0.09,0.41-0.21,0.59-0.34l0.87,0.35 c0.08,0.03,0.17,0,0.21-0.08l0.7-1.21c0.04-0.08,0.03-0.17-0.04-0.22L22.1,6.84z M19.5,7.75c-0.69,0-1.25-0.56-1.25-1.25 s0.56-1.25,1.25-1.25s1.25,0.56,1.25,1.25S20.19,7.75,19.5,7.75z',
+			'M19.92,11.68l-0.5-0.87c-0.03-0.06-0.1-0.08-0.15-0.06l-0.62,0.25c-0.13-0.1-0.27-0.18-0.42-0.24l-0.09-0.66 C18.12,10.04,18.06,10,18,10h-1c-0.06,0-0.11,0.04-0.12,0.11l-0.09,0.66c-0.15,0.06-0.29,0.15-0.42,0.24l-0.62-0.25 c-0.06-0.02-0.12,0-0.15,0.06l-0.5,0.87c-0.03,0.06-0.02,0.12,0.03,0.16l0.53,0.41c-0.01,0.08-0.02,0.16-0.02,0.24 c0,0.08,0.01,0.17,0.02,0.24l-0.53,0.41c-0.05,0.04-0.06,0.11-0.03,0.16l0.5,0.87c0.03,0.06,0.1,0.08,0.15,0.06l0.62-0.25 c0.13,0.1,0.27,0.18,0.42,0.24l0.09,0.66C16.89,14.96,16.94,15,17,15h1c0.06,0,0.12-0.04,0.12-0.11l0.09-0.66 c0.15-0.06,0.29-0.15,0.42-0.24l0.62,0.25c0.06,0.02,0.12,0,0.15-0.06l0.5-0.87c0.03-0.06,0.02-0.12-0.03-0.16l-0.52-0.41 c0.01-0.08,0.02-0.16,0.02-0.24c0-0.08-0.01-0.17-0.02-0.24l0.53-0.41C19.93,11.81,19.94,11.74,19.92,11.68z M17.5,13.33 c-0.46,0-0.83-0.38-0.83-0.83c0-0.46,0.38-0.83,0.83-0.83s0.83,0.38,0.83,0.83C18.33,12.96,17.96,13.33,17.5,13.33z',
+			'M4.74,9h8.53c0.27,0,0.49-0.22,0.49-0.49V8.49c0-0.27-0.22-0.49-0.49-0.49H13c0-1.48-0.81-2.75-2-3.45V5.5 C11,5.78,10.78,6,10.5,6S10,5.78,10,5.5V4.14C9.68,4.06,9.35,4,9,4S8.32,4.06,8,4.14V5.5C8,5.78,7.78,6,7.5,6S7,5.78,7,5.5V4.55 C5.81,5.25,5,6.52,5,8H4.74C4.47,8,4.25,8.22,4.25,8.49v0.03C4.25,8.78,4.47,9,4.74,9z',
+			'M9,13c1.86,0,3.41-1.28,3.86-3H5.14C5.59,11.72,7.14,13,9,13z',
+		],
+	},
+	{
+		title: 'Make the complete product experience real',
+		text: 'You know what the product should let people see, know or do. We establish the data flow and build the application around that use case — so you can put a complete, working experience in front of customers or stakeholders.',
+		glow: glowYellow,
+		icon: [
+			'M8.4,18.2C8.78,18.7,9,19.32,9,20c0,1.66-1.34,3-3,3s-3-1.34-3-3s1.34-3,3-3c0.44,0,0.85,0.09,1.23,0.26l1.41-1.77 c-0.92-1.03-1.29-2.39-1.09-3.69l-2.03-0.68C4.98,11.95,4.06,12.5,3,12.5c-1.66,0-3-1.34-3-3s1.34-3,3-3s3,1.34,3,3 c0,0.07,0,0.14-0.01,0.21l2.03,0.68c0.64-1.21,1.82-2.09,3.22-2.32l0-2.16C9.96,5.57,9,4.4,9,3c0-1.66,1.34-3,3-3s3,1.34,3,3 c0,1.4-0.96,2.57-2.25,2.91v2.16c1.4,0.23,2.58,1.11,3.22,2.32l2.03-0.68C18,9.64,18,9.57,18,9.5c0-1.66,1.34-3,3-3s3,1.34,3,3 s-1.34,3-3,3c-1.06,0-1.98-0.55-2.52-1.37l-2.03,0.68c0.2,1.29-0.16,2.65-1.09,3.69l1.41,1.77C17.15,17.09,17.56,17,18,17 c1.66,0,3,1.34,3,3s-1.34,3-3,3s-3-1.34-3-3c0-0.68,0.22-1.3,0.6-1.8l-1.41-1.77c-1.35,0.75-3.01,0.76-4.37,0L8.4,18.2z',
+		],
+	},
+];
+
+const journeySteps = [
+	{
+		title: 'How to connect the data?',
+		text: 'How does data get from the device or existing system into the application?',
+	},
+	{
+		title: 'How to make it useful?',
+		text: 'How should someone see the current state and what happened over time?',
+	},
+	{
+		title: 'How to handle problems?',
+		text: 'What should happen when a value crosses a limit or a device stops reporting?',
+	},
+	{
+		title: 'How to give people access?',
+		text: 'Who needs to see what — and what should they be able to do?',
+	},
+	{
+		title: 'How to keep it running?',
+		text: 'Where does it live, how is it managed and what does it cost to operate?',
+	},
+];
+
+const timelineDays = Array.from({ length: 11 }, (_, day) => day);
+const timeline = [
+	{ task: 'Kickoff & scope', start: 0, end: 0 },
+	{ task: 'Development environment', start: 1, end: 2 },
+	{ task: 'Real data flowing', start: 3, end: 4 },
+	{ task: 'Working interface', start: 5, end: 6 },
+	{ task: 'Users & permissions', start: 7, end: 7 },
+	{ task: 'Alerts, actions & reports', start: 8, end: 8 },
+	{ task: 'Deployment & QA', start: 9, end: 9 },
+	{ task: 'Handover', start: 10, end: 10 },
+];
+
+const deliverables = [
+	{
+		title: 'Your data flowing in',
+		text: 'Your device, gateway, API or existing system connected, with readings normalized, stored and available to work with.',
+	},
+	{
+		title: 'One live view of everything',
+		text: 'A unified screen showing the current state across all your assets, with the numbers that matter to your operation on top.',
+	},
+	{
+		title: 'Detail and history',
+		text: 'Open any asset or device to see live values and how they behaved over time, so people can tell a spike from a trend.',
+	},
+	{
+		title: 'Alerts that reach people',
+		text: 'Limits your team can adjust from the interface, and in-app plus email notifications when something needs attention.',
+	},
+	{
+		title: 'The right access with control permission',
+		text: 'Roles so customers, operators and admins each see only what they should — plus controls to send a command back to the device.',
+	},
+	{
+		title: 'Yours to run',
+		text: 'Everything we build is transferred into your ownership. It runs in your own environment and it belongs to you.',
+	},
+];
+
+// Material Icons (24px viewBox)
+const iconCheck = 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z';
+const iconInfo =
+	'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z';
+
+const gettingStarted = [
+	{
+		title: 'A device or data source',
+		text: 'A device, sensor, API or other accessible source of data.',
+		glow: 'blue',
+	},
+	{
+		title: 'One clear use case',
+		text: 'What should someone be able to see, know or do when this is working?',
+		glow: 'yellow',
+	},
+	{
+		title: '30–60 minutes for kickoff',
+		text: 'Bring the person who understands the product, equipment and users.',
+		glow: 'purple',
+	},
+];
+
+const priceHighlights = ['Fixed price', '10 business days', 'One complete use case'];
+// Two independent columns, as in the design (items don't line up across columns)
+const priceIncluded = [
+	[
+		{ text: 'A working application covering one complete use case' },
+		{ text: 'Kickoff workshop with the scope locked in writing' },
+		{ text: 'Direct line to the engineers building it, with progress you can see as it lands' },
+	],
+	[
+		{ text: 'White-labeling: your colors, logo, and login screen', footnote: true },
+		{ text: 'Validated / not-validated summary and documented limitations' },
+		{ text: 'Handover of configs, rule chains, and dashboards' },
+	],
+];
+
+const fitGood = [
+	'You already have a device, equipment, API or accessible source of data.',
+	'You can explain the one problem the application needs to solve',
+	'You need a monitoring, customer-facing or operational application around that use case',
+	'You want something complete now, with the option to expand later',
+];
+const fitOther = [
+	'The hardware or communication protocol is still being designed.',
+	'Several major workflows or integrations need to land together.',
+	'You are planning a multi-system or enterprise-wide rollout.',
+	'The outcome is bigger than one focused use case.',
+];
+
+const scopeStats = [
+	{ value: '8x', text: 'faster than greenfield — an eight-month MVP pattern delivered in about one month' },
+	{ value: '70%', text: 'of the interface built by configuration, not custom code' },
+	{ value: '40-50%', text: 'of configuration reused across engagements' },
+	{ value: '100+', text: 'client engagements behind this fixed scope' },
+];
+
+// Roboto Bold “ and ” outlines, scaled to the design's 81×64 quote marks
+const quoteMarks = {
+	open: 'M28.0 64L0 64L0 45.6Q0 37.6 3.1 29.0Q6.2 20.5 11.2 12.9Q16.3 5.3 22.4 0L22.4 0L38.9 9.6Q34.5 17.1 31.3 25.6Q28.0 34.1 28.0 45.6L28.0 45.6L28.0 64ZM70.1 64L42.0 64L42.0 45.6Q42.0 37.6 45.1 29.0Q48.2 20.5 53.3 12.9Q58.3 5.3 64.4 0L64.4 0L80.9 9.6Q76.5 17.1 73.3 25.6Q70.1 34.1 70.1 45.6L70.1 45.6L70.1 64Z',
+	close: 'M10.9-0.0L38.7-0.0L38.7 18.7Q38.7 26.7 35.7 35.1Q32.7 43.6 27.6 51.2Q22.6 58.7 16.6 64.0L16.6 64.0L0 54.4Q4.5 47.2 7.7 38.6Q10.9 30.1 10.9 18.8L10.9 18.8L10.9-0.0ZM53.3-0.0L81.1-0.0L81.1 18.7Q81.1 26.7 78.1 35.1Q75.1 43.6 70.0 51.2Q65.0 58.7 59.0 64.0L59.0 64.0L42.4 54.4Q46.9 47.2 50.1 38.6Q53.3 30.1 53.3 18.8L53.3 18.8L53.3-0.0Z',
+};
+const testimonialsDir = '/src/assets/images/usecases/poc/testimonials';
+const testimonials = [
+	{
+		quote: 'The fixed-price, fast delivery approach worked perfectly for us.',
+		name: 'Tamati Iro',
+		role: 'VAS Manager',
+		avatar: 'tamati-iro.svg',
+		company: 'Vodafone',
+		logo: 'vodafone.svg',
+		logoWidth: 98,
+		logoHeight: 25,
+		mark: 'open',
+	},
+	{
+		quote: 'Communication has been clear, responsive, and solution-oriented.',
+		name: 'Mario Garcia Torres',
+		role: 'R&D Director',
+		avatar: 'mario-garcia-torres.svg',
+		company: 'PoliGIoT',
+		logo: 'poligiot.svg',
+		logoWidth: 98,
+		logoHeight: 27,
+		mark: 'close',
+	},
+] as const;
+
+// Same case studies, images and figures as the Development Services page
+const deliveredCases = [
+	{
+		slug: 'schwarz',
+		tag: 'Retail & consumer service',
+		title: 'IoT in retail: how Schwarz Group accelerated digitalization with ThingsBoard',
+		image: '/images/case-studies/schwarz.webp',
+		logo: '/images/case-studies/schwarz.svg',
+		logoAlt: 'Schwarz logo',
+		logoWidth: 410,
+		logoHeight: 208,
+		logoDisplayHeight: 36,
+		stats: [
+			{ value: '500K+', label: 'Connected devices' },
+			{ value: '13K+', label: 'Stores' },
+			{ value: '32', label: 'Countries' },
+		],
+	},
+	{
+		slug: 'super-bock',
+		tag: 'Manufacturing',
+		title: 'Revolutionizing beer distribution: how ThingsBoard empowered Super Bock Group',
+		image: '/images/case-studies/super-bock-group.webp',
+		logo: '/images/case-studies/super-bock-group.svg',
+		logoAlt: 'Super Bock Group logo',
+		logoWidth: 126,
+		logoHeight: 56,
+		logoDisplayHeight: 36,
+		stats: [
+			{ value: '100%', label: 'Visibility of beer stock in real time' },
+			{ value: '90%', label: 'Reduction in manual operations' },
+			{ value: '3+', label: 'Integrated solutions' },
+		],
+	},
+	{
+		slug: 'awake',
+		tag: 'Equipment tracking',
+		title: 'Awake: unifying global rental operations with custom IoT solutions',
+		image: '/images/case-studies/awake.webp',
+		logo: '/images/case-studies/awake.svg',
+		logoAlt: 'Awake logo',
+		logoWidth: 402,
+		logoHeight: 59,
+		logoDisplayHeight: 20,
+		stats: [
+			{ value: '7', label: 'Years of experience on the market' },
+			{ value: '50+', label: 'Retailers managed under one system' },
+			{ value: '6', label: 'Solving challenges with data' },
+		],
+	},
+	{
+		slug: 'senseing',
+		tag: 'Logistic & Supply chain',
+		title: 'Transforming food logistics with IoT-powered temperature monitoring',
+		image: '/images/case-studies/senseing.webp',
+		logo: '/images/case-studies/senseing.svg',
+		logoAlt: 'SenseING GmbH logo',
+		logoWidth: 240,
+		logoHeight: 56,
+		logoDisplayHeight: 24,
+		stats: [
+			{ value: '100%', label: 'Automated temperature monitoring' },
+			{ value: '90%', label: 'Reduction in human error' },
+			{ value: '100+', label: 'Storage and transportation units' },
+		],
+	},
+];
+---
+
+<UseCaseLayout title={title} description={description} pageSlug="poc">
+	<section class="poc-hero">
+		<div class="poc-hero__content">
+			<h1 class="usecase-title poc-title">{title}</h1>
+			<p class="poc-description">{description}</p>
+			<NButton class="poc-cta">Talk to an expert</NButton>
+		</div>
+		<div class="poc-hero__media">
+			<img class="poc-hero__glow" src={leadGlow.src} alt="" aria-hidden="true" />
+			<SmartImage
+				class="poc-hero__lead"
+				src="/src/assets/images/usecases/poc/custom-development-lead.svg"
+				alt="Nizar Ali, Custom development lead: “You bring the product knowledge. We bring the IoT implementation experience.”"
+				width={418}
+				height={103}
+				loading="eager"
+			/>
+		</div>
+	</section>
+
+	<ImageComparison
+		class="poc-compare"
+		baseImage="/src/assets/images/usecases/poc/poc-dashboard.png"
+		baseImageAlt="ThingsBoard weather station dashboard with temperature, humidity, pressure and rainfall"
+		width={1440}
+		height={900}
+	>
+		<div slot="overlay" class="poc-compare__brief">
+			<div class="poc-brief">
+				<p class="poc-brief__subtitle">
+					Day 0 — your brief in plain words → Day 10 — the working application
+				</p>
+				<p class="poc-brief__quote">
+					“I need to monitor weather stations across the country in one place — see live
+					temperature, humidity, pressure and rainfall, check the trends, and get an alert when
+					rainfall exceeds the limit.”
+				</p>
+			</div>
+		</div>
+	</ImageComparison>
+
+	<section class="poc-clients">
+		<p class="poc-clients__caption">We created solutions for</p>
+		<ul class="poc-clients__logos">
+			{
+				clients.map((client) => (
+					<li>
+						<SmartImage
+							src={`${clientsDir}/${client.file}`}
+							alt={`${client.name} logo`}
+							width={client.width}
+							height={client.height}
+						/>
+					</li>
+				))
+			}
+		</ul>
+		<p class="poc-clients__caption">And more than 200 companies too</p>
+	</section>
+
+	<section class="poc-audience">
+		<h2 class="poc-section-title">Who is this proposal for?</h2>
+		<div class="poc-audience__cards">
+			{
+				audience.map((card) => (
+					<article class="poc-audience-card">
+						<img class="poc-audience-card__glow" src={card.glow.src} alt="" aria-hidden="true" />
+						<span class="poc-audience-card__icon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+								{card.icon.map((d) => (
+									<path d={d} />
+								))}
+							</svg>
+						</span>
+						<h3 class="poc-audience-card__title">{card.title}</h3>
+						<p class="poc-audience-card__text">{card.text}</p>
+					</article>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="poc-journey">
+		<h2 class="poc-section-title">A simple IoT use case turns into a software project</h2>
+		<ol class="poc-journey__steps">
+			<li class="poc-journey__step poc-journey__step--start">
+				<span class="poc-journey__marker" aria-hidden="true">
+					{/* Material Icons "outlined_flag" */}
+					<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+						<path d="M14 6l-1-2H5v17h2v-7h5l1 2h7V6h-6zm4 8h-4l-1-2H7V6h5l1 2h5v6z"></path>
+					</svg>
+				</span>
+				<div>
+					<p class="poc-journey__note">
+						I need to see these machines remotely, understand how they’re performing and know when
+						something goes wrong.
+					</p>
+					<p class="poc-journey__lead">
+						Between that sentence and the person who will actually use it, there is a whole path to
+						work out:
+					</p>
+				</div>
+			</li>
+			{
+				journeySteps.map((step) => (
+					<li class="poc-journey__step poc-journey__step--question">
+						<span class="poc-journey__marker" aria-hidden="true">
+							?
+						</span>
+						<div>
+							<h3 class="poc-journey__title">{step.title}</h3>
+							<p class="poc-journey__text">{step.text}</p>
+						</div>
+					</li>
+				))
+			}
+			<li class="poc-journey__step poc-journey__step--end">
+				<span class="poc-journey__marker" aria-hidden="true">
+					{/* Material Icons "flag" */}
+					<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+						<path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"></path>
+					</svg>
+				</span>
+				<p class="poc-journey__note">What started as one clear outcome becomes a software project.</p>
+			</li>
+		</ol>
+	</section>
+
+	<section class="poc-schedule">
+		<h2 class="poc-section-title">Ten business days, from kickoff to handover</h2>
+		<p class="poc-schedule__intro">
+			You bring the product knowledge. We bring the IoT implementation experience. We work through
+			the key decisions together, in regular contact across the ten days.
+		</p>
+		<div class="poc-timeline">
+			<table class="poc-timeline__table">
+				<caption class="visually-hidden">Project plan by business day</caption>
+				<thead>
+					<tr>
+						<th scope="col">Days</th>
+						{timelineDays.map((day) => <th scope="col">{day}</th>)}
+					</tr>
+				</thead>
+				<tbody>
+					{
+						timeline.map((row) => (
+							<tr>
+								<th scope="row">{row.task}</th>
+								{timelineDays.map((day) => (
+									<td>
+										{day === row.start && (
+											<span
+												class="poc-timeline__bar"
+												style={`--span: ${row.end - row.start + 1}`}
+											>
+												<span class="visually-hidden">
+													{row.start === row.end ? `Day ${row.start}` : `Days ${row.start}–${row.end}`}
+												</span>
+											</span>
+										)}
+									</td>
+								))}
+							</tr>
+						))
+					}
+				</tbody>
+			</table>
+		</div>
+	</section>
+
+	<section class="poc-deliverables">
+		<h2 class="poc-section-title">What you get on day 10</h2>
+		<p class="poc-deliverables__intro">
+			One complete use case, working end to end — described by what it does for the people using
+			it, not by a list of technical tasks.
+		</p>
+		<ol class="poc-deliverables__cards">
+			{
+				deliverables.map((item, i) => (
+					<li class="poc-deliverable">
+						<span class="poc-deliverable__number" aria-hidden="true">
+							{String(i + 1).padStart(2, '0')}
+						</span>
+						<h3 class="poc-deliverable__title">{item.title}</h3>
+						<p class="poc-deliverable__text">{item.text}</p>
+					</li>
+				))
+			}
+		</ol>
+	</section>
+
+	<section class="poc-cta-banner">
+		<h2 class="poc-cta-banner__title">Not sure your use case fits?</h2>
+		<p class="poc-cta-banner__text">
+			Tell us what you need to get working. We will say plainly whether ten days is enough for it.
+		</p>
+		<NButton class="poc-cta poc-cta--light">Talk to an expert</NButton>
+	</section>
+
+	<section class="poc-section">
+		<h2 class="poc-section-title poc-section-title--with-intro">Three things to get started</h2>
+		<p class="poc-section-intro" style="--intro-width: 640px">
+			You don’t need to arrive with an IoT architecture or ThingsBoard specification. Bring what
+			already exists and the outcome you want — we’ll work out the technical path together.
+		</p>
+		<ol class="poc-start__cards">
+			{
+				gettingStarted.map((item, i) => (
+					<li class:list={['poc-start-card', `poc-start-card--${item.glow}`]}>
+						<span class="poc-start-card__number" aria-hidden="true">
+							{String(i + 1).padStart(2, '0')}
+						</span>
+						<h3 class="poc-start-card__title">{item.title}</h3>
+						<p class="poc-start-card__text">{item.text}</p>
+					</li>
+				))
+			}
+		</ol>
+		<aside class="poc-note">
+			<span class="poc-note__icon" aria-hidden="true">
+				<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d={iconInfo} /></svg>
+			</span>
+			<div>
+				<h3 class="poc-note__title">No hardware available yet?</h3>
+				<p class="poc-note__text">
+					If the use case allows it, we can start with simulated data and connect the real device later.
+				</p>
+			</div>
+		</aside>
+	</section>
+
+	<section class="poc-section">
+		<h2 class="poc-section-title poc-section-title--with-intro">Fixed price, agreed before we start</h2>
+		<p class="poc-section-intro">You approve the scope on day 0 and the price stops moving.</p>
+		<div class="poc-price">
+			<div class="poc-price__package">
+				<p class="poc-price__label">Base package</p>
+				<p class="poc-price__amount">$7000</p>
+				<ul class="poc-price__highlights">
+					{priceHighlights.map((item) => <li>{item}</li>)}
+				</ul>
+				<NButton class="poc-cta poc-price__button" fullWidth>
+					Talk to an expert
+				</NButton>
+			</div>
+			<div class="poc-price__divider" aria-hidden="true"></div>
+			<div class="poc-price__included">
+				<h3 class="poc-price__heading">What’s included</h3>
+				<div class="poc-price__lists">
+					{
+						priceIncluded.map((column) => (
+							<ul class="poc-checklist poc-checklist--price">
+								{column.map((item) => (
+									<li>
+										<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+											<path d={iconCheck} />
+										</svg>
+										<span>
+											{item.text}
+											{item.footnote && <span class="poc-price__star">*</span>}
+										</span>
+									</li>
+								))}
+							</ul>
+						))
+					}
+				</div>
+				<p class="poc-price__footnote">
+					<span class="poc-price__star">*</span> White-labeling is configured inside the base sprint when
+					your ThingsBoard license includes it.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="poc-section">
+		<h2 class="poc-section-title poc-section-title--with-intro">Designed for one use case</h2>
+		<p class="poc-section-intro" style="--intro-width: 672px">
+			The 10-business-day package works best when there is one clear outcome to make real. For
+			anything larger we scope it separately. If you already run ThingsBoard, your existing
+			entities, integrations and dashboards are reused rather than rebuilt, so the same ten days
+			reach further into your backlog.
+		</p>
+		<div class="poc-fit">
+			<div class="poc-fit-card poc-fit-card--good">
+				<h3 class="poc-fit-card__title">A good fit when</h3>
+				<ul class="poc-checklist poc-checklist--fit">
+					{
+						fitGood.map((item) => (
+							<li>
+								<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+									<path d={iconCheck} />
+								</svg>
+								<span>{item}</span>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+			<div class="poc-fit-card poc-fit-card--other">
+				<h3 class="poc-fit-card__title">We have a different proposal when</h3>
+				<ul class="poc-dotlist">
+					{fitOther.map((item) => <li>{item}</li>)}
+				</ul>
+				<NButton class="poc-cta poc-fit-card__button">Discover other options</NButton>
+			</div>
+		</div>
+		<aside class="poc-note">
+			<span class="poc-note__icon" aria-hidden="true">
+				<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d={iconInfo} /></svg>
+			</span>
+			<div>
+				<h3 class="poc-note__title">Note</h3>
+				<p class="poc-note__text">
+					Already running ThingsBoard? Existing entities, integrations, and dashboards are reused rather than rebuilt, so the same ten days reach further into your backlog.
+				</p>
+			</div>
+		</aside>
+	</section>
+
+	<section class="poc-section">
+		<h2 class="poc-section-title poc-scope__title">The scope comes from work already delivered</h2>
+		<ul class="poc-scope">
+			{
+				scopeStats.map((stat) => (
+					<li class="poc-stat">
+						<p class="poc-stat__value">{stat.value}</p>
+						<p class="poc-stat__text">{stat.text}</p>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+
+	<section class="poc-testimonials">
+		<h2 class="poc-testimonials__title">What clients say about working with us</h2>
+		<div class="poc-testimonials__cards">
+			{
+				testimonials.map((item) => (
+					<figure class:list={['poc-testimonial', `poc-testimonial--${item.mark}`]}>
+						<svg
+							class="poc-testimonial__mark"
+							viewBox="0 0 81 64"
+							width="81"
+							height="64"
+							fill="currentColor"
+							aria-hidden="true"
+						>
+							<path d={quoteMarks[item.mark]} />
+						</svg>
+						<blockquote class="poc-testimonial__quote">
+							<p>{item.quote}</p>
+						</blockquote>
+						<figcaption class="poc-testimonial__footer">
+							<SmartImage
+								class="poc-testimonial__avatar"
+								src={`${testimonialsDir}/${item.avatar}`}
+								alt={item.name}
+								width={52}
+								height={52}
+							/>
+							<span class="poc-testimonial__person">
+								<span class="poc-testimonial__name">{item.name}</span>
+								<span class="poc-testimonial__role">{item.role}</span>
+							</span>
+							<SmartImage
+								class="poc-testimonial__logo"
+								src={`${testimonialsDir}/${item.logo}`}
+								alt={`${item.company} logo`}
+								width={item.logoWidth}
+								height={item.logoHeight}
+							/>
+						</figcaption>
+					</figure>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="poc-cases">
+		<h2 class="poc-cases__title">Where it has already been delivered</h2>
+		<ul class="poc-cases__grid">
+			{
+				deliveredCases.map((item) => (
+					<li class="poc-case">
+						<a class="poc-case__link" href={`/case-studies/${item.slug}/`}>
+							<span
+								class="poc-case__image"
+								style={`background-image: url('${item.image}')`}
+								aria-hidden="true"
+							/>
+							<span class="poc-case__header">
+								<span class="poc-case__tag">{item.tag}</span>
+								<img
+									class="poc-case__logo"
+									src={item.logo}
+									alt={item.logoAlt}
+									width={item.logoWidth}
+									height={item.logoHeight}
+									style={`height: ${item.logoDisplayHeight}px`}
+									loading="lazy"
+								/>
+							</span>
+							<span class="poc-case__footer">
+								<span class="poc-case__title">{item.title}</span>
+								<span class="poc-case__stats">
+									{item.stats.map((stat) => (
+										<span class="poc-case__stat">
+											<span class="poc-case__value">{stat.value}</span>
+											<span class="poc-case__label">{stat.label}</span>
+										</span>
+									))}
+								</span>
+							</span>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+
+	<section class="poc-workshop">
+		<div class="poc-workshop__content">
+			<p class="poc-workshop__badge">Next step</p>
+			<h2 class="poc-workshop__title">A 30-minute technical workshop</h2>
+			<p class="poc-workshop__text">
+				Before anyone signs, we check that a fixed scope fits your use case. In 30 minutes we confirm
+				the fit, walk through what you already have, and agree a kickoff date.
+			</p>
+			<NButton class="poc-cta poc-cta--workshop">Talk to an expert</NButton>
+		</div>
+		<aside class="poc-contact" aria-label="Your contact">
+			<p class="poc-contact__label">Talk to</p>
+			<div class="poc-contact__person">
+				<SmartImage
+					class="poc-contact__avatar"
+					src="/src/assets/images/usecases/poc/nizar-ali.png"
+					alt="Nizar Ali"
+					width={52}
+					height={52}
+				/>
+				<div>
+					<p class="poc-contact__name">Nizar Ali</p>
+					<p class="poc-contact__role">ThingsBoard Custom Development Unit</p>
+				</div>
+			</div>
+			<p class="poc-contact__terms">
+				Fixed-price offer, valid 30 days. Scope, deliverables, and timeline are guaranteed subject to
+				the readiness prerequisites above.
+			</p>
+		</aside>
+	</section>
+</UseCaseLayout>
+
+<style lang="scss">
+	@use '../../styles/variables' as *;
+
+	.poc-title {
+		max-width: 596px;
+	}
+
+	.poc-description {
+		@include text-m;
+		color: var(--color-text-secondary);
+		max-width: 504px;
+		margin: 0 0 $spacing-8;
+	}
+
+	// Text on the left, development-lead card on the right; stacks below lg,
+	// where the 596px title and the 418px card no longer fit side by side
+	.poc-hero {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: $spacing-6;
+		margin-bottom: $spacing-12;
+
+		@include media-down(lg) {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+	}
+
+	.poc-hero__media {
+		position: relative;
+		flex-shrink: 0;
+		max-width: 100%;
+	}
+
+	// Decorative radial glow behind the card: right edge on the container border
+	// (cancels the side padding), ellipse centre (y = 249 of 460) on the card's centre
+	.poc-hero__glow {
+		position: absolute;
+		top: calc(50% - 249px);
+		right: -$spacing-5;
+		width: 550px;
+		max-width: none;
+		height: 460px;
+		pointer-events: none;
+		user-select: none;
+	}
+
+	.poc-hero__lead {
+		position: relative;
+		display: block;
+		max-width: 100%;
+		height: auto;
+	}
+
+	// Typography matches `button-base` (ui/button: 16px / 500 / 1.5); `font-family: inherit`
+	// because a <button> doesn't inherit the site font and would otherwise fall back to Arial.
+	.poc-cta {
+		font-family: inherit;
+		font-weight: $font-weight-medium;
+		line-height: 1.5;
+	}
+
+	.poc-compare {
+		margin: 0 0 $spacing-12;
+	}
+
+	// HTML side of the comparison; fills the whole slider area
+	.poc-compare__brief {
+		display: flex;
+		align-items: center;
+		width: 100%;
+		height: 100%;
+		background: var(--color-bg-light);
+	}
+
+	// Keeps the text in the left half, clear of the divider's starting position
+	.poc-brief {
+		max-width: 450px;
+		margin-left: 35px;
+	}
+
+	.poc-brief__subtitle {
+		@include section-badge;
+		color: var(--sl-color-accent);
+		margin: 0 0 $spacing-2;
+	}
+
+	.poc-brief__quote {
+		@include card-title;
+		color: var(--color-text);
+		margin: 0;
+	}
+
+	.poc-clients__caption {
+		@include text-table-cell;
+		color: var(--color-text-secondary);
+		text-align: center;
+		margin: 0;
+	}
+
+	// One row, equal space between logos; wraps (centered) once they no longer fit
+	.poc-clients__logos {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: $spacing-6;
+		margin: $spacing-8 0 $spacing-5;
+		padding: 0;
+		list-style: none;
+
+		li {
+			display: flex;
+		}
+
+		@include media-down(md) {
+			justify-content: center;
+		}
+	}
+
+	.poc-audience {
+		padding-top: $spacing-30;
+
+		@include media-down(md) {
+			padding-top: $spacing-16;
+		}
+	}
+
+	.poc-section-title {
+		@include section-title;
+		color: var(--color-text);
+		text-align: center;
+		margin: 0 0 $spacing-12;
+
+		@include media-down(md) {
+			margin-bottom: $spacing-8;
+		}
+	}
+
+	.poc-audience__cards {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: $spacing-6;
+
+		@include media-down(lg) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		@include media-down(md) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.poc-audience-card {
+		position: relative;
+		overflow: clip;
+		padding: $spacing-6;
+		background: var(--color-bg-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 12px;
+	}
+
+	// Decorative corner glow (Figma export, already cropped to the corner);
+	// the card's overflow clip + radius trims it to the rounded corner
+	.poc-audience-card__glow {
+		position: absolute;
+		top: 0;
+		right: 0;
+		pointer-events: none;
+		user-select: none;
+	}
+
+	// Content paints above the glow
+	.poc-audience-card > :not(.poc-audience-card__glow) {
+		position: relative;
+	}
+
+	.poc-audience-card__icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		margin-bottom: $spacing-6;
+		color: var(--sl-color-accent);
+		background: var(--color-bg-surface);
+		border: 1px solid currentColor;
+		border-radius: $radius-sm;
+	}
+
+	.poc-audience-card__title {
+		@include card-title-sm;
+		color: var(--color-text);
+		margin: 0 0 $spacing-1;
+	}
+
+	.poc-audience-card__text {
+		@include text-card;
+		color: var(--color-text-secondary);
+		margin: 0;
+	}
+	.poc-journey {
+		// Colours from the design with no site token yet; dark variants keep contrast
+		--poc-question-bg: #fff5e6;
+		--poc-question-border: #f19102;
+		--poc-outcome-bg: #ebfaf1;
+
+		padding-top: $spacing-30;
+
+		@include media-down(md) {
+			padding-top: $spacing-16;
+		}
+
+		.poc-section-title {
+			margin-bottom: $spacing-8;
+		}
+	}
+
+	// Vertical timeline: 44px markers joined by a line through their centres
+	.poc-journey__steps {
+		display: flex;
+		flex-direction: column;
+		gap: $spacing-6;
+		max-width: 684px;
+		margin: 0 auto;
+		padding: 0;
+		list-style: none;
+	}
+
+	.poc-journey__step {
+		position: relative;
+		display: grid;
+		grid-template-columns: 44px minmax(0, 1fr);
+		column-gap: $spacing-6;
+		align-items: start;
+		margin: 0;
+
+		@include media-down(md) {
+			column-gap: $spacing-4;
+		}
+
+		// Connector: from just below this marker to just above the next one (4px gap at each end),
+		// so it never touches the markers or runs past the last one when text wraps
+		&:not(:last-child)::after {
+			content: '';
+			position: absolute;
+			top: calc(44px + #{$spacing-1});
+			bottom: calc(-1 * #{$spacing-6} + #{$spacing-1});
+			left: 21.5px;
+			width: 1px;
+			background: var(--color-border);
+		}
+	}
+
+	.poc-journey__marker {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		font-size: $font-size-base;
+		line-height: 24px;
+		color: var(--color-text);
+		background: var(--color-bg-surface);
+		border: 1px solid var(--color-border);
+		border-radius: $radius-lg;
+	}
+
+	.poc-journey__title {
+		font-size: $font-size-lg;
+		font-weight: $font-weight-medium;
+		line-height: 24px;
+		color: var(--color-text);
+		margin: 0 0 $spacing-1;
+	}
+
+	.poc-journey__text {
+		@include text-m;
+		color: var(--color-text-secondary);
+		margin: 0;
+	}
+
+	.poc-journey__lead {
+		@include text-table-cell;
+		color: var(--color-text-secondary);
+		max-width: 551px;
+		margin: $spacing-4 0 0;
+	}
+
+	.poc-journey__note {
+		@include text-m;
+		max-width: 551px;
+		margin: 0;
+		padding: $spacing-2 $spacing-4;
+		border: 1px solid;
+		border-radius: $radius-lg;
+	}
+
+	// Start: the brief (accent) — tint layered over the surface colour
+	.poc-journey__step--start {
+		.poc-journey__marker,
+		.poc-journey__note {
+			border-color: var(--sl-color-accent);
+			background: linear-gradient(rgba(var(--color-primary-rgb), 0.05), rgba(var(--color-primary-rgb), 0.05)),
+				var(--color-bg-surface);
+		}
+
+		.poc-journey__marker {
+			color: var(--sl-color-accent);
+		}
+	}
+
+	// Open questions: dark "?" on light yellow with an orange outline
+	.poc-journey__step--question .poc-journey__marker {
+		border-color: var(--poc-question-border);
+		background: var(--poc-question-bg);
+	}
+
+	// End: the outcome (green)
+	.poc-journey__step--end {
+		.poc-journey__marker,
+		.poc-journey__note {
+			border-color: var(--color-success);
+			background: var(--poc-outcome-bg);
+		}
+
+		.poc-journey__marker {
+			color: var(--color-success);
+		}
+	}
+
+	.poc-schedule {
+		padding-top: $spacing-20;
+
+		@include media-down(md) {
+			padding-top: $spacing-16;
+		}
+
+		.poc-section-title {
+			margin-bottom: $spacing-5;
+		}
+	}
+
+	.poc-schedule__intro {
+		@include text-m;
+		color: var(--color-text-secondary);
+		text-align: center;
+		max-width: 684px;
+		margin: 0 auto $spacing-10;
+	}
+
+	// Scrolls sideways on narrow screens instead of squashing the 11 day columns
+	.poc-timeline {
+		--poc-timeline-bg: linear-gradient(rgba(var(--color-primary-rgb), 0.05), rgba(var(--color-primary-rgb), 0.05)),
+			var(--color-bg-surface);
+
+		overflow-x: auto;
+		background: var(--poc-timeline-bg);
+		border-radius: 12px;
+	}
+
+	.poc-timeline__table {
+		width: 100%;
+		min-width: 760px;
+		table-layout: fixed;
+		border-collapse: collapse;
+		@include text-table-cell;
+		color: var(--color-text-secondary);
+
+		th {
+			font-weight: $font-weight-normal;
+		}
+
+		// Task label column; stays in place while the days scroll underneath on narrow screens
+		th:first-child {
+			position: sticky;
+			left: 0;
+			z-index: 1;
+			width: 227px;
+			padding: 0 $spacing-4 0 0;
+			text-align: right;
+			white-space: nowrap;
+			background: var(--poc-timeline-bg);
+		}
+
+		thead th {
+			height: 36px;
+			padding-top: 0;
+			padding-bottom: 0;
+			border-bottom: 1px solid var(--color-border-light);
+		}
+
+		thead th:not(:first-child) {
+			text-align: center;
+		}
+
+		tbody th,
+		tbody td {
+			height: 40px;
+			padding-top: 0;
+			padding-bottom: 0;
+		}
+
+		// Column lines between the label column and every day
+		tbody td {
+			position: relative;
+			padding: 0;
+			border-left: 1px solid var(--color-border-light);
+		}
+
+		// Breathing room above the first and below the last task
+		tbody tr:first-child > * {
+			height: 60px;
+			padding-top: $spacing-5;
+		}
+
+		tbody tr:last-child > * {
+			height: 52px;
+			padding-bottom: $spacing-3;
+		}
+
+		// Keep those two rows' bars centred on the 40px row, not the padded cell
+		tbody tr:first-child .poc-timeline__bar {
+			top: calc(50% + #{$spacing-5} / 2);
+		}
+
+		tbody tr:last-child .poc-timeline__bar {
+			top: calc(50% - #{$spacing-3} / 2);
+		}
+	}
+
+	// Soft bar across the task's days: transparent at the ends, strongest in the middle.
+	// Sits in the first day's cell and stretches over `--span` columns (plus their 1px lines).
+	.poc-timeline__bar {
+		position: absolute;
+		top: 50%;
+		left: 2px;
+		width: calc(var(--span) * 100% + (var(--span) - 1) * 1px - 4px);
+		height: 22px;
+		transform: translateY(-50%);
+		background: linear-gradient(
+			90deg,
+			rgba(var(--color-primary-rgb), 0) 0%,
+			rgba(var(--color-primary-rgb), 0.24) 50%,
+			rgba(var(--color-primary-rgb), 0) 100%
+		);
+	}
+
+	.poc-deliverables {
+		--poc-number-color: #b3c7ff; // from the design; no site token has this exact value
+
+		padding-top: $spacing-20;
+
+		@include media-down(md) {
+			padding-top: $spacing-16;
+		}
+
+		.poc-section-title {
+			margin-bottom: $spacing-5;
+		}
+	}
+
+	.poc-deliverables__intro {
+		@include text-m;
+		color: var(--color-text-secondary);
+		text-align: center;
+		max-width: 520px;
+		margin: 0 auto $spacing-8;
+	}
+
+	.poc-deliverables__cards {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: $spacing-6;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		@include media-down(lg) {
+			grid-template-columns: repeat(2, 1fr);
+		}
+
+		@include media-down(md) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.poc-deliverable {
+		margin: 0;
+		padding: $spacing-6;
+		background: var(--color-bg-surface);
+		border: 1px solid var(--color-border-light);
+		border-radius: 12px;
+	}
+
+	.poc-deliverable__number {
+		display: block;
+		font-size: $font-size-4xl;
+		font-weight: $font-weight-medium;
+		line-height: 1.2;
+		color: var(--poc-number-color);
+		margin-bottom: $spacing-3;
+	}
+
+	.poc-deliverable__title {
+		@include card-title-sm;
+		color: var(--color-text);
+		margin: 0 0 $spacing-4;
+	}
+
+	.poc-deliverable__text {
+		@include text-m;
+		color: var(--color-text-secondary);
+		margin: 0;
+	}
+
+	// ---- Shared section pieces (sections below the day-10 cards) ----
+	.poc-section {
+		padding-top: $spacing-20;
+
+		@include media-down(md) {
+			padding-top: $spacing-16;
+		}
+	}
+
+	.poc-section-title--with-intro {
+		margin-bottom: $spacing-5;
+	}
+
+	.poc-section-intro {
+		@include text-m;
+		color: var(--color-text-secondary);
+		text-align: center;
+		max-width: var(--intro-width, 684px);
+		margin: 0 auto $spacing-10;
+	}
+
+	// Info note: outlined icon square + title + text on the light accent tint
+	.poc-note {
+		display: flex;
+		align-items: center;
+		gap: $spacing-5;
+		margin-top: $spacing-6;
+		padding: $spacing-6;
+		background: linear-gradient(rgba(var(--color-primary-rgb), 0.05), rgba(var(--color-primary-rgb), 0.05)),
+			var(--color-bg-surface);
+		border: 1px solid var(--sl-color-accent);
+		border-radius: 12px;
+	}
+
+	.poc-note__icon {
+		display: flex;
+		flex-shrink: 0;
+		align-items: center;
+		justify-content: center;
+		width: 48px;
+		height: 48px;
+		color: var(--sl-color-accent);
+		border: 1px solid currentColor;
+		border-radius: $radius-md;
+	}
+
+	.poc-note__title {
+		@include card-title-sm;
+		color: var(--color-text);
+		margin: 0 0 $spacing-3;
+	}
+
+	.poc-note__text {
+		@include text-m;
+		color: var(--color-text-secondary);
+		margin: 0;
+	}
+
+	// Check / dot lists: 20px icon (or 8px dot) + 8px gap + text
+	.poc-checklist,
+	.poc-dotlist {
+		display: flex;
+		flex-direction: column;
+		gap: $spacing-2;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		li {
+			@include text-m;
+			display: flex;
+			gap: $spacing-2;
+			margin: 0;
+			color: var(--color-text-secondary);
+		}
+	}
+
+	.poc-checklist svg {
+		flex-shrink: 0;
+		margin-top: 4px; // centres the 20px icon on the first 28px line
+	}
+
+	.poc-dotlist li::before {
+		content: '';
+		flex-shrink: 0;
+		width: 8px;
+		height: 8px;
+		margin-top: 10px;
+		border-radius: 50%;
+		background: var(--sl-color-accent);
+	}
+
+	// ---- Not sure your use case fits? ----
+	.poc-cta-banner {
+		margin-top: $spacing-20;
+		padding: $spacing-12 $spacing-6;
+		text-align: center;
+		color: var(--color-white);
+		background: rgb(var(--color-primary-rgb)); // same blue in both themes, keeps white text legible
+		border-radius: $radius-xl;
+
+		@include media-down(md) {
+			margin-top: $spacing-16;
+			padding: $spacing-10 $spacing-5;
+		}
+	}
+
+	.poc-cta-banner__title {
+		@include subsection-title;
+		color: inherit;
+		margin: 0 0 $spacing-4;
+	}
+
+	.poc-cta-banner__text {
+		@include text-table-cell;
+		color: inherit;
+		margin: 0 0 $spacing-5;
+	}
+
+	// Light grey button on the blue banner (NButton reads its colours from these properties)
+	.poc-cta.poc-cta--light {
+		--_btn-color: var(--color-border);
+		--_btn-color-hover: var(--color-border-light);
+		--_btn-color-contrast: var(--color-text);
+		--_btn-shadow: none;
+
+		min-width: 200px;
+	}
+
+	// ---- Three things to get started ----
+	.poc-start__cards {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: $spacing-6;
+		margin: 0;
+		padding: $spacing-6 0 0; // room for the badges that straddle the card tops
+		list-style: none;
+
+		@include media-down(md) {
+			grid-template-columns: 1fr;
+			row-gap: $spacing-12;
+		}
+	}
+
+	// Figma glow along the bottom edge, as a background so the card's radius clips it
+	// (no overflow clipping, which would cut off the badge on the top edge)
+	.poc-start-card {
+		--glow: none;
+
+		position: relative;
+		margin: 0;
+		padding: $spacing-10 $spacing-6 36px;
+		background: var(--glow) no-repeat center bottom / 100% auto, var(--color-bg-surface);
+		border: 1px solid var(--color-border-light);
+		border-radius: 12px;
+	}
+
+	.poc-start-card--blue {
+		--glow: url('../../assets/images/usecases/poc/start-glow-blue.svg');
+	}
+
+	.poc-start-card--yellow {
+		--glow: url('../../assets/images/usecases/poc/start-glow-yellow.svg');
+	}
+
+	.poc-start-card--purple {
+		--glow: url('../../assets/images/usecases/poc/start-glow-purple.svg');
+	}
+
+	.poc-start-card__number {
+		position: absolute;
+		top: -24px;
+		left: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 48px;
+		height: 48px;
+		transform: translateX(-50%);
+		@include card-title-sm;
+		color: var(--sl-color-accent);
+		background: linear-gradient(rgba(var(--color-primary-rgb), 0.05), rgba(var(--color-primary-rgb), 0.05)),
+			var(--color-bg-surface);
+		border: 1px solid var(--sl-color-accent);
+		border-radius: $radius-lg;
+	}
+
+	.poc-start-card__title {
+		@include card-title-sm;
+		color: var(--color-text);
+		margin: 0 0 $spacing-3;
+	}
+
+	.poc-start-card__text {
+		@include text-m;
+		color: var(--color-text-secondary);
+		margin: 0;
+	}
+
+	// ---- Fixed price ----
+	.poc-price {
+		--poc-price-check: #166c37;
+
+		display: grid;
+		grid-template-columns: 348px 1px minmax(0, 1fr);
+		column-gap: $spacing-6;
+		padding: $spacing-12;
+		background: linear-gradient(rgba(var(--color-primary-rgb), 0.05), rgba(var(--color-primary-rgb), 0.05)),
+			var(--color-bg-surface);
+		border: 1px solid var(--sl-color-accent);
+		border-radius: $radius-xl;
+
+		@include media-down(lg) {
+			grid-template-columns: 1fr;
+			row-gap: $spacing-8;
+		}
+
+		@include media-down(md) {
+			padding: $spacing-8 $spacing-5;
+		}
+	}
+
+	.poc-price__label {
+		@include text-table-cell;
+		color: var(--color-text-secondary);
+		margin: 0 0 $spacing-1;
+	}
+
+	.poc-price__amount {
+		font-size: 48px;
+		font-weight: $font-weight-semibold;
+		line-height: 1.2;
+		color: var(--color-text);
+		margin: 0 0 $spacing-5;
+	}
+
+	.poc-price__highlights {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		margin: 0 0 $spacing-8;
+		padding: 0;
+		list-style: none;
+
+		li {
+			display: flex;
+			align-items: center;
+			gap: $spacing-2;
+			margin: 0;
+			font-size: $font-size-lg;
+			line-height: 1.5;
+			color: var(--color-text);
+
+			&::before {
+				content: '';
+				flex-shrink: 0;
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+				background: var(--sl-color-accent);
+			}
+		}
+	}
+
+	.poc-price__divider {
+		background: var(--color-border-light);
+
+		@include media-down(lg) {
+			display: none;
+		}
+	}
+
+	.poc-price__heading {
+		@include card-title-sm;
+		color: var(--color-text);
+		margin: 0 0 $spacing-4;
+	}
+
+	.poc-price__lists {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: $spacing-2 $spacing-6;
+		padding-bottom: $spacing-3;
+		border-bottom: 1px solid var(--color-border-light);
+
+		@include media-down(md) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.poc-checklist--price {
+		li {
+			color: var(--color-text);
+		}
+
+		svg {
+			color: var(--poc-price-check);
+		}
+	}
+
+	.poc-price__star {
+		color: var(--sl-color-accent);
+	}
+
+	.poc-price__footnote {
+		@include text-s;
+		color: var(--color-text-muted);
+		margin: $spacing-3 0 0;
+	}
+
+	// ---- Designed for one use case ----
+	.poc-fit {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: $spacing-6;
+
+		@include media-down(md) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	// 2px coloured left edge, thin neutral border elsewhere
+	.poc-fit-card {
+		padding: $spacing-8;
+		background: var(--color-bg-surface);
+		border: 1px solid var(--color-border-light);
+		border-left-width: 2px;
+		border-radius: 12px;
+
+		@include media-down(md) {
+			padding: $spacing-6;
+		}
+	}
+
+	.poc-fit-card--good {
+		border-left-color: var(--color-success);
+	}
+
+	.poc-fit-card--other {
+		border-left-color: var(--sl-color-accent);
+	}
+
+	.poc-fit-card__title {
+		@include card-title-sm;
+		color: var(--color-text);
+		margin: 0 0 $spacing-4;
+	}
+
+	.poc-checklist--fit svg {
+		color: var(--color-success);
+	}
+
+	.poc-fit-card__button {
+		margin-top: $spacing-6;
+	}
+
+	// ---- The scope comes from work already delivered ----
+	.poc-section-title.poc-scope__title {
+		margin-bottom: $spacing-16;
+
+		@include media-down(md) {
+			margin-bottom: $spacing-8;
+		}
+	}
+
+	.poc-scope {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: $spacing-6;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		@include media-down(lg) {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			row-gap: $spacing-8;
+		}
+
+		@include media-down(md) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.poc-stat {
+		margin: 0;
+	}
+
+	.poc-stat__value {
+		font-size: 40px;
+		font-weight: $font-weight-semibold;
+		line-height: 1.2;
+		color: var(--sl-color-accent);
+		margin: 0;
+		padding-bottom: $spacing-2;
+		border-bottom: 1px solid var(--sl-color-accent);
+	}
+
+	.poc-stat__text {
+		@include text-m;
+		color: var(--color-text-secondary);
+		margin: $spacing-2 0 0;
+	}
+
+	// ---- What clients say about working with us ----
+	.poc-testimonials {
+		--poc-quote-mark: #e5ebff;
+
+		padding-top: 56px; // from the design
+
+		@include media-down(md) {
+			padding-top: $spacing-16;
+		}
+	}
+
+	.poc-testimonials__title {
+		@include card-title;
+		color: var(--color-text);
+		text-align: center;
+		margin: 0 0 $spacing-8;
+	}
+
+	.poc-testimonials__cards {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: $spacing-6;
+
+		@include media-down(md) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.poc-testimonial {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		margin: 0;
+		padding: $spacing-6;
+		background: var(--color-bg-surface);
+		border: 1px solid var(--color-border-light);
+		border-radius: 12px;
+	}
+
+	// Large decorative quote mark behind the text: “ top-left, ” top-right
+	.poc-testimonial__mark {
+		position: absolute;
+		top: $spacing-2;
+		color: var(--poc-quote-mark);
+		pointer-events: none;
+	}
+
+	.poc-testimonial--open .poc-testimonial__mark {
+		left: 5px;
+	}
+
+	.poc-testimonial--close .poc-testimonial__mark {
+		right: 0;
+	}
+
+	.poc-testimonial__quote {
+		position: relative;
+		margin: 0 0 44px; // from the design
+		padding: 0;
+		border: 0;
+
+		p {
+			@include card-title-sm;
+			color: var(--color-text);
+			margin: 0;
+		}
+	}
+
+	// Pinned to the card bottom so both cards' footers line up
+	.poc-testimonial__footer {
+		position: relative;
+		display: flex;
+		align-items: flex-start;
+		gap: $spacing-4;
+		margin-top: auto;
+	}
+
+	.poc-testimonial__avatar {
+		flex-shrink: 0;
+		width: 52px;
+		height: 52px;
+	}
+
+	.poc-testimonial__person {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		gap: $spacing-1;
+		min-width: 0;
+	}
+
+	.poc-testimonial__name {
+		@include text-table-cell;
+		color: var(--color-text);
+	}
+
+	.poc-testimonial__role {
+		@include text-s;
+		color: var(--color-text-secondary);
+	}
+
+	.poc-testimonial__logo {
+		flex-shrink: 0;
+		height: auto;
+	}
+
+	// ---- Where it has already been delivered ----
+	.poc-cases {
+		padding-top: 56px; // from the design
+
+		@include media-down(md) {
+			padding-top: $spacing-16;
+		}
+	}
+
+	.poc-cases__title {
+		@include card-title;
+		color: var(--color-text);
+		text-align: center;
+		margin: 0 0 $spacing-8;
+	}
+
+	.poc-cases__grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: $spacing-6;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+
+		@include media-down(md) {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	.poc-case {
+		margin: 0;
+	}
+
+	// Photo card: darkened background image, tag + logo on top, title + stats at the bottom
+	.poc-case__link {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		gap: $spacing-6;
+		min-height: 299px; // from the design
+		padding: $spacing-4;
+		overflow: hidden;
+		isolation: isolate;
+		color: var(--color-white);
+		text-decoration: none;
+		border-radius: 12px;
+
+		&:hover .poc-case__image {
+			transform: scale(1.1);
+		}
+
+		&:focus-visible {
+			outline: 2px solid var(--sl-color-accent);
+			outline-offset: 2px;
+		}
+	}
+
+	.poc-case__image {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background-color: var(--color-bg-dark);
+		background-position: center;
+		background-size: cover;
+		transition: transform 0.5s;
+
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: rgba(0, 0, 0, 0.4);
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			transition: none;
+		}
+	}
+
+	.poc-case__header {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: $spacing-4;
+	}
+
+	.poc-case__tag {
+		@include text-xs;
+		line-height: 16px;
+		padding: $spacing-1 $spacing-3;
+		color: var(--color-text);
+		background: var(--color-white);
+		border-radius: $radius-sm;
+	}
+
+	.poc-case__logo {
+		width: auto;
+		max-width: 50%;
+	}
+
+	.poc-case__footer {
+		display: block;
+	}
+
+	.poc-case__title {
+		@include card-title-sm;
+		display: block;
+		padding-bottom: $spacing-3;
+		margin-bottom: $spacing-3;
+		border-bottom: 1px solid var(--color-border-light);
+	}
+
+	.poc-case__stats {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: $spacing-2;
+	}
+
+	.poc-case__stat {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.poc-case__value {
+		@include card-title;
+	}
+
+	.poc-case__label {
+		@include text-s;
+		color: inherit;
+	}
+
+	// ---- Next step: A 30-minute technical workshop ----
+	// Always-dark block (same in both themes), so its colours are fixed values from the design
+	.poc-workshop {
+		--poc-dark-bg: #1e1f23;
+		--poc-dark-card: #262830;
+		--poc-dark-border: #63656c;
+		--poc-dark-text: #e4e5e7;
+		--poc-dark-muted: #a1a2a8;
+		--poc-dark-accent: #b3c7ff;
+
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 452px;
+		gap: $spacing-5;
+		// Border to border: cancels the container's side padding and covers its 1px side borders
+		margin: $spacing-20 calc(-1 * #{$spacing-5} - 1px) 0;
+		padding: $spacing-10;
+		color: var(--color-white);
+		background: var(--poc-dark-bg);
+
+		@include media-down(lg) {
+			grid-template-columns: 1fr;
+			gap: $spacing-8;
+		}
+
+		@include media-down(md) {
+			margin-top: $spacing-16;
+			padding: $spacing-10 $spacing-5;
+		}
+	}
+
+	.poc-workshop__badge {
+		@include section-badge;
+		color: var(--poc-dark-accent);
+		margin: 0 0 $spacing-3;
+	}
+
+	.poc-workshop__title {
+		@include subsection-title;
+		color: var(--color-white);
+		margin: 0 0 $spacing-5;
+	}
+
+	.poc-workshop__text {
+		@include text-m;
+		color: var(--poc-dark-muted);
+		margin: 0 0 $spacing-8;
+	}
+
+	// Light button on the dark block (NButton reads its colours from these properties)
+	.poc-cta.poc-cta--workshop {
+		--_btn-color: var(--poc-dark-text);
+		--_btn-color-hover: var(--color-white);
+		--_btn-color-contrast: var(--color-black);
+		--_btn-shadow: none;
+
+		min-width: 200px;
+	}
+
+	.poc-contact {
+		align-self: start;
+		padding: $spacing-6;
+		background: var(--poc-dark-card);
+		border: 1px solid var(--poc-dark-border);
+		border-radius: 12px;
+	}
+
+	.poc-contact__label {
+		@include text-table-cell;
+		color: var(--poc-dark-text);
+		margin: 0 0 $spacing-4;
+	}
+
+	.poc-contact__person {
+		display: flex;
+		align-items: center;
+		gap: $spacing-4;
+		padding-bottom: $spacing-4;
+		margin-bottom: $spacing-4;
+		border-bottom: 1px solid var(--poc-dark-border);
+
+		p {
+			margin: 0;
+		}
+
+		.poc-contact__name {
+			margin-bottom: $spacing-1;
+		}
+	}
+
+	.poc-contact__avatar {
+		flex-shrink: 0;
+		width: 52px;
+		height: 52px;
+	}
+
+	.poc-contact__name {
+		font-size: $font-size-lg;
+		font-weight: $font-weight-medium;
+		line-height: 24px;
+		color: var(--color-white);
+	}
+
+	.poc-contact__role {
+		@include text-s;
+		color: var(--poc-dark-muted);
+	}
+
+	.poc-contact__terms {
+		@include text-m;
+		color: var(--poc-dark-muted);
+		margin: 0;
+	}
+
+	:global([data-theme='dark']) .poc-testimonials {
+		--poc-quote-mark: rgba(var(--color-primary-rgb), 0.2);
+	}
+
+	:global([data-theme='dark']) .poc-price {
+		--poc-price-check: var(--color-success);
+	}
+
+	:global([data-theme='dark']) .poc-deliverables {
+		--poc-number-color: rgba(var(--color-primary-rgb), 0.55);
+	}
+
+	:global([data-theme='dark']) .poc-journey {
+		--poc-question-bg: rgba(241, 145, 2, 0.12);
+		--poc-outcome-bg: rgba(31, 139, 77, 0.15);
+	}
+</style>
