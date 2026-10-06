@@ -3,10 +3,21 @@ import UseCaseLayout from '../../layouts/UseCaseLayout.astro';
 import NButton from '../../components/Landing/NButton.astro';
 import ImageComparison from '../../components/UseCase/ImageComparison.astro';
 import SmartImage from '../../components/SmartImage.astro';
+import ContactModal from '../../components/Services/ContactModal.astro';
 import leadGlow from '~/assets/images/usecases/poc/custom-dev-lead-bg.svg';
 import glowPurple from '~/assets/images/usecases/poc/audience-glow-purple.svg';
 import glowBlue from '~/assets/images/usecases/poc/audience-glow-blue.svg';
 import glowYellow from '~/assets/images/usecases/poc/audience-glow-yellow.svg';
+import iconDeviceData from '~/assets/images/usecases/poc/audience-icon-device-data.svg';
+import iconEquipment from '~/assets/images/usecases/poc/audience-icon-equipment.svg';
+import iconProduct from '~/assets/images/usecases/poc/audience-icon-product.svg';
+import iconBrief from '~/assets/images/usecases/poc/journey-icon-brief.svg';
+import iconOutcome from '~/assets/images/usecases/poc/journey-icon-outcome.svg';
+import iconCheck from '~/assets/images/usecases/poc/list-icon-check.svg';
+import iconDot from '~/assets/images/usecases/poc/list-icon-dot.svg';
+import iconInfo from '~/assets/images/usecases/poc/note-icon-info.svg';
+import quoteOpen from '~/assets/images/usecases/poc/testimonial-quote-open.svg';
+import quoteClose from '~/assets/images/usecases/poc/testimonial-quote-close.svg';
 
 const title = 'A working IoT application in 10 business days — for a fixed price';
 const description =
@@ -23,35 +34,30 @@ const clients = [
 	{ name: 'ASG Tech', file: 'asg-tech.svg', width: 169, height: 31 },
 ];
 
-// Icons are Material Icons (24px viewBox): build, engineering, hub
 const audience = [
 	{
+		label: 'You make devices or equipment',
 		title: 'Turn device data into something people can use',
 		text: 'Your hardware already produces the data. We turn it into a working application where customers or operators can see readings, review history, receive alerts and access the information they need.',
 		glow: glowPurple,
-		icon: [
-			'M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z',
-		],
+		glowCorner: 'bottom-left',
+		icon: iconDeviceData,
 	},
 	{
+		label: 'You operate equipment or assets',
 		title: 'See what is happening across your equipment',
 		text: 'Bring the data from your machines, sites or assets into one application. See current conditions, spot problems, review what happened and give the right people access.',
 		glow: glowBlue,
-		icon: [
-			'M9,15c-2.67,0-8,1.34-8,4v2h16v-2C17,16.34,11.67,15,9,15z',
-			'M22.1,6.84c0.01-0.11,0.02-0.22,0.02-0.34c0-0.12-0.01-0.23-0.03-0.34l0.74-0.58c0.07-0.05,0.08-0.15,0.04-0.22l-0.7-1.21 c-0.04-0.08-0.14-0.1-0.21-0.08L21.1,4.42c-0.18-0.14-0.38-0.25-0.59-0.34l-0.13-0.93C20.36,3.06,20.29,3,20.2,3h-1.4 c-0.09,0-0.16,0.06-0.17,0.15L18.5,4.08c-0.21,0.09-0.41,0.21-0.59,0.34l-0.87-0.35c-0.08-0.03-0.17,0-0.21,0.08l-0.7,1.21 c-0.04,0.08-0.03,0.17,0.04,0.22l0.74,0.58c-0.02,0.11-0.03,0.23-0.03,0.34c0,0.11,0.01,0.23,0.03,0.34l-0.74,0.58 c-0.07,0.05-0.08,0.15-0.04,0.22l0.7,1.21c0.04,0.08,0.14,0.1,0.21,0.08l0.87-0.35c0.18,0.14,0.38,0.25,0.59,0.34l0.13,0.93 C18.64,9.94,18.71,10,18.8,10h1.4c0.09,0,0.16-0.06,0.17-0.15l0.13-0.93c0.21-0.09,0.41-0.21,0.59-0.34l0.87,0.35 c0.08,0.03,0.17,0,0.21-0.08l0.7-1.21c0.04-0.08,0.03-0.17-0.04-0.22L22.1,6.84z M19.5,7.75c-0.69,0-1.25-0.56-1.25-1.25 s0.56-1.25,1.25-1.25s1.25,0.56,1.25,1.25S20.19,7.75,19.5,7.75z',
-			'M19.92,11.68l-0.5-0.87c-0.03-0.06-0.1-0.08-0.15-0.06l-0.62,0.25c-0.13-0.1-0.27-0.18-0.42-0.24l-0.09-0.66 C18.12,10.04,18.06,10,18,10h-1c-0.06,0-0.11,0.04-0.12,0.11l-0.09,0.66c-0.15,0.06-0.29,0.15-0.42,0.24l-0.62-0.25 c-0.06-0.02-0.12,0-0.15,0.06l-0.5,0.87c-0.03,0.06-0.02,0.12,0.03,0.16l0.53,0.41c-0.01,0.08-0.02,0.16-0.02,0.24 c0,0.08,0.01,0.17,0.02,0.24l-0.53,0.41c-0.05,0.04-0.06,0.11-0.03,0.16l0.5,0.87c0.03,0.06,0.1,0.08,0.15,0.06l0.62-0.25 c0.13,0.1,0.27,0.18,0.42,0.24l0.09,0.66C16.89,14.96,16.94,15,17,15h1c0.06,0,0.12-0.04,0.12-0.11l0.09-0.66 c0.15-0.06,0.29-0.15,0.42-0.24l0.62,0.25c0.06,0.02,0.12,0,0.15-0.06l0.5-0.87c0.03-0.06,0.02-0.12-0.03-0.16l-0.52-0.41 c0.01-0.08,0.02-0.16,0.02-0.24c0-0.08-0.01-0.17-0.02-0.24l0.53-0.41C19.93,11.81,19.94,11.74,19.92,11.68z M17.5,13.33 c-0.46,0-0.83-0.38-0.83-0.83c0-0.46,0.38-0.83,0.83-0.83s0.83,0.38,0.83,0.83C18.33,12.96,17.96,13.33,17.5,13.33z',
-			'M4.74,9h8.53c0.27,0,0.49-0.22,0.49-0.49V8.49c0-0.27-0.22-0.49-0.49-0.49H13c0-1.48-0.81-2.75-2-3.45V5.5 C11,5.78,10.78,6,10.5,6S10,5.78,10,5.5V4.14C9.68,4.06,9.35,4,9,4S8.32,4.06,8,4.14V5.5C8,5.78,7.78,6,7.5,6S7,5.78,7,5.5V4.55 C5.81,5.25,5,6.52,5,8H4.74C4.47,8,4.25,8.22,4.25,8.49v0.03C4.25,8.78,4.47,9,4.74,9z',
-			'M9,13c1.86,0,3.41-1.28,3.86-3H5.14C5.59,11.72,7.14,13,9,13z',
-		],
+		glowCorner: 'bottom-right',
+		icon: iconEquipment,
 	},
 	{
+		label: 'You are building a connected product',
 		title: 'Make the complete product experience real',
 		text: 'You know what the product should let people see, know or do. We establish the data flow and build the application around that use case — so you can put a complete, working experience in front of customers or stakeholders.',
 		glow: glowYellow,
-		icon: [
-			'M8.4,18.2C8.78,18.7,9,19.32,9,20c0,1.66-1.34,3-3,3s-3-1.34-3-3s1.34-3,3-3c0.44,0,0.85,0.09,1.23,0.26l1.41-1.77 c-0.92-1.03-1.29-2.39-1.09-3.69l-2.03-0.68C4.98,11.95,4.06,12.5,3,12.5c-1.66,0-3-1.34-3-3s1.34-3,3-3s3,1.34,3,3 c0,0.07,0,0.14-0.01,0.21l2.03,0.68c0.64-1.21,1.82-2.09,3.22-2.32l0-2.16C9.96,5.57,9,4.4,9,3c0-1.66,1.34-3,3-3s3,1.34,3,3 c0,1.4-0.96,2.57-2.25,2.91v2.16c1.4,0.23,2.58,1.11,3.22,2.32l2.03-0.68C18,9.64,18,9.57,18,9.5c0-1.66,1.34-3,3-3s3,1.34,3,3 s-1.34,3-3,3c-1.06,0-1.98-0.55-2.52-1.37l-2.03,0.68c0.2,1.29-0.16,2.65-1.09,3.69l1.41,1.77C17.15,17.09,17.56,17,18,17 c1.66,0,3,1.34,3,3s-1.34,3-3,3s-3-1.34-3-3c0-0.68,0.22-1.3,0.6-1.8l-1.41-1.77c-1.35,0.75-3.01,0.76-4.37,0L8.4,18.2z',
-		],
+		glowCorner: 'bottom-right',
+		icon: iconProduct,
 	},
 ];
 
@@ -117,11 +123,6 @@ const deliverables = [
 	},
 ];
 
-// Material Icons (24px viewBox)
-const iconCheck = 'M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z';
-const iconInfo =
-	'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z';
-
 const gettingStarted = [
 	{
 		title: 'A device or data source',
@@ -175,11 +176,7 @@ const scopeStats = [
 	{ value: '100+', text: 'client engagements behind this fixed scope' },
 ];
 
-// Roboto Bold “ and ” outlines, scaled to the design's 81×64 quote marks
-const quoteMarks = {
-	open: 'M28.0 64L0 64L0 45.6Q0 37.6 3.1 29.0Q6.2 20.5 11.2 12.9Q16.3 5.3 22.4 0L22.4 0L38.9 9.6Q34.5 17.1 31.3 25.6Q28.0 34.1 28.0 45.6L28.0 45.6L28.0 64ZM70.1 64L42.0 64L42.0 45.6Q42.0 37.6 45.1 29.0Q48.2 20.5 53.3 12.9Q58.3 5.3 64.4 0L64.4 0L80.9 9.6Q76.5 17.1 73.3 25.6Q70.1 34.1 70.1 45.6L70.1 45.6L70.1 64Z',
-	close: 'M10.9-0.0L38.7-0.0L38.7 18.7Q38.7 26.7 35.7 35.1Q32.7 43.6 27.6 51.2Q22.6 58.7 16.6 64.0L16.6 64.0L0 54.4Q4.5 47.2 7.7 38.6Q10.9 30.1 10.9 18.8L10.9 18.8L10.9-0.0ZM53.3-0.0L81.1-0.0L81.1 18.7Q81.1 26.7 78.1 35.1Q75.1 43.6 70.0 51.2Q65.0 58.7 59.0 64.0L59.0 64.0L42.4 54.4Q46.9 47.2 50.1 38.6Q53.3 30.1 53.3 18.8L53.3 18.8L53.3-0.0Z',
-};
+const quoteMarks = { open: quoteOpen, close: quoteClose };
 const testimonialsDir = '/src/assets/images/usecases/poc/testimonials';
 const testimonials = [
 	{
@@ -194,82 +191,112 @@ const testimonials = [
 		mark: 'open',
 	},
 	{
-		quote: 'Communication has been clear, responsive, and solution-oriented.',
-		name: 'Mario Garcia Torres',
-		role: 'R&D Director',
-		avatar: 'mario-garcia-torres.svg',
-		company: 'PoliGIoT',
-		logo: 'poligiot.svg',
-		logoWidth: 98,
-		logoHeight: 27,
+		quote:
+			'Working with the ThingsBoard team proved to be efficient, with just the right level of collaboration needed to deliver an optimal outcome.',
+		name: 'Klemen Pevec',
+		role: 'Head of Software Engineering',
+		avatar: 'klemen-pevec.png',
+		company: 'Awake',
+		logo: 'awake.png',
+		logoWidth: 127,
+		logoHeight: 18,
 		mark: 'close',
 	},
 ] as const;
 
-// Same case studies, images and figures as the Development Services page
+// Same case-study cards as the Development Services page. Each stat shows a short
+// label that swaps to the long one (`long` lines) on hover.
 const deliveredCases = [
 	{
 		slug: 'schwarz',
 		tag: 'Retail & consumer service',
 		title: 'IoT in retail: how Schwarz Group accelerated digitalization with ThingsBoard',
-		image: '/images/case-studies/schwarz.webp',
-		logo: '/images/case-studies/schwarz.svg',
+		image: 'schwarz.webp',
+		logo: 'schwarz.svg',
 		logoAlt: 'Schwarz logo',
 		logoWidth: 410,
 		logoHeight: 208,
-		logoDisplayHeight: 36,
 		stats: [
-			{ value: '500K+', label: 'Connected devices' },
-			{ value: '13K+', label: 'Stores' },
-			{ value: '32', label: 'Countries' },
+			{ value: '500K+', short: 'Devices', long: ['Connected', 'devices'] },
+			{ value: '13K+', short: 'Stores' },
+			{ value: '32', short: 'Countries' },
 		],
 	},
 	{
 		slug: 'super-bock',
 		tag: 'Manufacturing',
 		title: 'Revolutionizing beer distribution: how ThingsBoard empowered Super Bock Group',
-		image: '/images/case-studies/super-bock-group.webp',
-		logo: '/images/case-studies/super-bock-group.svg',
+		image: 'super-bock-group.webp',
+		logo: 'super-bock-group.svg',
 		logoAlt: 'Super Bock Group logo',
 		logoWidth: 126,
 		logoHeight: 56,
-		logoDisplayHeight: 36,
 		stats: [
-			{ value: '100%', label: 'Visibility of beer stock in real time' },
-			{ value: '90%', label: 'Reduction in manual operations' },
-			{ value: '3+', label: 'Integrated solutions' },
+			{ value: '100%', short: 'Visibility', long: ['Visibility of beer', 'stock in', 'real-time'] },
+			{ value: '90%', short: 'Automation', long: ['Reduction in', 'manual', 'operations'] },
+			{ value: '3+', short: 'Solutions', long: ['Integrated', 'solutions'] },
+		],
+	},
+	{
+		slug: 'dacor',
+		tag: 'Industry 4.0',
+		title: 'Real-time production monitoring for automotive supplier by süc//dacor GmbH',
+		image: 'dacor.webp',
+		logo: 'dacor.svg',
+		logoAlt: 'Dacor logo',
+		logoWidth: 400,
+		logoHeight: 140,
+		stats: [
+			{ value: '20', short: 'Gateways', long: ['LoRaWAN', 'gateways in our', 'public network'] },
+			{ value: '5+', short: 'IoT experience', long: ['Experience in the', 'field of IoT with', 'LoRaWAN'] },
+			{ value: '150', short: 'Sensor types', long: ['Sensor types', 'tested in', 'our lab'] },
+		],
+	},
+	{
+		slug: 'oxi',
+		tag: 'Energy and utilities',
+		title: 'Empowering alternative energy: how OXI TRADE streamlined IoT infrastructure with TB',
+		image: 'oxi.webp',
+		logo: 'oxi.svg',
+		logoAlt: 'OXI Trade logo',
+		logoWidth: 153,
+		logoHeight: 56,
+		stats: [
+			{ value: '10+', short: 'Experience', long: ['Years experience', 'in the alternative', 'energy sector'] },
+			{ value: '7K', short: 'Sales', long: ['Pellet burners', 'sold'] },
+			{ value: '96%', short: 'Efficiency', long: ['Efficiency of', 'pellet burners'] },
 		],
 	},
 	{
 		slug: 'awake',
 		tag: 'Equipment tracking',
 		title: 'Awake: unifying global rental operations with custom IoT solutions',
-		image: '/images/case-studies/awake.webp',
-		logo: '/images/case-studies/awake.svg',
+		image: 'awake.webp',
+		logo: 'awake.svg',
 		logoAlt: 'Awake logo',
 		logoWidth: 402,
 		logoHeight: 59,
 		logoDisplayHeight: 20,
 		stats: [
-			{ value: '7', label: 'Years of experience on the market' },
-			{ value: '50+', label: 'Retailers managed under one system' },
-			{ value: '6', label: 'Solving challenges with data' },
+			{ value: '7', short: 'Experience', long: ['Years of', 'experience', 'on the market'] },
+			{ value: '50+', short: 'Retailers', long: ['Retailers', 'managed under', 'one system'] },
+			{ value: '6', short: 'Challenges', long: ['Solving', 'challenges', 'with data'] },
 		],
 	},
 	{
 		slug: 'senseing',
-		tag: 'Logistic & Supply chain',
+		tag: 'Logistic & supply-chain',
 		title: 'Transforming food logistics with IoT-powered temperature monitoring',
-		image: '/images/case-studies/senseing.webp',
-		logo: '/images/case-studies/senseing.svg',
+		image: 'senseing.webp',
+		logo: 'senseing.svg',
 		logoAlt: 'SenseING GmbH logo',
 		logoWidth: 240,
 		logoHeight: 56,
 		logoDisplayHeight: 24,
 		stats: [
-			{ value: '100%', label: 'Automated temperature monitoring' },
-			{ value: '90%', label: 'Reduction in human error' },
-			{ value: '100+', label: 'Storage and transportation units' },
+			{ value: '100%', short: 'Automation', long: ['Automated', 'temperature', 'monitoring'] },
+			{ value: '90%', short: 'Accuracy', long: ['Reduction', 'in human error'] },
+			{ value: '100+', short: 'Units', long: ['Storage and', 'transportation', 'units'] },
 		],
 	},
 ];
@@ -280,14 +307,14 @@ const deliveredCases = [
 		<div class="poc-hero__content">
 			<h1 class="usecase-title poc-title">{title}</h1>
 			<p class="poc-description">{description}</p>
-			<NButton class="poc-cta">Talk to an expert</NButton>
+			<NButton data-contact-modal-open class="poc-cta">Talk to an expert</NButton>
 		</div>
 		<div class="poc-hero__media">
 			<img class="poc-hero__glow" src={leadGlow.src} alt="" aria-hidden="true" />
 			<SmartImage
 				class="poc-hero__lead"
-				src="/src/assets/images/usecases/poc/custom-development-lead.svg"
-				alt="Nizar Ali, Custom development lead: “You bring the product knowledge. We bring the IoT implementation experience.”"
+				src="/src/assets/images/usecases/poc/head-of-delivery-quote.png"
+				alt="Nizar Ali, Head of delivery: “You bring the product knowledge. We bring the IoT implementation experience.”"
 				width={418}
 				height={103}
 				loading="eager"
@@ -341,14 +368,16 @@ const deliveredCases = [
 			{
 				audience.map((card) => (
 					<article class="poc-audience-card">
-						<img class="poc-audience-card__glow" src={card.glow.src} alt="" aria-hidden="true" />
-						<span class="poc-audience-card__icon" aria-hidden="true">
-							<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-								{card.icon.map((d) => (
-									<path d={d} />
-								))}
-							</svg>
-						</span>
+						<img
+							class={`poc-audience-card__glow poc-audience-card__glow--${card.glowCorner}`}
+							src={card.glow.src}
+							alt=""
+							aria-hidden="true"
+						/>
+						<div class="poc-audience-card__head">
+							<p class="poc-audience-card__label">{card.label}</p>
+							<img class="poc-audience-card__icon" src={card.icon.src} alt="" width="24" height="24" />
+						</div>
 						<h3 class="poc-audience-card__title">{card.title}</h3>
 						<p class="poc-audience-card__text">{card.text}</p>
 					</article>
@@ -362,10 +391,7 @@ const deliveredCases = [
 		<ol class="poc-journey__steps">
 			<li class="poc-journey__step poc-journey__step--start">
 				<span class="poc-journey__marker" aria-hidden="true">
-					{/* Material Icons "outlined_flag" */}
-					<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-						<path d="M14 6l-1-2H5v17h2v-7h5l1 2h7V6h-6zm4 8h-4l-1-2H7V6h5l1 2h5v6z"></path>
-					</svg>
+					<img src={iconBrief.src} alt="" width="24" height="24" />
 				</span>
 				<div>
 					<p class="poc-journey__note">
@@ -393,10 +419,7 @@ const deliveredCases = [
 			}
 			<li class="poc-journey__step poc-journey__step--end">
 				<span class="poc-journey__marker" aria-hidden="true">
-					{/* Material Icons "flag" */}
-					<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-						<path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z"></path>
-					</svg>
+					<img src={iconOutcome.src} alt="" width="15" height="17" />
 				</span>
 				<p class="poc-journey__note">What started as one clear outcome becomes a software project.</p>
 			</li>
@@ -471,7 +494,7 @@ const deliveredCases = [
 		<p class="poc-cta-banner__text">
 			Tell us what you need to get working. We will say plainly whether ten days is enough for it.
 		</p>
-		<NButton class="poc-cta poc-cta--light">Talk to an expert</NButton>
+		<NButton data-contact-modal-open class="poc-cta poc-cta--light">Talk to an expert</NButton>
 	</section>
 
 	<section class="poc-section">
@@ -495,7 +518,7 @@ const deliveredCases = [
 		</ol>
 		<aside class="poc-note">
 			<span class="poc-note__icon" aria-hidden="true">
-				<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d={iconInfo} /></svg>
+				<img src={iconInfo.src} alt="" width="20" height="20" />
 			</span>
 			<div>
 				<h3 class="poc-note__title">No hardware available yet?</h3>
@@ -516,7 +539,7 @@ const deliveredCases = [
 				<ul class="poc-price__highlights">
 					{priceHighlights.map((item) => <li>{item}</li>)}
 				</ul>
-				<NButton class="poc-cta poc-price__button" fullWidth>
+				<NButton data-contact-modal-open class="poc-cta poc-price__button" fullWidth>
 					Talk to an expert
 				</NButton>
 			</div>
@@ -529,9 +552,7 @@ const deliveredCases = [
 							<ul class="poc-checklist poc-checklist--price">
 								{column.map((item) => (
 									<li>
-										<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-											<path d={iconCheck} />
-										</svg>
+										<img class="poc-checklist__icon" src={iconCheck.src} alt="" width="15" height="12" />
 										<span>
 											{item.text}
 											{item.footnote && <span class="poc-price__star">*</span>}
@@ -544,7 +565,8 @@ const deliveredCases = [
 				</div>
 				<p class="poc-price__footnote">
 					<span class="poc-price__star">*</span> White-labeling is configured inside the base sprint when
-					your ThingsBoard license includes it.
+					your ThingsBoard license includes it. The price excludes your ThingsBoard subscription or license,
+					hosting, hardware, and third-party services such as an SMS gateway.
 				</p>
 			</div>
 		</div>
@@ -565,9 +587,7 @@ const deliveredCases = [
 					{
 						fitGood.map((item) => (
 							<li>
-								<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-									<path d={iconCheck} />
-								</svg>
+								<img class="poc-checklist__icon" src={iconCheck.src} alt="" width="15" height="12" />
 								<span>{item}</span>
 							</li>
 						))
@@ -577,14 +597,21 @@ const deliveredCases = [
 			<div class="poc-fit-card poc-fit-card--other">
 				<h3 class="poc-fit-card__title">We have a different proposal when</h3>
 				<ul class="poc-dotlist">
-					{fitOther.map((item) => <li>{item}</li>)}
+					{
+						fitOther.map((item) => (
+							<li>
+								<img class="poc-dotlist__icon" src={iconDot.src} alt="" width="8" height="8" />
+								<span>{item}</span>
+							</li>
+						))
+					}
 				</ul>
-				<NButton class="poc-cta poc-fit-card__button">Discover other options</NButton>
+				<NButton data-contact-modal-open class="poc-cta poc-fit-card__button">Discover other options</NButton>
 			</div>
 		</div>
 		<aside class="poc-note">
 			<span class="poc-note__icon" aria-hidden="true">
-				<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d={iconInfo} /></svg>
+				<img src={iconInfo.src} alt="" width="20" height="20" />
 			</span>
 			<div>
 				<h3 class="poc-note__title">Note</h3>
@@ -615,16 +642,13 @@ const deliveredCases = [
 			{
 				testimonials.map((item) => (
 					<figure class:list={['poc-testimonial', `poc-testimonial--${item.mark}`]}>
-						<svg
+						<img
 							class="poc-testimonial__mark"
-							viewBox="0 0 81 64"
-							width="81"
-							height="64"
-							fill="currentColor"
-							aria-hidden="true"
-						>
-							<path d={quoteMarks[item.mark]} />
-						</svg>
+							src={quoteMarks[item.mark].src}
+							alt=""
+							width="80"
+							height="65"
+						/>
 						<blockquote class="poc-testimonial__quote">
 							<p>{item.quote}</p>
 						</blockquote>
@@ -660,33 +684,42 @@ const deliveredCases = [
 			{
 				deliveredCases.map((item) => (
 					<li class="poc-case">
-						<a class="poc-case__link" href={`/case-studies/${item.slug}/`}>
-							<span
-								class="poc-case__image"
-								style={`background-image: url('${item.image}')`}
-								aria-hidden="true"
-							/>
-							<span class="poc-case__header">
-								<span class="poc-case__tag">{item.tag}</span>
-								<img
-									class="poc-case__logo"
-									src={item.logo}
-									alt={item.logoAlt}
-									width={item.logoWidth}
-									height={item.logoHeight}
-									style={`height: ${item.logoDisplayHeight}px`}
-									loading="lazy"
-								/>
-							</span>
-							<span class="poc-case__footer">
-								<span class="poc-case__title">{item.title}</span>
-								<span class="poc-case__stats">
-									{item.stats.map((stat) => (
-										<span class="poc-case__stat">
-											<span class="poc-case__value">{stat.value}</span>
-											<span class="poc-case__label">{stat.label}</span>
-										</span>
-									))}
+						<a
+							class="poc-case__link"
+							href={`/case-studies/${item.slug}/`}
+							style={`background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.3) 100%), url('/images/case-studies/${item.image}')`}
+						>
+							<span class="poc-case__content">
+								<span class="poc-case__header">
+									<span class="poc-case__tag">{item.tag}</span>
+									<img
+										class="poc-case__logo"
+										src={`/images/case-studies/${item.logo}`}
+										alt={item.logoAlt}
+										width={item.logoWidth}
+										height={item.logoHeight}
+										style={item.logoDisplayHeight && `height: ${item.logoDisplayHeight}px`}
+										loading="lazy"
+									/>
+								</span>
+								<span class="poc-case__footer">
+									<span class="poc-case__title">{item.title}</span>
+									<span class="poc-case__stats">
+										{item.stats.map((stat) => (
+											<span class="poc-case__stat">
+												<span class="poc-case__value">{stat.value}</span>
+												<span class="poc-case__short">{stat.short}</span>
+												<span class="poc-case__long">
+													{(stat.long ?? [stat.short]).map((line, i) => (
+														<>
+															{i > 0 && <br />}
+															{line}
+														</>
+													))}
+												</span>
+											</span>
+										))}
+									</span>
 								</span>
 							</span>
 						</a>
@@ -704,7 +737,7 @@ const deliveredCases = [
 				Before anyone signs, we check that a fixed scope fits your use case. In 30 minutes we confirm
 				the fit, walk through what you already have, and agree a kickoff date.
 			</p>
-			<NButton class="poc-cta poc-cta--workshop">Talk to an expert</NButton>
+			<NButton data-contact-modal-open class="poc-cta poc-cta--workshop">Talk to an expert</NButton>
 		</div>
 		<aside class="poc-contact" aria-label="Your contact">
 			<p class="poc-contact__label">Talk to</p>
@@ -721,12 +754,9 @@ const deliveredCases = [
 					<p class="poc-contact__role">ThingsBoard Custom Development Unit</p>
 				</div>
 			</div>
-			<p class="poc-contact__terms">
-				Fixed-price offer, valid 30 days. Scope, deliverables, and timeline are guaranteed subject to
-				the readiness prerequisites above.
-			</p>
 		</aside>
 	</section>
+	<ContactModal formId="poc_sales_modal" tags="sales" />
 </UseCaseLayout>
 
 <style lang="scss">
@@ -886,20 +916,53 @@ const deliveredCases = [
 	.poc-audience-card {
 		position: relative;
 		overflow: clip;
-		padding: $spacing-6;
+		padding: $spacing-5;
 		background: var(--color-bg-surface);
 		border: 1px solid var(--color-border);
 		border-radius: 12px;
 	}
 
-	// Decorative corner glow (Figma export, already cropped to the corner);
-	// the card's overflow clip + radius trims it to the rounded corner
+	// Card hover — same lift + shadow as the Device Library / Partners cards
+	.poc-audience-card,
+	.poc-deliverable,
+	.poc-start-card,
+	.poc-fit-card,
+	.poc-testimonial {
+		transition:
+			transform 0.2s,
+			box-shadow 0.2s;
+
+		&:hover {
+			transform: translateY(-2px);
+			box-shadow: var(--shadow-card-hover, 0 4px 12px rgba(0, 0, 0, 0.15));
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			transition: box-shadow 0.2s;
+
+			&:hover {
+				transform: none;
+			}
+		}
+	}
+
+	// Decorative corner glow (Figma export, cropped to the top-right corner and
+	// flipped into the bottom corner); the card's overflow clip + radius trims it
 	.poc-audience-card__glow {
 		position: absolute;
-		top: 0;
-		right: 0;
+		bottom: 0;
 		pointer-events: none;
 		user-select: none;
+
+		&--bottom-right {
+			right: 0;
+			transform: scaleY(-1);
+		}
+
+		&--bottom-left {
+			left: 0;
+			transform: scale(-1, -1);
+		}
 	}
 
 	// Content paints above the glow
@@ -907,23 +970,32 @@ const deliveredCases = [
 		position: relative;
 	}
 
-	.poc-audience-card__icon {
+	// Who-it's-for label on the left, icon on the right
+	.poc-audience-card__head {
 		display: flex;
 		align-items: center;
-		justify-content: center;
-		width: 36px;
-		height: 36px;
-		margin-bottom: $spacing-6;
+		justify-content: space-between;
+		gap: $spacing-4;
+		margin-bottom: $spacing-4;
+	}
+
+	.poc-audience-card__label {
+		@include text-s;
+		font-weight: $font-weight-medium;
 		color: var(--sl-color-accent);
-		background: var(--color-bg-surface);
-		border: 1px solid currentColor;
-		border-radius: $radius-sm;
+		margin: 0;
+	}
+
+	.poc-audience-card__icon {
+		flex-shrink: 0;
+		width: 24px;
+		height: 24px;
 	}
 
 	.poc-audience-card__title {
 		@include card-title-sm;
 		color: var(--color-text);
-		margin: 0 0 $spacing-1;
+		margin: 0 0 $spacing-4;
 	}
 
 	.poc-audience-card__text {
@@ -999,7 +1071,7 @@ const deliveredCases = [
 	}
 
 	.poc-journey__title {
-		font-size: $font-size-lg;
+		font-size: $font-size-base;
 		font-weight: $font-weight-medium;
 		line-height: 24px;
 		color: var(--color-text);
@@ -1013,10 +1085,12 @@ const deliveredCases = [
 	}
 
 	.poc-journey__lead {
-		@include text-table-cell;
-		color: var(--color-text-secondary);
+		font-size: $font-size-lg;
+		font-weight: $font-weight-medium;
+		line-height: 24px;
+		color: var(--color-text);
 		max-width: 551px;
-		margin: $spacing-4 0 0;
+		margin: $spacing-4 0 $spacing-2;
 	}
 
 	.poc-journey__note {
@@ -1046,6 +1120,11 @@ const deliveredCases = [
 	.poc-journey__step--question .poc-journey__marker {
 		border-color: var(--poc-question-border);
 		background: var(--poc-question-bg);
+	}
+
+	// Extra space before the outcome; padding (not margin) so the connector still reaches it
+	.poc-journey__step--question:has(+ .poc-journey__step--end) {
+		padding-bottom: $spacing-2;
 	}
 
 	// End: the outcome (green)
@@ -1323,19 +1402,19 @@ const deliveredCases = [
 		}
 	}
 
-	.poc-checklist svg {
+	// 15×12 check in a 20px slot, centred on the first 28px line
+	.poc-checklist__icon,
+	.poc-dotlist__icon {
 		flex-shrink: 0;
-		margin-top: 4px; // centres the 20px icon on the first 28px line
+		align-self: flex-start; // don't stretch to the item's height
 	}
 
-	.poc-dotlist li::before {
-		content: '';
-		flex-shrink: 0;
-		width: 8px;
-		height: 8px;
+	.poc-checklist__icon {
+		margin: 8px 2px 0 3px;
+	}
+
+	.poc-dotlist__icon {
 		margin-top: 10px;
-		border-radius: 50%;
-		background: var(--sl-color-accent);
 	}
 
 	// ---- Not sure your use case fits? ----
@@ -1447,8 +1526,6 @@ const deliveredCases = [
 
 	// ---- Fixed price ----
 	.poc-price {
-		--poc-price-check: #166c37;
-
 		display: grid;
 		grid-template-columns: 348px 1px minmax(0, 1fr);
 		column-gap: $spacing-6;
@@ -1540,10 +1617,6 @@ const deliveredCases = [
 		li {
 			color: var(--color-text);
 		}
-
-		svg {
-			color: var(--poc-price-check);
-		}
 	}
 
 	.poc-price__star {
@@ -1592,10 +1665,6 @@ const deliveredCases = [
 		@include card-title-sm;
 		color: var(--color-text);
 		margin: 0 0 $spacing-4;
-	}
-
-	.poc-checklist--fit svg {
-		color: var(--color-success);
 	}
 
 	.poc-fit-card__button {
@@ -1651,8 +1720,6 @@ const deliveredCases = [
 
 	// ---- What clients say about working with us ----
 	.poc-testimonials {
-		--poc-quote-mark: #e5ebff;
-
 		padding-top: 56px; // from the design
 
 		@include media-down(md) {
@@ -1692,8 +1759,8 @@ const deliveredCases = [
 	.poc-testimonial__mark {
 		position: absolute;
 		top: $spacing-2;
-		color: var(--poc-quote-mark);
 		pointer-events: none;
+		user-select: none;
 	}
 
 	.poc-testimonial--open .poc-testimonial__mark {
@@ -1730,6 +1797,8 @@ const deliveredCases = [
 		flex-shrink: 0;
 		width: 52px;
 		height: 52px;
+		object-fit: cover;
+		border-radius: 6px; // same corner as the design avatars, whatever the source photo
 	}
 
 	.poc-testimonial__person {
@@ -1771,15 +1840,16 @@ const deliveredCases = [
 		margin: 0 0 $spacing-8;
 	}
 
+	// Card layout, sizes and hover from the Development Services case-study cards
 	.poc-cases__grid {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: $spacing-6;
+		gap: 32px;
 		margin: 0;
 		padding: 0;
 		list-style: none;
 
-		@include media-down(md) {
+		@media (max-width: 959px) {
 			grid-template-columns: 1fr;
 		}
 	}
@@ -1788,103 +1858,187 @@ const deliveredCases = [
 		margin: 0;
 	}
 
-	// Photo card: darkened background image, tag + logo on top, title + stats at the bottom
+	// The photo sits on the link; a copy of it (::after, `background: inherit`) is what zooms
 	.poc-case__link {
 		position: relative;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		gap: $spacing-6;
-		min-height: 299px; // from the design
-		padding: $spacing-4;
+		display: block;
+		height: 299px;
 		overflow: hidden;
-		isolation: isolate;
 		color: var(--color-white);
 		text-decoration: none;
-		border-radius: 12px;
+		background-position: center;
+		background-size: cover;
+		border-radius: 24px;
 
-		&:hover .poc-case__image {
-			transform: scale(1.1);
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: inherit;
+			background-size: cover;
+			transform-origin: center;
+			transition: transform 0.5s;
+		}
+
+		&:hover,
+		&:focus-visible {
+			&::after {
+				transform: scale(1.2);
+			}
+
+			.poc-case__footer {
+				padding-bottom: 45px;
+			}
+
+			.poc-case__short {
+				opacity: 0;
+			}
+
+			.poc-case__long {
+				opacity: 1;
+			}
 		}
 
 		&:focus-visible {
 			outline: 2px solid var(--sl-color-accent);
 			outline-offset: 2px;
 		}
-	}
-
-	.poc-case__image {
-		position: absolute;
-		inset: 0;
-		z-index: -1;
-		background-color: var(--color-bg-dark);
-		background-position: center;
-		background-size: cover;
-		transition: transform 0.5s;
-
-		&::after {
-			content: '';
-			position: absolute;
-			inset: 0;
-			background: rgba(0, 0, 0, 0.4);
-		}
 
 		@media (prefers-reduced-motion: reduce) {
-			transition: none;
+			&::after {
+				transition: none;
+			}
+
+			&:hover::after,
+			&:focus-visible::after {
+				transform: none;
+			}
 		}
+	}
+
+	.poc-case__content {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: flex-start;
+		height: 100%;
+		padding: 20px;
 	}
 
 	.poc-case__header {
 		display: flex;
-		align-items: flex-start;
 		justify-content: space-between;
-		gap: $spacing-4;
+		width: 100%;
 	}
 
+	// Frosted-glass tag
 	.poc-case__tag {
-		@include text-xs;
-		line-height: 16px;
-		padding: $spacing-1 $spacing-3;
-		color: var(--color-text);
-		background: var(--color-white);
-		border-radius: $radius-sm;
+		position: relative;
+		overflow: hidden;
+		@include text-s;
+		font-weight: $font-weight-medium;
+		padding: $spacing-1 $spacing-2;
+		color: #1c1c1b;
+		background: rgba(255, 255, 255, 0.6);
+		border: 1px solid rgba(255, 255, 255, 0.3);
+		border-radius: 6px;
+		backdrop-filter: blur(5px);
+		-webkit-backdrop-filter: blur(5px);
+
+		&::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 1px;
+			background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+		}
+
+		&::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 1px;
+			height: 100%;
+			background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), transparent, rgba(255, 255, 255, 0.3));
+		}
 	}
 
 	.poc-case__logo {
 		width: auto;
-		max-width: 50%;
+		height: 36px;
 	}
 
 	.poc-case__footer {
 		display: block;
+		width: 100%;
+		transition: padding 0.5s;
 	}
 
 	.poc-case__title {
-		@include card-title-sm;
 		display: block;
+		@include text-overlay;
 		padding-bottom: $spacing-3;
 		margin-bottom: $spacing-3;
-		border-bottom: 1px solid var(--color-border-light);
+		border-bottom: 1px solid #b9c0c5;
 	}
 
 	.poc-case__stats {
-		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-		gap: $spacing-2;
+		display: flex;
+		min-height: 60px;
+
+		// Fixed-width columns don't fit a phone card — three equal columns instead
+		@media (max-width: 599px) {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: $spacing-2;
+		}
 	}
 
 	.poc-case__stat {
-		display: flex;
-		flex-direction: column;
+		position: relative;
+		flex-shrink: 0;
+		@include text-s;
+		width: 129px;
+		color: inherit;
+
+		&:last-child {
+			width: auto;
+		}
+
+		@media (max-width: 599px) {
+			width: auto;
+		}
 	}
 
 	.poc-case__value {
-		@include card-title;
+		display: block;
+		font-size: $font-size-2xl;
+		font-weight: $font-weight-medium;
+		line-height: 36px;
 	}
 
-	.poc-case__label {
-		@include text-s;
-		color: inherit;
+	// Short label by default, long label on hover — stacked in the same spot
+	.poc-case__short,
+	.poc-case__long {
+		position: absolute;
+		white-space: nowrap;
+		transition: opacity 0.5s linear;
+
+		// Wrap inside the column on phones
+		@media (max-width: 599px) {
+			left: 0;
+			right: 0;
+			white-space: normal;
+		}
+	}
+
+	.poc-case__long {
+		opacity: 0;
 	}
 
 	// ---- Next step: A 30-minute technical workshop ----
@@ -1946,7 +2100,7 @@ const deliveredCases = [
 	}
 
 	.poc-contact {
-		align-self: start;
+		align-self: center;
 		padding: $spacing-6;
 		background: var(--poc-dark-card);
 		border: 1px solid var(--poc-dark-border);
@@ -1963,9 +2117,6 @@ const deliveredCases = [
 		display: flex;
 		align-items: center;
 		gap: $spacing-4;
-		padding-bottom: $spacing-4;
-		margin-bottom: $spacing-4;
-		border-bottom: 1px solid var(--poc-dark-border);
 
 		p {
 			margin: 0;
@@ -1994,18 +2145,9 @@ const deliveredCases = [
 		color: var(--poc-dark-muted);
 	}
 
-	.poc-contact__terms {
-		@include text-m;
-		color: var(--poc-dark-muted);
-		margin: 0;
-	}
-
-	:global([data-theme='dark']) .poc-testimonials {
-		--poc-quote-mark: rgba(var(--color-primary-rgb), 0.2);
-	}
-
-	:global([data-theme='dark']) .poc-price {
-		--poc-price-check: var(--color-success);
+	// The quote-mark file is a fixed light tint — fade it so it stays subtle on dark cards
+	:global([data-theme='dark']) .poc-testimonial__mark {
+		opacity: 0.2;
 	}
 
 	:global([data-theme='dark']) .poc-deliverables {

@@ -1,0 +1,468 @@
+---
+// "Let's talk about your project" modal — same look and behaviour as the one on
+// /services/development-services/. Any element with `data-contact-modal-open` opens it.
+// `formId` and `tags` are sent with the submission so it reaches the right team.
+interface Props {
+	formId: string;
+	tags: string;
+	title?: string;
+	submitLabel?: string;
+}
+
+const { formId, tags, title = "Let's talk about your project", submitLabel = 'Submit request' } =
+	Astro.props;
+---
+
+<div id="contactModal" class="dev-modal" role="dialog" aria-modal="true" aria-labelledby="contactModalTitle">
+	<div class="dev-modal-content">
+		<div class="dev-modal-title-container">
+			<h2 id="contactModalTitle">{title}</h2>
+			<button type="button" class="dev-modal-close-button" aria-label="Close">
+				<img class="close" src="/images/close-icon.svg" alt="" width="47" height="47" />
+			</button>
+		</div>
+		<form
+			method="post"
+			action="https://formspree.io/f/xrbnqnna"
+			class="gtm_form contactModalForm"
+			novalidate
+		>
+			<div class="dev-modal-sub-content">
+				<div class="form-section">
+					<div class="form-element">
+						<label for="contact-modal-name">
+							<input
+								class="form-control input--empty"
+								value=""
+								placeholder="John Doe"
+								name="name"
+								id="contact-modal-name"
+								type="text"
+								maxlength="50"
+								aria-invalid="false"
+							/>
+							<p>Name</p>
+						</label>
+					</div>
+					<div class="form-element">
+						<label for="contact-modal-email">
+							<input
+								class="form-control input--empty"
+								value=""
+								placeholder="john@example.com"
+								name="email"
+								id="contact-modal-email"
+								type="email"
+								maxlength="80"
+								aria-invalid="false"
+							/>
+							<p>Email Address</p>
+						</label>
+					</div>
+					<div class="form-element next">
+						<label for="contact-modal-msg">
+							<textarea
+								id="contact-modal-msg"
+								class="form-control text-area input--empty"
+								placeholder="Type your message here"
+								name="message"
+								maxlength="800"></textarea>
+							<p class="text-area-label">Message</p>
+						</label>
+					</div>
+				</div>
+				<input type="hidden" name="utm_source" />
+				<input type="hidden" name="utm_medium" />
+				<input type="hidden" name="utm_campaign" />
+				<input type="hidden" name="utm_term" />
+				<input type="hidden" name="utm_content" />
+				<input type="hidden" name="tags" value={tags} />
+				<input type="hidden" name="form_id" value={formId} />
+				<input type="hidden" name="path" />
+				<div class="cus-hp-container">
+					<label for="contact-modal-hp">Leave this field empty</label>
+					<input type="text" id="contact-modal-hp" name="contact-modal-hp" autocomplete="off" />
+				</div>
+				<input type="hidden" class="form-rendered-at" value="" />
+			</div>
+			<div class="dev-modal-submit-container">
+				<input class="cdu-button button cus-submit-btn" value={submitLabel} type="submit" />
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+	const modal = document.getElementById('contactModal') as HTMLElement | null;
+	const form = modal?.querySelector<HTMLFormElement>('.contactModalForm') ?? null;
+
+	function openModal() {
+		if (!modal) return;
+		const timeInput = modal.querySelector<HTMLInputElement>('.form-rendered-at');
+		if (timeInput) timeInput.value = String(Math.floor(Date.now() / 1000));
+		modal.style.display = 'flex';
+		document.body.style.overflow = 'hidden';
+		modal.querySelector<HTMLInputElement>('input[name="name"]')?.focus();
+	}
+
+	function closeModal() {
+		if (!modal) return;
+		modal.style.display = 'none';
+		document.body.style.overflow = '';
+	}
+
+	document.addEventListener('click', (e) => {
+		const target = e.target as HTMLElement;
+		if (target.closest('[data-contact-modal-open]')) {
+			e.preventDefault();
+			openModal();
+		} else if (target === modal || target.closest('.dev-modal-close-button')) {
+			closeModal();
+		}
+	});
+
+	document.addEventListener('keydown', (e) => {
+		if (e.key === 'Escape' && modal?.style.display === 'flex') closeModal();
+	});
+
+	function validate(form: HTMLFormElement): boolean {
+		const fields = [
+			{ name: 'name', label: 'Name', type: 'text' },
+			{ name: 'email', label: 'Email Address', type: 'email' },
+			{ name: 'message', label: 'Message', type: 'textarea' },
+		];
+		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,63}$/;
+		// Reject common XSS payloads client-side so users get an inline
+		// error instead of Cloudflare's "you have been blocked" page.
+		const xssPattern =
+			/<\s*\/?\s*(?:script|iframe|object|embed)\b|javascript\s*:|on(?:click|error|load|focus|blur|mouseover|mouseout|change|submit|input|toggle|animationend)\s*=/i;
+
+		let isValid = true;
+		fields.forEach(({ name, label, type }) => {
+			const el = form.elements.namedItem(name) as HTMLInputElement | null;
+			if (!el) return;
+			el.classList.remove('invalid-input');
+			el.setAttribute('aria-invalid', 'false');
+			const oldHint = el.closest('label')?.nextElementSibling;
+			if (oldHint?.classList.contains('error-message-hint')) oldHint.remove();
+
+			const value = el.value.trim();
+			let msg = '';
+			if (!value) msg = `${label} is required.`;
+			else if (type === 'email' && !emailRegex.test(value)) msg = `Please enter a valid ${label.toLowerCase()}.`;
+			else if (xssPattern.test(value)) msg = `Please remove HTML or script tags from ${label.toLowerCase()}.`;
+			if (msg) {
+				isValid = false;
+				el.classList.add('invalid-input');
+				el.setAttribute('aria-invalid', 'true');
+				const hint = document.createElement('p');
+				hint.className = 'error-message-hint';
+				hint.textContent = msg;
+				el.closest('label')?.insertAdjacentElement('afterend', hint);
+			}
+		});
+		if (!isValid) form.querySelector<HTMLElement>('.invalid-input')?.focus();
+		return isValid;
+	}
+
+	if (form) {
+		const params = new URLSearchParams(window.location.search);
+		['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach((key) => {
+			const el = form.querySelector<HTMLInputElement>(`[name="${key}"]`);
+			if (el) el.value = params.get(key) || '';
+		});
+		const pathEl = form.querySelector<HTMLInputElement>('[name="path"]');
+		if (pathEl) pathEl.value = window.location.pathname;
+
+		// Randomize honeypot name so bots can't learn it
+		const hpInput = form.querySelector<HTMLInputElement>('.cus-hp-container input');
+		const hpLabel = form.querySelector<HTMLLabelElement>('.cus-hp-container label');
+		if (hpInput && hpLabel) {
+			const newName = 'hp_' + Math.random().toString(36).substring(2, 10);
+			hpInput.name = newName;
+			hpInput.id = newName;
+			hpLabel.htmlFor = newName;
+		}
+
+		// input--empty class drives the floating labels
+		form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('.form-control').forEach((el) => {
+			el.addEventListener('input', () => el.classList.toggle('input--empty', !el.value));
+		});
+
+		form.addEventListener('submit', (e) => {
+			if (!validate(form)) {
+				e.preventDefault();
+				return;
+			}
+			// Honeypot / timing check — bot signals. Don't post to Formspree,
+			// just show the "Thank you" placeholder text.
+			const timeInput = form.querySelector<HTMLInputElement>('.form-rendered-at');
+			if (hpInput && timeInput) {
+				const tooFast = Math.floor(Date.now() / 1000) - parseInt(timeInput.value, 10) < 3;
+				if (hpInput.value.trim() !== '' || tooFast) {
+					e.preventDefault();
+					form.innerHTML = '<p>Thank you! Your message has been received.</p>';
+					return;
+				}
+				hpInput.removeAttribute('name');
+			}
+		});
+	}
+</script>
+
+<style lang="scss">
+	.dev-modal {
+		display: none;
+		position: fixed;
+		align-items: center;
+		justify-content: center;
+		z-index: 13000;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.4);
+	}
+
+	.dev-modal-content {
+		width: 861px;
+		max-width: 90%;
+		max-height: 90%;
+		display: flex;
+		flex-direction: column;
+		animation: animatetop 0.4s;
+		background-color: #fefefe;
+		border: 1px solid #888;
+		border-radius: 24px;
+		overflow: hidden;
+		padding: 30px;
+	}
+
+	.dev-modal-title-container {
+		position: sticky;
+		top: 0;
+		background: #fefefe;
+		z-index: 1;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 8px;
+
+		h2 {
+			margin: 0;
+			font-size: 24px;
+			font-weight: 500;
+			color: #212529;
+			white-space: normal;
+			padding: 0;
+		}
+	}
+
+	.dev-modal-close-button {
+		cursor: pointer;
+		padding: 4px;
+		border: none;
+		background: none;
+
+		img {
+			width: 28px;
+			height: 28px;
+			display: block;
+		}
+	}
+
+	form {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		overflow: auto;
+	}
+
+	.cus-hp-container {
+		position: absolute;
+		left: -9999px;
+	}
+
+	.dev-modal-sub-content {
+		flex: 1;
+		overflow-y: auto;
+		min-height: 0;
+		padding: 20px 0;
+	}
+
+	.form-section {
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px;
+	}
+
+	.form-element {
+		display: inline-block;
+		position: relative;
+		width: calc(50% - 8px);
+		margin-bottom: 8px;
+
+		&.next,
+		&:last-of-type {
+			width: 100%;
+		}
+
+		.form-control {
+			width: 100%;
+			margin: 24px 0 0 0;
+			line-height: 30px;
+			font-size: 16px;
+			font-family: inherit;
+			vertical-align: middle;
+			border: 1px solid #e0e1e2;
+			background-color: transparent;
+			border-radius: 6px;
+			color: #212529;
+			box-shadow: none;
+			box-sizing: border-box;
+
+			&::placeholder {
+				color: #9e9e9e;
+			}
+			&.invalid-input {
+				border: 1px solid #d9534f;
+			}
+			&.invalid-input:focus {
+				border-color: #d9534f;
+				box-shadow: 0 0 0 0.2rem rgba(217, 83, 79, 0.25);
+			}
+
+			// Focus uses a box-shadow ring instead of growing the border —
+			// border width changes shift the input's content box.
+			&:focus {
+				outline: none;
+				border-color: #2a7dec;
+				box-shadow: 0 0 0 1px #2a7dec;
+				color: #212529;
+				&::placeholder {
+					opacity: 0.2;
+				}
+			}
+		}
+
+		input.form-control {
+			height: 44px;
+			padding: 0 16px;
+		}
+
+		textarea.form-control {
+			height: 170px;
+			resize: vertical;
+			padding: 8px 16px;
+			margin-bottom: 16px;
+			&:focus {
+				cursor: initial;
+			}
+		}
+
+		label {
+			display: block;
+			width: 100%;
+			line-height: 100%;
+			font-size: 14px;
+			margin-bottom: 0;
+
+			p {
+				cursor: text;
+				position: absolute;
+				left: unset;
+				top: unset;
+				margin: 0 0 0 10px;
+				padding: 11px 0;
+				font-size: 14px;
+				font-weight: 500;
+				color: #3d3d3d;
+				transition: 150ms;
+				transform: scale(1) translate(-10px, -86px);
+				pointer-events: none;
+
+				&.text-area-label {
+					position: absolute;
+					top: 68px;
+				}
+			}
+		}
+
+		.form-control:focus + p,
+		.form-control:not(.input--empty) + p {
+			color: inherit;
+		}
+
+		// :global() because the hint <p> is created in JS and never gets the
+		// scoping attribute; the scoped parent keeps the rule inside this form.
+		:global(.error-message-hint) {
+			color: #d9534f;
+			font-size: 14px;
+			font-weight: 400;
+			margin: 0;
+			width: 100%;
+			display: block;
+			box-sizing: border-box;
+		}
+	}
+
+	.dev-modal-submit-container {
+		position: sticky;
+		bottom: 0;
+		background: #fefefe;
+		z-index: 1;
+		margin-top: auto;
+		padding-top: 20px;
+	}
+
+	.cdu-button {
+		display: inline-block;
+		width: 100%;
+		height: 56px;
+		padding: 0;
+		border-radius: 6px;
+		color: #fff;
+		background-color: #2a7dec;
+		border: 1px solid #2a7dec;
+		font-family: inherit;
+		font-size: 20px;
+		font-weight: 600;
+		line-height: 1;
+		text-align: center;
+		cursor: pointer;
+		transition:
+			background-color 0.15s,
+			color 0.15s;
+
+		&:hover {
+			background-color: #fff;
+			color: #2a7dec;
+			// Cancel the global `:where(.button):hover` filter.
+			filter: none;
+			border: 1px solid #2a7dec;
+		}
+	}
+
+	@keyframes animatetop {
+		from {
+			top: -300px;
+			opacity: 0;
+		}
+		to {
+			top: 0;
+			opacity: 1;
+		}
+	}
+
+	@media (max-width: 959px) {
+		.dev-modal-title-container h2 {
+			font-size: 18px;
+		}
+
+		.form-element {
+			width: 100%;
+		}
+	}
+</style>
