@@ -39,6 +39,8 @@ interface Props {
 	 * images will compete with the real LCP target for bandwidth.
 	 */
 	preloadLcpImage?: string;
+	hideHeader?: boolean;
+	hideFooter?: boolean;
 }
 
 const {
@@ -60,6 +62,8 @@ const {
 	noIndex = false,
 	jsonLd,
 	preloadLcpImage,
+	hideHeader = false,
+	hideFooter = false,
 } = Astro.props;
 
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
@@ -115,16 +119,18 @@ const ogImage = ogImageProp ?? getOgImageUrl(Astro.url.pathname);
 		<GtmNoscript />
 
 		{/* Sticky unit: banner scrolls away, header pins. See `.tb-topbar` in HeaderContent. */}
-		<div class="tb-topbar">
-			<PromoBanner />
-			<Header githubLink={githubLink} githubLabel={githubLabel} platformQuery={platformQuery} gitHubPlatform={gitHubPlatform} />
-		</div>
+		{!hideHeader && (
+			<div class="tb-topbar">
+				<PromoBanner />
+				<Header githubLink={githubLink} githubLabel={githubLabel} platformQuery={platformQuery} gitHubPlatform={gitHubPlatform} />
+			</div>
+		)}
 		<CookieBanner />
 		<UtmTracker />
 
 		<slot />
 
-		<Footer />
+		{!hideFooter && <Footer />}
 
 		<!-- flip-nav sentinel: toggles `flip-nav` at ~10px scroll so transparent-header
 		     pages turn opaque early. (The banner hides via CSS in the .tb-topbar unit.) -->

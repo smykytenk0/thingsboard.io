@@ -4,32 +4,31 @@ import NButton from '../../components/Landing/NButton.astro';
 import ImageComparison from '../../components/UseCase/ImageComparison.astro';
 import SmartImage from '../../components/SmartImage.astro';
 import ContactModal from '../../components/Services/ContactModal.astro';
-import leadGlow from '~/assets/images/usecases/poc/custom-dev-lead-bg.svg';
-import glowPurple from '~/assets/images/usecases/poc/audience-glow-purple.svg';
-import glowBlue from '~/assets/images/usecases/poc/audience-glow-blue.svg';
-import glowYellow from '~/assets/images/usecases/poc/audience-glow-yellow.svg';
-import iconDeviceData from '~/assets/images/usecases/poc/audience-icon-device-data.svg';
-import iconEquipment from '~/assets/images/usecases/poc/audience-icon-equipment.svg';
-import iconProduct from '~/assets/images/usecases/poc/audience-icon-product.svg';
-import iconBrief from '~/assets/images/usecases/poc/journey-icon-brief.svg';
-import iconOutcome from '~/assets/images/usecases/poc/journey-icon-outcome.svg';
-import iconCheck from '~/assets/images/usecases/poc/list-icon-check.svg';
-import iconDot from '~/assets/images/usecases/poc/list-icon-dot.svg';
-import iconInfo from '~/assets/images/usecases/poc/note-icon-info.svg';
-import quoteOpen from '~/assets/images/usecases/poc/testimonial-quote-open.svg';
-import quoteClose from '~/assets/images/usecases/poc/testimonial-quote-close.svg';
+import leadGlow from '~/assets/images/proof-of-concept/custom-dev-lead-bg.svg';
+import glowPurple from '~/assets/images/proof-of-concept/audience-glow-purple.svg';
+import glowBlue from '~/assets/images/proof-of-concept/audience-glow-blue.svg';
+import glowYellow from '~/assets/images/proof-of-concept/audience-glow-yellow.svg';
+import iconDeviceData from '~/assets/images/proof-of-concept/audience-icon-device-data.svg';
+import iconEquipment from '~/assets/images/proof-of-concept/audience-icon-equipment.svg';
+import iconProduct from '~/assets/images/proof-of-concept/audience-icon-product.svg';
+import iconBrief from '~/assets/images/proof-of-concept/journey-icon-brief.svg';
+import iconOutcome from '~/assets/images/proof-of-concept/journey-icon-outcome.svg';
+import iconCheck from '~/assets/images/proof-of-concept/list-icon-check.svg';
+import iconDot from '~/assets/images/proof-of-concept/list-icon-dot.svg';
+import iconInfo from '~/assets/images/proof-of-concept/note-icon-info.svg';
+import quoteOpen from '~/assets/images/proof-of-concept/testimonial-quote-open.svg';
+import quoteClose from '~/assets/images/proof-of-concept/testimonial-quote-close.svg';
 
 const title = 'A working IoT application in 10 business days — for a fixed price';
 const description =
 	'One complete use case, built end to end: real data from your device or system, a clear operational interface, and automatic alerts when something needs attention. Complete for the agreed use case. Expandable when you need more.';
 
-const clientsDir = '/src/assets/images/usecases/poc/clients';
+const clientsDir = '/src/assets/images/proof-of-concept/clients';
 const clients = [
 	{ name: 'Magenta Business', file: 'magenta-business.svg', width: 86, height: 25 },
 	{ name: 'Super Bock Group', file: 'super-bock-group.svg', width: 79, height: 35 },
 	{ name: 'Kalitec', file: 'kalitec.svg', width: 94, height: 25 },
 	{ name: 'Suessco', file: 'suessco.svg', width: 119, height: 21 },
-	{ name: 'OXI', file: 'oxi.svg', width: 57, height: 21 },
 	{ name: 'IONA Tech', file: 'iona-tech-logo.svg', width: 83, height: 27 },
 	{ name: 'ASG Tech', file: 'asg-tech.svg', width: 169, height: 31 },
 ];
@@ -142,7 +141,6 @@ const gettingStarted = [
 ];
 
 const priceHighlights = ['Fixed price', '10 business days', 'One complete use case'];
-// Two independent columns, as in the design (items don't line up across columns)
 const priceIncluded = [
 	[
 		{ text: 'A working application covering one complete use case' },
@@ -177,13 +175,13 @@ const scopeStats = [
 ];
 
 const quoteMarks = { open: quoteOpen, close: quoteClose };
-const testimonialsDir = '/src/assets/images/usecases/poc/testimonials';
+const testimonialsDir = '/src/assets/images/proof-of-concept/testimonials';
 const testimonials = [
 	{
 		quote: 'The fixed-price, fast delivery approach worked perfectly for us.',
 		name: 'Tamati Iro',
 		role: 'VAS Manager',
-		avatar: 'tamati-iro.svg',
+		avatar: '/images/customers/tamati-iro.webp',
 		company: 'Vodafone',
 		logo: 'vodafone.svg',
 		logoWidth: 98,
@@ -195,7 +193,7 @@ const testimonials = [
 			'Working with the ThingsBoard team proved to be efficient, with just the right level of collaboration needed to deliver an optimal outcome.',
 		name: 'Klemen Pevec',
 		role: 'Head of Software Engineering',
-		avatar: 'klemen-pevec.png',
+		avatar: '/images/customers/kemen-pevec.webp',
 		company: 'Awake',
 		logo: 'awake.png',
 		logoWidth: 127,
@@ -204,8 +202,6 @@ const testimonials = [
 	},
 ] as const;
 
-// Same case-study cards as the Development Services page. Each stat shows a short
-// label that swaps to the long one (`long` lines) on hover.
 const deliveredCases = [
 	{
 		slug: 'schwarz',
@@ -235,36 +231,6 @@ const deliveredCases = [
 			{ value: '100%', short: 'Visibility', long: ['Visibility of beer', 'stock in', 'real-time'] },
 			{ value: '90%', short: 'Automation', long: ['Reduction in', 'manual', 'operations'] },
 			{ value: '3+', short: 'Solutions', long: ['Integrated', 'solutions'] },
-		],
-	},
-	{
-		slug: 'dacor',
-		tag: 'Industry 4.0',
-		title: 'Real-time production monitoring for automotive supplier by süc//dacor GmbH',
-		image: 'dacor.webp',
-		logo: 'dacor.svg',
-		logoAlt: 'Dacor logo',
-		logoWidth: 400,
-		logoHeight: 140,
-		stats: [
-			{ value: '20', short: 'Gateways', long: ['LoRaWAN', 'gateways in our', 'public network'] },
-			{ value: '5+', short: 'IoT experience', long: ['Experience in the', 'field of IoT with', 'LoRaWAN'] },
-			{ value: '150', short: 'Sensor types', long: ['Sensor types', 'tested in', 'our lab'] },
-		],
-	},
-	{
-		slug: 'oxi',
-		tag: 'Energy and utilities',
-		title: 'Empowering alternative energy: how OXI TRADE streamlined IoT infrastructure with TB',
-		image: 'oxi.webp',
-		logo: 'oxi.svg',
-		logoAlt: 'OXI Trade logo',
-		logoWidth: 153,
-		logoHeight: 56,
-		stats: [
-			{ value: '10+', short: 'Experience', long: ['Years experience', 'in the alternative', 'energy sector'] },
-			{ value: '7K', short: 'Sales', long: ['Pellet burners', 'sold'] },
-			{ value: '96%', short: 'Efficiency', long: ['Efficiency of', 'pellet burners'] },
 		],
 	},
 	{
@@ -302,7 +268,7 @@ const deliveredCases = [
 ];
 ---
 
-<UseCaseLayout title={title} description={description} pageSlug="poc">
+<UseCaseLayout title={title} description={description} pageSlug="poc" hideHeader hideFooter>
 	<section class="poc-hero">
 		<div class="poc-hero__content">
 			<h1 class="usecase-title poc-title">{title}</h1>
@@ -313,7 +279,7 @@ const deliveredCases = [
 			<img class="poc-hero__glow" src={leadGlow.src} alt="" aria-hidden="true" />
 			<SmartImage
 				class="poc-hero__lead"
-				src="/src/assets/images/usecases/poc/head-of-delivery-quote.png"
+				src="/src/assets/images/proof-of-concept/head-of-delivery-quote.png"
 				alt="Nizar Ali, Head of delivery: “You bring the product knowledge. We bring the IoT implementation experience.”"
 				width={418}
 				height={103}
@@ -324,7 +290,7 @@ const deliveredCases = [
 
 	<ImageComparison
 		class="poc-compare"
-		baseImage="/src/assets/images/usecases/poc/poc-dashboard.png"
+		baseImage="/src/assets/images/proof-of-concept/poc-dashboard.png"
 		baseImageAlt="ThingsBoard weather station dashboard with temperature, humidity, pressure and rainfall"
 		width={1440}
 		height={900}
@@ -655,7 +621,7 @@ const deliveredCases = [
 						<figcaption class="poc-testimonial__footer">
 							<SmartImage
 								class="poc-testimonial__avatar"
-								src={`${testimonialsDir}/${item.avatar}`}
+								src={item.avatar}
 								alt={item.name}
 								width={52}
 								height={52}
@@ -744,7 +710,7 @@ const deliveredCases = [
 			<div class="poc-contact__person">
 				<SmartImage
 					class="poc-contact__avatar"
-					src="/src/assets/images/usecases/poc/nizar-ali.png"
+					src="/src/assets/images/proof-of-concept/nizar-ali.png"
 					alt="Nizar Ali"
 					width={52}
 					height={52}
@@ -773,8 +739,6 @@ const deliveredCases = [
 		margin: 0 0 $spacing-8;
 	}
 
-	// Text on the left, development-lead card on the right; stacks below lg,
-	// where the 596px title and the 418px card no longer fit side by side
 	.poc-hero {
 		display: flex;
 		align-items: center;
@@ -794,8 +758,6 @@ const deliveredCases = [
 		max-width: 100%;
 	}
 
-	// Decorative radial glow behind the card: right edge on the container border
-	// (cancels the side padding), ellipse centre (y = 249 of 460) on the card's centre
 	.poc-hero__glow {
 		position: absolute;
 		top: calc(50% - 249px);
@@ -814,8 +776,6 @@ const deliveredCases = [
 		height: auto;
 	}
 
-	// Typography matches `button-base` (ui/button: 16px / 500 / 1.5); `font-family: inherit`
-	// because a <button> doesn't inherit the site font and would otherwise fall back to Arial.
 	.poc-cta {
 		font-family: inherit;
 		font-weight: $font-weight-medium;
@@ -826,7 +786,6 @@ const deliveredCases = [
 		margin: 0 0 $spacing-12;
 	}
 
-	// HTML side of the comparison; fills the whole slider area
 	.poc-compare__brief {
 		display: flex;
 		align-items: center;
@@ -835,7 +794,6 @@ const deliveredCases = [
 		background: var(--color-bg-light);
 	}
 
-	// Keeps the text in the left half, clear of the divider's starting position
 	.poc-brief {
 		max-width: 450px;
 		margin-left: 35px;
@@ -860,7 +818,6 @@ const deliveredCases = [
 		margin: 0;
 	}
 
-	// One row, equal space between logos; wraps (centered) once they no longer fit
 	.poc-clients__logos {
 		display: flex;
 		flex-wrap: wrap;
@@ -922,7 +879,6 @@ const deliveredCases = [
 		border-radius: 12px;
 	}
 
-	// Card hover — same lift + shadow as the Device Library / Partners cards
 	.poc-audience-card,
 	.poc-deliverable,
 	.poc-start-card,
@@ -946,8 +902,6 @@ const deliveredCases = [
 		}
 	}
 
-	// Decorative corner glow (Figma export, cropped to the top-right corner and
-	// flipped into the bottom corner); the card's overflow clip + radius trims it
 	.poc-audience-card__glow {
 		position: absolute;
 		bottom: 0;
@@ -965,12 +919,10 @@ const deliveredCases = [
 		}
 	}
 
-	// Content paints above the glow
 	.poc-audience-card > :not(.poc-audience-card__glow) {
 		position: relative;
 	}
 
-	// Who-it's-for label on the left, icon on the right
 	.poc-audience-card__head {
 		display: flex;
 		align-items: center;
@@ -1004,10 +956,9 @@ const deliveredCases = [
 		margin: 0;
 	}
 	.poc-journey {
-		// Colours from the design with no site token yet; dark variants keep contrast
-		--poc-question-bg: #fff5e6;
-		--poc-question-border: #f19102;
-		--poc-outcome-bg: #ebfaf1;
+		--poc-question-bg: var(--sl-color-orange-low);
+		--poc-question-border: var(--sl-color-orange-high);
+		--poc-outcome-bg: var(--sl-color-green-low);
 
 		padding-top: $spacing-30;
 
@@ -1020,7 +971,6 @@ const deliveredCases = [
 		}
 	}
 
-	// Vertical timeline: 44px markers joined by a line through their centres
 	.poc-journey__steps {
 		display: flex;
 		flex-direction: column;
@@ -1043,8 +993,6 @@ const deliveredCases = [
 			column-gap: $spacing-4;
 		}
 
-		// Connector: from just below this marker to just above the next one (4px gap at each end),
-		// so it never touches the markers or runs past the last one when text wraps
 		&:not(:last-child)::after {
 			content: '';
 			position: absolute;
@@ -1102,7 +1050,6 @@ const deliveredCases = [
 		border-radius: $radius-lg;
 	}
 
-	// Start: the brief (accent) — tint layered over the surface colour
 	.poc-journey__step--start {
 		.poc-journey__marker,
 		.poc-journey__note {
@@ -1116,18 +1063,15 @@ const deliveredCases = [
 		}
 	}
 
-	// Open questions: dark "?" on light yellow with an orange outline
 	.poc-journey__step--question .poc-journey__marker {
 		border-color: var(--poc-question-border);
 		background: var(--poc-question-bg);
 	}
 
-	// Extra space before the outcome; padding (not margin) so the connector still reaches it
 	.poc-journey__step--question:has(+ .poc-journey__step--end) {
 		padding-bottom: $spacing-2;
 	}
 
-	// End: the outcome (green)
 	.poc-journey__step--end {
 		.poc-journey__marker,
 		.poc-journey__note {
@@ -1160,7 +1104,6 @@ const deliveredCases = [
 		margin: 0 auto $spacing-10;
 	}
 
-	// Scrolls sideways on narrow screens instead of squashing the 11 day columns
 	.poc-timeline {
 		--poc-timeline-bg: linear-gradient(rgba(var(--color-primary-rgb), 0.05), rgba(var(--color-primary-rgb), 0.05)),
 			var(--color-bg-surface);
@@ -1182,7 +1125,6 @@ const deliveredCases = [
 			font-weight: $font-weight-normal;
 		}
 
-		// Task label column; stays in place while the days scroll underneath on narrow screens
 		th:first-child {
 			position: sticky;
 			left: 0;
@@ -1212,14 +1154,12 @@ const deliveredCases = [
 			padding-bottom: 0;
 		}
 
-		// Column lines between the label column and every day
 		tbody td {
 			position: relative;
 			padding: 0;
 			border-left: 1px solid var(--color-border-light);
 		}
 
-		// Breathing room above the first and below the last task
 		tbody tr:first-child > * {
 			height: 60px;
 			padding-top: $spacing-5;
@@ -1230,7 +1170,6 @@ const deliveredCases = [
 			padding-bottom: $spacing-3;
 		}
 
-		// Keep those two rows' bars centred on the 40px row, not the padded cell
 		tbody tr:first-child .poc-timeline__bar {
 			top: calc(50% + #{$spacing-5} / 2);
 		}
@@ -1240,8 +1179,6 @@ const deliveredCases = [
 		}
 	}
 
-	// Soft bar across the task's days: transparent at the ends, strongest in the middle.
-	// Sits in the first day's cell and stretches over `--span` columns (plus their 1px lines).
 	.poc-timeline__bar {
 		position: absolute;
 		top: 50%;
@@ -1258,7 +1195,7 @@ const deliveredCases = [
 	}
 
 	.poc-deliverables {
-		--poc-number-color: #b3c7ff; // from the design; no site token has this exact value
+		--poc-number-color: #b3c7ff;
 
 		padding-top: $spacing-20;
 
@@ -1325,7 +1262,6 @@ const deliveredCases = [
 		margin: 0;
 	}
 
-	// ---- Shared section pieces (sections below the day-10 cards) ----
 	.poc-section {
 		padding-top: $spacing-20;
 
@@ -1346,7 +1282,6 @@ const deliveredCases = [
 		margin: 0 auto $spacing-10;
 	}
 
-	// Info note: outlined icon square + title + text on the light accent tint
 	.poc-note {
 		display: flex;
 		align-items: center;
@@ -1383,7 +1318,6 @@ const deliveredCases = [
 		margin: 0;
 	}
 
-	// Check / dot lists: 20px icon (or 8px dot) + 8px gap + text
 	.poc-checklist,
 	.poc-dotlist {
 		display: flex;
@@ -1402,11 +1336,10 @@ const deliveredCases = [
 		}
 	}
 
-	// 15×12 check in a 20px slot, centred on the first 28px line
 	.poc-checklist__icon,
 	.poc-dotlist__icon {
 		flex-shrink: 0;
-		align-self: flex-start; // don't stretch to the item's height
+		align-self: flex-start;
 	}
 
 	.poc-checklist__icon {
@@ -1417,13 +1350,12 @@ const deliveredCases = [
 		margin-top: 10px;
 	}
 
-	// ---- Not sure your use case fits? ----
 	.poc-cta-banner {
 		margin-top: $spacing-20;
 		padding: $spacing-12 $spacing-6;
 		text-align: center;
 		color: var(--color-white);
-		background: rgb(var(--color-primary-rgb)); // same blue in both themes, keeps white text legible
+		background: rgb(var(--color-primary-rgb));
 		border-radius: $radius-xl;
 
 		@include media-down(md) {
@@ -1444,7 +1376,6 @@ const deliveredCases = [
 		margin: 0 0 $spacing-5;
 	}
 
-	// Light grey button on the blue banner (NButton reads its colours from these properties)
 	.poc-cta.poc-cta--light {
 		--_btn-color: var(--color-border);
 		--_btn-color-hover: var(--color-border-light);
@@ -1454,13 +1385,12 @@ const deliveredCases = [
 		min-width: 200px;
 	}
 
-	// ---- Three things to get started ----
 	.poc-start__cards {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		gap: $spacing-6;
 		margin: 0;
-		padding: $spacing-6 0 0; // room for the badges that straddle the card tops
+		padding: $spacing-6 0 0;
 		list-style: none;
 
 		@include media-down(md) {
@@ -1469,8 +1399,6 @@ const deliveredCases = [
 		}
 	}
 
-	// Figma glow along the bottom edge, as a background so the card's radius clips it
-	// (no overflow clipping, which would cut off the badge on the top edge)
 	.poc-start-card {
 		--glow: none;
 
@@ -1483,15 +1411,15 @@ const deliveredCases = [
 	}
 
 	.poc-start-card--blue {
-		--glow: url('../../assets/images/usecases/poc/start-glow-blue.svg');
+		--glow: url('../../assets/images/proof-of-concept/start-glow-blue.svg');
 	}
 
 	.poc-start-card--yellow {
-		--glow: url('../../assets/images/usecases/poc/start-glow-yellow.svg');
+		--glow: url('../../assets/images/proof-of-concept/start-glow-yellow.svg');
 	}
 
 	.poc-start-card--purple {
-		--glow: url('../../assets/images/usecases/poc/start-glow-purple.svg');
+		--glow: url('../../assets/images/proof-of-concept/start-glow-purple.svg');
 	}
 
 	.poc-start-card__number {
@@ -1524,7 +1452,6 @@ const deliveredCases = [
 		margin: 0;
 	}
 
-	// ---- Fixed price ----
 	.poc-price {
 		display: grid;
 		grid-template-columns: 348px 1px minmax(0, 1fr);
@@ -1629,7 +1556,6 @@ const deliveredCases = [
 		margin: $spacing-3 0 0;
 	}
 
-	// ---- Designed for one use case ----
 	.poc-fit {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1640,7 +1566,6 @@ const deliveredCases = [
 		}
 	}
 
-	// 2px coloured left edge, thin neutral border elsewhere
 	.poc-fit-card {
 		padding: $spacing-8;
 		background: var(--color-bg-surface);
@@ -1671,7 +1596,6 @@ const deliveredCases = [
 		margin-top: $spacing-6;
 	}
 
-	// ---- The scope comes from work already delivered ----
 	.poc-section-title.poc-scope__title {
 		margin-bottom: $spacing-16;
 
@@ -1718,9 +1642,8 @@ const deliveredCases = [
 		margin: $spacing-2 0 0;
 	}
 
-	// ---- What clients say about working with us ----
 	.poc-testimonials {
-		padding-top: 56px; // from the design
+		padding-top: 56px;
 
 		@include media-down(md) {
 			padding-top: $spacing-16;
@@ -1755,7 +1678,6 @@ const deliveredCases = [
 		border-radius: 12px;
 	}
 
-	// Large decorative quote mark behind the text: “ top-left, ” top-right
 	.poc-testimonial__mark {
 		position: absolute;
 		top: $spacing-2;
@@ -1773,7 +1695,7 @@ const deliveredCases = [
 
 	.poc-testimonial__quote {
 		position: relative;
-		margin: 0 0 44px; // from the design
+		margin: 0 0 44px;
 		padding: 0;
 		border: 0;
 
@@ -1784,7 +1706,6 @@ const deliveredCases = [
 		}
 	}
 
-	// Pinned to the card bottom so both cards' footers line up
 	.poc-testimonial__footer {
 		position: relative;
 		display: flex;
@@ -1798,7 +1719,7 @@ const deliveredCases = [
 		width: 52px;
 		height: 52px;
 		object-fit: cover;
-		border-radius: 6px; // same corner as the design avatars, whatever the source photo
+		border-radius: 6px;
 	}
 
 	.poc-testimonial__person {
@@ -1824,9 +1745,8 @@ const deliveredCases = [
 		height: auto;
 	}
 
-	// ---- Where it has already been delivered ----
 	.poc-cases {
-		padding-top: 56px; // from the design
+		padding-top: 56px;
 
 		@include media-down(md) {
 			padding-top: $spacing-16;
@@ -1840,7 +1760,6 @@ const deliveredCases = [
 		margin: 0 0 $spacing-8;
 	}
 
-	// Card layout, sizes and hover from the Development Services case-study cards
 	.poc-cases__grid {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1858,7 +1777,6 @@ const deliveredCases = [
 		margin: 0;
 	}
 
-	// The photo sits on the link; a copy of it (::after, `background: inherit`) is what zooms
 	.poc-case__link {
 		position: relative;
 		display: block;
@@ -1933,7 +1851,6 @@ const deliveredCases = [
 		width: 100%;
 	}
 
-	// Frosted-glass tag
 	.poc-case__tag {
 		position: relative;
 		overflow: hidden;
@@ -1991,7 +1908,6 @@ const deliveredCases = [
 		display: flex;
 		min-height: 60px;
 
-		// Fixed-width columns don't fit a phone card — three equal columns instead
 		@media (max-width: 599px) {
 			display: grid;
 			grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2022,14 +1938,12 @@ const deliveredCases = [
 		line-height: 36px;
 	}
 
-	// Short label by default, long label on hover — stacked in the same spot
 	.poc-case__short,
 	.poc-case__long {
 		position: absolute;
 		white-space: nowrap;
 		transition: opacity 0.5s linear;
 
-		// Wrap inside the column on phones
 		@media (max-width: 599px) {
 			left: 0;
 			right: 0;
@@ -2041,8 +1955,6 @@ const deliveredCases = [
 		opacity: 0;
 	}
 
-	// ---- Next step: A 30-minute technical workshop ----
-	// Always-dark block (same in both themes), so its colours are fixed values from the design
 	.poc-workshop {
 		--poc-dark-bg: #1e1f23;
 		--poc-dark-card: #262830;
@@ -2054,7 +1966,6 @@ const deliveredCases = [
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) 452px;
 		gap: $spacing-5;
-		// Border to border: cancels the container's side padding and covers its 1px side borders
 		margin: $spacing-20 calc(-1 * #{$spacing-5} - 1px) 0;
 		padding: $spacing-10;
 		color: var(--color-white);
@@ -2089,7 +2000,6 @@ const deliveredCases = [
 		margin: 0 0 $spacing-8;
 	}
 
-	// Light button on the dark block (NButton reads its colours from these properties)
 	.poc-cta.poc-cta--workshop {
 		--_btn-color: var(--poc-dark-text);
 		--_btn-color-hover: var(--color-white);
@@ -2145,17 +2055,11 @@ const deliveredCases = [
 		color: var(--poc-dark-muted);
 	}
 
-	// The quote-mark file is a fixed light tint — fade it so it stays subtle on dark cards
 	:global([data-theme='dark']) .poc-testimonial__mark {
 		opacity: 0.2;
 	}
 
 	:global([data-theme='dark']) .poc-deliverables {
 		--poc-number-color: rgba(var(--color-primary-rgb), 0.55);
-	}
-
-	:global([data-theme='dark']) .poc-journey {
-		--poc-question-bg: rgba(241, 145, 2, 0.12);
-		--poc-outcome-bg: rgba(31, 139, 77, 0.15);
 	}
 </style>

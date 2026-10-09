@@ -1,7 +1,4 @@
 ---
-// "Let's talk about your project" modal — same look and behaviour as the one on
-// /services/development-services/. Any element with `data-contact-modal-open` opens it.
-// `formId` and `tags` are sent with the submission so it reaches the right team.
 interface Props {
 	formId: string;
 	tags: string;
@@ -326,7 +323,8 @@ const { formId, tags, title = "Let's talk about your project", submitLabel = 'Su
 			&::placeholder {
 				color: #9e9e9e;
 			}
-			&.invalid-input {
+			&.invalid-input,
+			&.invalid-input:hover {
 				border: 1px solid #d9534f;
 			}
 			&.invalid-input:focus {
@@ -334,12 +332,15 @@ const { formId, tags, title = "Let's talk about your project", submitLabel = 'Su
 				box-shadow: 0 0 0 0.2rem rgba(217, 83, 79, 0.25);
 			}
 
+			&:hover {
+				border-color: var(--color-primary);
+			}
 			// Focus uses a box-shadow ring instead of growing the border —
 			// border width changes shift the input's content box.
 			&:focus {
 				outline: none;
-				border-color: #2a7dec;
-				box-shadow: 0 0 0 1px #2a7dec;
+				border-color: var(--color-primary);
+				box-shadow: 0 0 0 1px var(--color-primary);
 				color: #212529;
 				&::placeholder {
 					opacity: 0.2;
@@ -423,25 +424,25 @@ const { formId, tags, title = "Let's talk about your project", submitLabel = 'Su
 		height: 56px;
 		padding: 0;
 		border-radius: 6px;
-		color: #fff;
-		background-color: #2a7dec;
-		border: 1px solid #2a7dec;
+		color: var(--sl-color-black);
+		background-color: var(--color-primary);
+		background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0));
+		border: none;
 		font-family: inherit;
 		font-size: 20px;
 		font-weight: 600;
 		line-height: 1;
 		text-align: center;
 		cursor: pointer;
-		transition:
-			background-color 0.15s,
-			color 0.15s;
 
 		&:hover {
-			background-color: #fff;
-			color: #2a7dec;
+			background-image: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15));
 			// Cancel the global `:where(.button):hover` filter.
 			filter: none;
-			border: 1px solid #2a7dec;
+		}
+
+		&:active {
+			background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25));
 		}
 	}
 
