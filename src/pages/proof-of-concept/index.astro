@@ -23,12 +23,20 @@ const title = 'A working IoT application in 10 business days — for a fixed pri
 const description =
 	'One complete use case, built end to end: real data from your device or system, a clear operational interface, and automatic alerts when something needs attention. Complete for the agreed use case. Expandable when you need more.';
 
+const brief = {
+	day0: 'Day 0 — your brief in plain words',
+	day10: 'Day 10 — the working application',
+	quote:
+		'“I need to monitor weather stations across the country in one place — see live temperature, humidity, pressure and rainfall, check the trends, and get an alert when rainfall exceeds the limit.”',
+};
+
 const clientsDir = '/src/assets/images/proof-of-concept/clients';
 const clients = [
 	{ name: 'Magenta Business', file: 'magenta-business.svg', width: 86, height: 25 },
 	{ name: 'Super Bock Group', file: 'super-bock-group.svg', width: 79, height: 35 },
 	{ name: 'Kalitec', file: 'kalitec.svg', width: 94, height: 25 },
 	{ name: 'Suessco', file: 'suessco.svg', width: 119, height: 21 },
+	{ name: 'OXI', file: 'oxi.svg', width: 57, height: 21 },
 	{ name: 'IONA Tech', file: 'iona-tech-logo.svg', width: 83, height: 27 },
 	{ name: 'ASG Tech', file: 'asg-tech.svg', width: 169, height: 31 },
 ];
@@ -93,7 +101,11 @@ const timeline = [
 	{ task: 'Alerts, actions & reports', start: 8, end: 8 },
 	{ task: 'Deployment & QA', start: 9, end: 9 },
 	{ task: 'Handover', start: 10, end: 10 },
-];
+].map((row) => ({
+	...row,
+	span: row.end - row.start + 1,
+	days: row.start === row.end ? `Day ${row.start}` : `Days ${row.start}–${row.end}`,
+}));
 
 const deliverables = [
 	{
@@ -277,14 +289,22 @@ const deliveredCases = [
 		</div>
 		<div class="poc-hero__media">
 			<img class="poc-hero__glow" src={leadGlow.src} alt="" aria-hidden="true" />
-			<SmartImage
-				class="poc-hero__lead"
-				src="/src/assets/images/proof-of-concept/head-of-delivery-quote.png"
-				alt="Nizar Ali, Head of delivery: “You bring the product knowledge. We bring the IoT implementation experience.”"
-				width={418}
-				height={103}
-				loading="eager"
-			/>
+			<figure class="poc-lead">
+				<figcaption class="poc-lead__name">Nizar Ali - Head of delivery</figcaption>
+				<div class="poc-lead__row">
+					<blockquote class="poc-lead__bubble">
+						<p>You bring the product knowledge. We bring the IoT implementation experience.</p>
+					</blockquote>
+					<SmartImage
+						class="poc-lead__avatar"
+						src="/src/assets/images/proof-of-concept/nizar-ali.png"
+						alt="Nizar Ali"
+						width={52}
+						height={52}
+						loading="eager"
+					/>
+				</div>
+			</figure>
 		</div>
 	</section>
 
@@ -297,17 +317,24 @@ const deliveredCases = [
 	>
 		<div slot="overlay" class="poc-compare__brief">
 			<div class="poc-brief">
-				<p class="poc-brief__subtitle">
-					Day 0 — your brief in plain words → Day 10 — the working application
-				</p>
-				<p class="poc-brief__quote">
-					“I need to monitor weather stations across the country in one place — see live
-					temperature, humidity, pressure and rainfall, check the trends, and get an alert when
-					rainfall exceeds the limit.”
-				</p>
+				<p class="poc-brief__subtitle">{brief.day0} → {brief.day10}</p>
+				<p class="poc-brief__quote">{brief.quote}</p>
 			</div>
 		</div>
 	</ImageComparison>
+
+	<section class="poc-compare-mobile">
+		<p class="poc-brief__subtitle">{brief.day0}</p>
+		<p class="poc-brief__quote">{brief.quote}</p>
+		<p class="poc-brief__subtitle poc-compare-mobile__result">{brief.day10}</p>
+		<SmartImage
+			class="poc-compare-mobile__image"
+			src="/src/assets/images/proof-of-concept/poc-dashboard.png"
+			alt="ThingsBoard weather station dashboard with temperature, humidity, pressure and rainfall"
+			width={1440}
+			height={900}
+		/>
+	</section>
 
 	<section class="poc-clients">
 		<p class="poc-clients__caption">We created solutions for</p>
@@ -415,13 +442,8 @@ const deliveredCases = [
 								{timelineDays.map((day) => (
 									<td>
 										{day === row.start && (
-											<span
-												class="poc-timeline__bar"
-												style={`--span: ${row.end - row.start + 1}`}
-											>
-												<span class="visually-hidden">
-													{row.start === row.end ? `Day ${row.start}` : `Days ${row.start}–${row.end}`}
-												</span>
+											<span class="poc-timeline__bar" style={`--span: ${row.span}`}>
+												<span class="visually-hidden">{row.days}</span>
 											</span>
 										)}
 									</td>
@@ -431,6 +453,22 @@ const deliveredCases = [
 					}
 				</tbody>
 			</table>
+			<ol class="poc-timeline__list">
+				{
+					timeline.map((row) => (
+						<li class="poc-timeline__item">
+							<span class="poc-timeline__task">{row.task}</span>
+							<span class="poc-timeline__days">{row.days}</span>
+							<span class="poc-timeline__track" aria-hidden="true">
+								<span
+									class="poc-timeline__track-bar"
+									style={`--start: ${row.start}; --span: ${row.span}`}
+								/>
+							</span>
+						</li>
+					))
+				}
+			</ol>
 		</div>
 	</section>
 
@@ -737,6 +775,11 @@ const deliveredCases = [
 		color: var(--color-text-secondary);
 		max-width: 504px;
 		margin: 0 0 $spacing-8;
+
+		@include media-down(md) {
+			@include text-s;
+			color: var(--color-text-secondary);
+		}
 	}
 
 	.poc-hero {
@@ -749,6 +792,16 @@ const deliveredCases = [
 		@include media-down(lg) {
 			flex-direction: column;
 			align-items: flex-start;
+		}
+
+		@include media-down(md) {
+			align-items: stretch;
+			gap: $spacing-10;
+			margin-bottom: $spacing-6;
+
+			.poc-cta {
+				width: 100%;
+			}
 		}
 	}
 
@@ -769,11 +822,68 @@ const deliveredCases = [
 		user-select: none;
 	}
 
-	.poc-hero__lead {
+	.poc-lead {
 		position: relative;
-		display: block;
+		width: 418px;
 		max-width: 100%;
-		height: auto;
+		margin: 0;
+
+		@include media-down(md) {
+			width: 100%;
+		}
+	}
+
+	.poc-lead__name {
+		@include text-s;
+		color: var(--color-text-secondary);
+		margin: 0 0 $spacing-1 $spacing-4;
+	}
+
+	.poc-lead__row {
+		display: flex;
+		align-items: flex-end;
+		gap: $spacing-3;
+	}
+
+	.poc-lead__bubble {
+		position: relative;
+		flex: 1;
+		margin: 0;
+		padding: $spacing-2 $spacing-4;
+		background: linear-gradient(rgba(var(--color-primary-rgb), 0.2), rgba(var(--color-primary-rgb), 0.2)),
+			var(--color-bg-surface);
+		border: 0;
+		border-radius: 12px 12px 0 12px;
+
+		&::after {
+			content: '';
+			position: absolute;
+			right: -8px;
+			bottom: 0;
+			width: 8px;
+			height: 10px;
+			background: inherit;
+			clip-path: polygon(0 0, 0 100%, 100% 100%);
+		}
+
+		p {
+			@include text-m;
+			color: var(--color-text);
+			margin: 0;
+
+			@include media-down(md) {
+				line-height: 24px;
+			}
+		}
+	}
+
+	.poc-lead__avatar {
+		flex-shrink: 0;
+		width: 44px;
+		height: 44px;
+		object-fit: cover;
+		border: 1px solid var(--color-border-light);
+		border-radius: $radius-md;
 	}
 
 	.poc-cta {
@@ -784,6 +894,46 @@ const deliveredCases = [
 
 	.poc-compare {
 		margin: 0 0 $spacing-12;
+
+		@media (max-width: 1079px) {
+			margin-right: calc(-1 * #{$spacing-5} - 1px);
+			margin-left: calc(-1 * #{$spacing-5} - 1px);
+			max-width: none;
+		}
+
+		@include media-down(md) {
+			display: none;
+		}
+	}
+
+	.poc-compare-mobile {
+		display: none;
+		margin: 0 calc(-1 * #{$spacing-5} - 1px) $spacing-8;
+		padding-top: $spacing-5;
+		background: var(--color-bg-light);
+
+		@include media-down(md) {
+			display: block;
+		}
+
+		.poc-brief__subtitle,
+		.poc-brief__quote {
+			padding: 0 calc(#{$spacing-5} + 1px);
+		}
+
+		.poc-brief__quote {
+			@include card-title-sm;
+		}
+	}
+
+	.poc-compare-mobile .poc-compare-mobile__result {
+		margin: $spacing-6 0 $spacing-4;
+	}
+
+	.poc-compare-mobile__image {
+		display: block;
+		width: 100%;
+		height: auto;
 	}
 
 	.poc-compare__brief {
@@ -795,7 +945,7 @@ const deliveredCases = [
 	}
 
 	.poc-brief {
-		max-width: 450px;
+		max-width: min(450px, calc(50% - 60px));
 		margin-left: 35px;
 	}
 
@@ -809,6 +959,10 @@ const deliveredCases = [
 		@include card-title;
 		color: var(--color-text);
 		margin: 0;
+
+		@include media-down(lg) {
+			font-size: $font-size-xl;
+		}
 	}
 
 	.poc-clients__caption {
@@ -832,16 +986,26 @@ const deliveredCases = [
 			display: flex;
 		}
 
-		@include media-down(md) {
+		@include media-down(lg) {
 			justify-content: center;
+		}
+
+		@include media-down(md) {
+			row-gap: $spacing-4;
 		}
 	}
 
 	.poc-audience {
 		padding-top: $spacing-30;
 
+		.poc-section-title {
+			@include media-down(md) {
+				margin-bottom: $spacing-6;
+			}
+		}
+
 		@include media-down(md) {
-			padding-top: $spacing-16;
+			padding-top: $spacing-12;
 		}
 	}
 
@@ -919,6 +1083,24 @@ const deliveredCases = [
 		}
 	}
 
+	.poc-audience-card:nth-child(1) .poc-audience-card__glow {
+		@include media-down(md) {
+			translate: 0 60px;
+		}
+	}
+
+	.poc-audience-card:nth-child(2) .poc-audience-card__glow {
+		@include media-down(md) {
+			translate: 50px 100px;
+		}
+	}
+
+	.poc-audience-card:nth-child(3) .poc-audience-card__glow {
+		@include media-down(md) {
+			translate: 0 40px;
+		}
+	}
+
 	.poc-audience-card > :not(.poc-audience-card__glow) {
 		position: relative;
 	}
@@ -954,6 +1136,11 @@ const deliveredCases = [
 		@include text-card;
 		color: var(--color-text-secondary);
 		margin: 0;
+
+		@include media-down(md) {
+			@include text-s;
+			color: var(--color-text-secondary);
+		}
 	}
 	.poc-journey {
 		--poc-question-bg: var(--sl-color-orange-low);
@@ -963,7 +1150,7 @@ const deliveredCases = [
 		padding-top: $spacing-30;
 
 		@include media-down(md) {
-			padding-top: $spacing-16;
+			padding-top: $spacing-10;
 		}
 
 		.poc-section-title {
@@ -988,10 +1175,6 @@ const deliveredCases = [
 		column-gap: $spacing-6;
 		align-items: start;
 		margin: 0;
-
-		@include media-down(md) {
-			column-gap: $spacing-4;
-		}
 
 		&:not(:last-child)::after {
 			content: '';
@@ -1039,6 +1222,12 @@ const deliveredCases = [
 		color: var(--color-text);
 		max-width: 551px;
 		margin: $spacing-4 0 $spacing-2;
+
+		@include media-down(md) {
+			font-size: $font-size-base;
+			font-weight: $font-weight-semibold;
+			line-height: 28px;
+		}
 	}
 
 	.poc-journey__note {
@@ -1088,7 +1277,7 @@ const deliveredCases = [
 		padding-top: $spacing-20;
 
 		@include media-down(md) {
-			padding-top: $spacing-16;
+			padding-top: $spacing-10;
 		}
 
 		.poc-section-title {
@@ -1177,6 +1366,10 @@ const deliveredCases = [
 		tbody tr:last-child .poc-timeline__bar {
 			top: calc(50% - #{$spacing-3} / 2);
 		}
+
+		@include media-down(md) {
+			display: none;
+		}
 	}
 
 	.poc-timeline__bar {
@@ -1194,13 +1387,65 @@ const deliveredCases = [
 		);
 	}
 
+	.poc-timeline__list {
+		display: none;
+		flex-direction: column;
+		gap: $spacing-3;
+		margin: 0;
+		padding: $spacing-3;
+		list-style: none;
+
+		@include media-down(md) {
+			display: flex;
+		}
+	}
+
+	.poc-timeline__item {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		column-gap: $spacing-3;
+		row-gap: 0;
+		margin: 0;
+		@include text-s;
+		color: var(--color-text-secondary);
+	}
+
+	.poc-timeline__days {
+		white-space: nowrap;
+	}
+
+	.poc-timeline__track {
+		--cell: calc((100% - 1px) / 11);
+
+		position: relative;
+		grid-column: 1 / -1;
+		height: 16px;
+		background: linear-gradient(90deg, var(--color-border-light) 1px, transparent 1px) 0 0 / var(--cell)
+			100% repeat-x;
+		border-right: 1px solid var(--color-border-light);
+	}
+
+	.poc-timeline__track-bar {
+		position: absolute;
+		top: 2px;
+		bottom: 2px;
+		left: calc(var(--start) * var(--cell) + 3px);
+		width: calc(var(--span) * var(--cell) - 4px);
+		background: linear-gradient(
+			90deg,
+			rgba(var(--color-primary-rgb), 0) 0%,
+			rgba(var(--color-primary-rgb), 0.24) 50%,
+			rgba(var(--color-primary-rgb), 0) 100%
+		);
+	}
+
 	.poc-deliverables {
 		--poc-number-color: #b3c7ff;
 
 		padding-top: $spacing-20;
 
 		@include media-down(md) {
-			padding-top: $spacing-16;
+			padding-top: $spacing-10;
 		}
 
 		.poc-section-title {
@@ -1266,7 +1511,7 @@ const deliveredCases = [
 		padding-top: $spacing-20;
 
 		@include media-down(md) {
-			padding-top: $spacing-16;
+			padding-top: $spacing-10;
 		}
 	}
 
@@ -1280,6 +1525,10 @@ const deliveredCases = [
 		text-align: center;
 		max-width: var(--intro-width, 684px);
 		margin: 0 auto $spacing-10;
+
+		@include media-down(md) {
+			margin-bottom: $spacing-8;
+		}
 	}
 
 	.poc-note {
@@ -1292,6 +1541,12 @@ const deliveredCases = [
 			var(--color-bg-surface);
 		border: 1px solid var(--sl-color-accent);
 		border-radius: 12px;
+
+		@include media-down(md) {
+			flex-direction: column;
+			align-items: flex-start;
+			gap: $spacing-4;
+		}
 	}
 
 	.poc-note__icon {
@@ -1333,6 +1588,11 @@ const deliveredCases = [
 			gap: $spacing-2;
 			margin: 0;
 			color: var(--color-text-secondary);
+
+			@include media-down(md) {
+				font-size: $font-size-sm;
+				line-height: 24px;
+			}
 		}
 	}
 
@@ -1344,10 +1604,18 @@ const deliveredCases = [
 
 	.poc-checklist__icon {
 		margin: 8px 2px 0 3px;
+
+		@include media-down(md) {
+			margin-top: 6px;
+		}
 	}
 
 	.poc-dotlist__icon {
 		margin-top: 10px;
+
+		@include media-down(md) {
+			margin-top: 8px;
+		}
 	}
 
 	.poc-cta-banner {
@@ -1359,7 +1627,7 @@ const deliveredCases = [
 		border-radius: $radius-xl;
 
 		@include media-down(md) {
-			margin-top: $spacing-16;
+			margin-top: $spacing-10;
 			padding: $spacing-10 $spacing-5;
 		}
 	}
@@ -1408,6 +1676,10 @@ const deliveredCases = [
 		background: var(--glow) no-repeat center bottom / 100% auto, var(--color-bg-surface);
 		border: 1px solid var(--color-border-light);
 		border-radius: 12px;
+
+		@include media-down(md) {
+			background-position: center bottom -16px, 0 0;
+		}
 	}
 
 	.poc-start-card--blue {
@@ -1464,11 +1736,11 @@ const deliveredCases = [
 
 		@include media-down(lg) {
 			grid-template-columns: 1fr;
-			row-gap: $spacing-8;
+			row-gap: $spacing-6;
 		}
 
 		@include media-down(md) {
-			padding: $spacing-8 $spacing-5;
+			padding: $spacing-6;
 		}
 	}
 
@@ -1484,6 +1756,10 @@ const deliveredCases = [
 		line-height: 1.2;
 		color: var(--color-text);
 		margin: 0 0 $spacing-5;
+
+		@include media-down(md) {
+			font-size: 40px;
+		}
 	}
 
 	.poc-price__highlights {
@@ -1503,6 +1779,10 @@ const deliveredCases = [
 			line-height: 1.5;
 			color: var(--color-text);
 
+			@include media-down(md) {
+				font-size: $font-size-sm;
+			}
+
 			&::before {
 				content: '';
 				flex-shrink: 0;
@@ -1518,7 +1798,7 @@ const deliveredCases = [
 		background: var(--color-border-light);
 
 		@include media-down(lg) {
-			display: none;
+			height: 1px;
 		}
 	}
 
@@ -1537,10 +1817,15 @@ const deliveredCases = [
 
 		@include media-down(md) {
 			grid-template-columns: 1fr;
+			row-gap: $spacing-4;
 		}
 	}
 
 	.poc-checklist--price {
+		@include media-down(md) {
+			gap: $spacing-4;
+		}
+
 		li {
 			color: var(--color-text);
 		}
@@ -1572,10 +1857,6 @@ const deliveredCases = [
 		border: 1px solid var(--color-border-light);
 		border-left-width: 2px;
 		border-radius: 12px;
-
-		@include media-down(md) {
-			padding: $spacing-6;
-		}
 	}
 
 	.poc-fit-card--good {
@@ -1598,10 +1879,6 @@ const deliveredCases = [
 
 	.poc-section-title.poc-scope__title {
 		margin-bottom: $spacing-16;
-
-		@include media-down(md) {
-			margin-bottom: $spacing-8;
-		}
 	}
 
 	.poc-scope {
@@ -1612,13 +1889,14 @@ const deliveredCases = [
 		padding: 0;
 		list-style: none;
 
-		@include media-down(lg) {
+		@media (max-width: 1079px) {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 			row-gap: $spacing-8;
 		}
 
 		@include media-down(md) {
 			grid-template-columns: 1fr;
+			row-gap: $spacing-6;
 		}
 	}
 
@@ -1646,7 +1924,7 @@ const deliveredCases = [
 		padding-top: 56px;
 
 		@include media-down(md) {
-			padding-top: $spacing-16;
+			padding-top: $spacing-6;
 		}
 	}
 
@@ -1699,10 +1977,18 @@ const deliveredCases = [
 		padding: 0;
 		border: 0;
 
+		@include media-down(md) {
+			margin-bottom: $spacing-5;
+		}
+
 		p {
 			@include card-title-sm;
 			color: var(--color-text);
 			margin: 0;
+
+			@include media-down(md) {
+				font-size: $font-size-base;
+			}
 		}
 	}
 
@@ -1743,13 +2029,17 @@ const deliveredCases = [
 	.poc-testimonial__logo {
 		flex-shrink: 0;
 		height: auto;
+
+		@include media-down(md) {
+			display: none;
+		}
 	}
 
 	.poc-cases {
 		padding-top: 56px;
 
 		@include media-down(md) {
-			padding-top: $spacing-16;
+			padding-top: $spacing-6;
 		}
 	}
 
@@ -1832,6 +2122,19 @@ const deliveredCases = [
 				transform: none;
 			}
 		}
+
+		@media (max-width: 599px) {
+			height: auto;
+			min-height: 299px;
+			border-radius: $radius-xl;
+
+			&:hover,
+			&:focus-visible {
+				.poc-case__footer {
+					padding-bottom: 0;
+				}
+			}
+		}
 	}
 
 	.poc-case__content {
@@ -1841,8 +2144,14 @@ const deliveredCases = [
 		flex-direction: column;
 		justify-content: space-between;
 		align-items: flex-start;
+		gap: $spacing-10;
 		height: 100%;
+		min-height: inherit;
 		padding: 20px;
+
+		@media (max-width: 599px) {
+			padding: $spacing-4;
+		}
 	}
 
 	.poc-case__header {
@@ -1902,6 +2211,10 @@ const deliveredCases = [
 		padding-bottom: $spacing-3;
 		margin-bottom: $spacing-3;
 		border-bottom: 1px solid #b9c0c5;
+
+		@media (max-width: 599px) {
+			line-height: 24px;
+		}
 	}
 
 	.poc-case__stats {
@@ -1912,6 +2225,7 @@ const deliveredCases = [
 			display: grid;
 			grid-template-columns: repeat(3, minmax(0, 1fr));
 			gap: $spacing-2;
+			min-height: 0;
 		}
 	}
 
@@ -1945,14 +2259,24 @@ const deliveredCases = [
 		transition: opacity 0.5s linear;
 
 		@media (max-width: 599px) {
-			left: 0;
-			right: 0;
+			position: static;
 			white-space: normal;
 		}
 	}
 
 	.poc-case__long {
 		opacity: 0;
+
+		@media (max-width: 599px) {
+			display: block;
+			opacity: 1;
+		}
+	}
+
+	.poc-case__short {
+		@media (max-width: 599px) {
+			display: none;
+		}
 	}
 
 	.poc-workshop {
@@ -1971,13 +2295,18 @@ const deliveredCases = [
 		color: var(--color-white);
 		background: var(--poc-dark-bg);
 
+		@media (max-width: 1079px) {
+			grid-template-columns: minmax(0, 1fr) 396px;
+			gap: $spacing-6;
+		}
+
 		@include media-down(lg) {
 			grid-template-columns: 1fr;
 			gap: $spacing-8;
 		}
 
 		@include media-down(md) {
-			margin-top: $spacing-16;
+			margin-top: $spacing-6;
 			padding: $spacing-10 $spacing-5;
 		}
 	}
@@ -2007,6 +2336,10 @@ const deliveredCases = [
 		--_btn-shadow: none;
 
 		min-width: 200px;
+
+		@include media-down(md) {
+			width: 100%;
+		}
 	}
 
 	.poc-contact {
@@ -2053,6 +2386,62 @@ const deliveredCases = [
 	.poc-contact__role {
 		@include text-s;
 		color: var(--poc-dark-muted);
+	}
+
+	.poc-audience-card__title,
+	.poc-deliverable__title,
+	.poc-start-card__title,
+	.poc-fit-card__title,
+	.poc-note__title,
+	.poc-price__heading {
+		@include media-down(md) {
+			font-size: $font-size-lg;
+		}
+	}
+
+	.poc-journey__text,
+	.poc-journey__note,
+	.poc-schedule__intro,
+	.poc-deliverables__intro,
+	.poc-deliverable__text,
+	.poc-section-intro,
+	.poc-start-card__text,
+	.poc-note__text,
+	.poc-stat__text,
+	.poc-workshop__text {
+		@include media-down(md) {
+			font-size: $font-size-sm;
+			line-height: 24px;
+		}
+	}
+
+	.poc-title {
+		@media (max-width: 1079px) {
+			font-size: $font-size-5xl;
+		}
+
+		@include media-down(md) {
+			font-size: $font-size-3xl;
+		}
+	}
+
+	.poc-section-title {
+		@media (max-width: 1079px) {
+			font-size: $font-size-4xl;
+			line-height: 1.2;
+		}
+
+		@include media-down(md) {
+			font-size: $font-size-2xl;
+		}
+	}
+
+	.poc-cta-banner__title,
+	.poc-workshop__title {
+		@include media-down(md) {
+			font-size: $font-size-4xl;
+			line-height: 1.2;
+		}
 	}
 
 	:global([data-theme='dark']) .poc-testimonial__mark {
