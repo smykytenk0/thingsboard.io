@@ -1,5 +1,6 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { PRIVACY_CHOICES_LABEL } from '@data/privacy';
 ---
 
 <BaseLayout title="Cookie Policy" description="ThingsBoard Cookie Policy">
@@ -28,15 +29,27 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 					>.
 				</li>
 				<li>
+					Search the site using <a href="https://programmablesearchengine.google.com/"
+						>Google Programmable Search Engine</a
+					>. It loads only after you allow External media (in the cookie settings, or with Load Google search on the
+					search itself) and then open the search or visit a search page. Google sets its own cookies and shows
+					ads in the search results.
+				</li>
+				<li>
 					Enhance user experience and provide personalized features through <a
 						href="https://yourgpt.ai/">YourGPT</a
 					>, which uses cookies to analyze user interactions and improve service functionality.
 				</li>
 			</ul>
 
-			<p>These cookies are enabled by default on your web browser.</p>
 			<p>
-				However, you may configure your browser to alert you each time cookies are created. It is
+				Only strictly necessary cookies are set by default. Analytics, marketing and external media cookies are
+				set only after you allow them in the cookie banner, and you can change your choice at any time via
+				<button type="button" class="cookie-settings" data-cc="show-preferences">{PRIVACY_CHOICES_LABEL}</button>
+				in the site footer.
+			</p>
+			<p>
+				You may also configure your browser to alert you each time cookies are created. It is
 				also possible to prevent their installation. Here is the procedure to follow on the three
 				main browsers:
 			</p>
@@ -78,6 +91,12 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 				> for more details.
 			</p>
 
+			<h3>Google Programmable Search Engine</h3>
+			<p>
+				See Google privacy <a href="https://policies.google.com/technologies/cookies?hl=en-US">page</a> for more
+				details.
+			</p>
+
 			<h3>Cloudflare</h3>
 			<p>
 				See Cloudflare documentation <a
@@ -94,9 +113,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 			<h3>Other Cookies</h3>
 			<ul>
 				<li>
-					<strong>cookie-notice-dismissed</strong> is used to store if the user clicked <code
-						>Accept</code
-					> button on the cookies banner or close (X) it. This cookie has a 365 days timeout.
+					<strong>tb_consent</strong> is used to store your choice in the cookie banner (which optional
+					cookie categories you allowed). This cookie has a 180 days timeout.
 				</li>
 				<li>
 					<strong>cloudServer</strong> is used to store the last visited cloud region in the
@@ -107,22 +125,16 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 					timeout.
 				</li>
 			</ul>
-
-			<p>
-				Please note that by continuing to browse this site with the opened cookies banner, you
-				agree the use of cookies, in accordance with our cookie policy.
-			</p>
 		</div>
 	</div>
 </BaseLayout>
 
 <style lang="scss">
-	@use '~/styles/variables' as *;
+	@use '../../styles/variables' as *;
 
 	.cookie-policy-page {
-		padding-top: $header-height;
 		min-height: 100vh;
-		background-color: #fff;
+		background-color: var(--color-bg);
 	}
 
 	.cookie-policy-content {
@@ -133,6 +145,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 		line-height: 1.7;
 		font-size: 16px;
 		text-align: justify;
+
+		// No token matches these light-theme greys, so dark mode gets its own values.
+		:global([data-theme='dark']) & {
+			color: var(--color-text);
+		}
 
 		h1 {
 			font-size: 32px;
@@ -166,18 +183,27 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 				font-size: 1.125rem;
 				line-height: 1.6;
 
+				:global([data-theme='dark']) & {
+					color: var(--color-text-secondary);
+				}
+
 				&::marker {
-					color: #75767c;
+					color: currentColor;
 				}
 			}
 		}
 
-		a {
+		a,
+		.cookie-settings {
 			color: #2a7dec;
 			text-decoration: none;
 
 			&:hover {
 				text-decoration: underline;
+			}
+
+			:global([data-theme='dark']) & {
+				color: var(--color-primary);
 			}
 		}
 
@@ -186,6 +212,20 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 			padding: 2px 6px;
 			border-radius: 4px;
 			font-size: 14px;
+
+			:global([data-theme='dark']) & {
+				background: var(--color-bg-light);
+			}
+		}
+	}
+
+	@media print {
+		.cookie-policy-page {
+			min-height: 0;
+		}
+
+		.cookie-policy-content {
+			padding-block: 0;
 		}
 	}
 </style>

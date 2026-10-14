@@ -7,7 +7,7 @@ import iconMetricExplorer from '~/assets/images/landings/trendz/icon-metric-expl
 import iconCpu from '~/assets/images/landings/trendz/icon-cpu.svg?raw';
 import iconChartBar from '~/assets/images/landings/trendz/icon-chart-bar.svg?raw';
 import iconTreeStructure from '~/assets/images/landings/trendz/icon-tree-structure.svg?raw';
-import iconWebhooks from '~/assets/images/landings/trendz/icon-webhooks.svg?raw';
+import iconVibration from '~/assets/images/landings/trendz/icon-vibration.svg?raw';
 
 const cards = [
 	{
@@ -44,7 +44,7 @@ const cards = [
 			'View long- and short-term forecasts instantly',
 			'Save predictions to ThingsBoard to drive preventive maintenance dashboards',
 		],
-		href: '/docs/trendz/prediction/',
+		href: '/docs/trendz/prediction/overview/',
 	},
 	{
 		icon: iconAi,
@@ -95,6 +95,18 @@ const cards = [
 		href: '/docs/trendz/visualizations-overview/',
 	},
 	{
+		icon: iconVibration,
+		title: 'Vibration Analysis',
+		subtitle: 'Machine Condition Monitoring & Fault Diagnosis',
+		items: [
+			'Analyze raw vibration waveforms from pumps, fans, motors, and gearboxes',
+			'Grade vibration severity by ISO 10816 zones for each machine class',
+			'Diagnose unbalance, misalignment, looseness, and bearing faults',
+			'Raise ThingsBoard alarms and save vibration metrics as telemetry',
+		],
+		href: '/docs/trendz/vibration/overview/',
+	},
+	{
 		icon: iconTreeStructure,
 		title: 'What-If Simulations',
 		subtitle: 'Scenario Testing with Calculated Fields',
@@ -103,18 +115,6 @@ const cards = [
 			'Test best-case, worst-case, or custom operational scenarios',
 			'Validate business assumptions without affecting real data',
 			'Use simulations to prepare decisions, budgets, or maintenance strategies',
-		],
-		href: null,
-	},
-	{
-		icon: iconWebhooks,
-		title: 'Optimization Engine',
-		subtitle: 'Smart Formula-Based Optimization',
-		items: [
-			'Optimize KPIs such as efficiency, cost, consumption, or performance',
-			'Automatically compute the best parameter combination',
-			'Use constraints and conditions to keep scenarios realistic',
-			'Ideal for process tuning, energy optimization, and resource planning',
 		],
 		href: null,
 	},
@@ -133,14 +133,20 @@ const cards = [
 
 		<div class="tf-grid">
 			{
-				cards.map((card) => (
+				cards.map((card, i) => (
 					<div class="tf-card">
-						<div class="tf-card-header">
-							<span class="tf-card-icon" set:html={card.icon} />
-							<h3 class="tf-card-title">{card.title}</h3>
-							<span class="tf-card-chevron" aria-hidden="true" />
-						</div>
-						<div class="tf-card-body">
+						<h3 class="tf-card-heading">
+							<button
+								class="tf-card-header"
+								aria-expanded="false"
+								aria-controls={`tf-body-${i}`}
+							>
+								<span class="tf-card-icon" set:html={card.icon} />
+								<span class="tf-card-title">{card.title}</span>
+								<span class="tf-card-chevron print:hidden" aria-hidden="true" />
+							</button>
+						</h3>
+						<div class="tf-card-body" id={`tf-body-${i}`}>
 							<p class="tf-card-subtitle">{card.subtitle}</p>
 							<ul class="tf-card-list">
 								{card.items.map((item) => (
@@ -148,7 +154,7 @@ const cards = [
 								))}
 							</ul>
 							{card.href ? (
-								<a class="tf-card-link" href={card.href} target="_blank" rel="noopener noreferrer">
+								<a class="tf-card-link print:hidden" href={card.href} target="_blank" rel="noopener noreferrer">
 									Read more<span class="tf-sr-context"> about {card.title}</span>
 								</a>
 							) : (
@@ -166,18 +172,23 @@ const cards = [
 	const cards = Array.from(document.querySelectorAll<HTMLElement>('#trendz-top-features .tf-card'));
 
 	cards.forEach((card) => {
-		card.querySelector<HTMLElement>('.tf-card-header')?.addEventListener('click', () => {
+		card.querySelector<HTMLButtonElement>('.tf-card-header')?.addEventListener('click', () => {
 			const rowTop = card.offsetTop;
 			const rowCards = cards.filter((c) => c.offsetTop === rowTop);
 			const isExpanded = card.classList.contains('expanded');
-			rowCards.forEach((c) => c.classList.toggle('expanded', !isExpanded));
+			rowCards.forEach((c) => {
+				c.classList.toggle('expanded', !isExpanded);
+				c.querySelector<HTMLButtonElement>('.tf-card-header')?.setAttribute('aria-expanded', String(!isExpanded));
+			});
 		});
 	});
 
 	function getColCount() {
+		// Must match the .tf-grid column breakpoints in SCSS below:
+		// media-up(xl) = 1280px → 3 cols, media-up(lg) = 1024px → 2 cols.
 		const w = window.innerWidth;
 		if (w >= 1280) return 3;
-		if (w >= 960) return 2;
+		if (w >= 1024) return 2;
 		return 1;
 	}
 
@@ -186,7 +197,10 @@ const cards = [
 		const cols = getColCount();
 		if (cols !== currentCols) {
 			currentCols = cols;
-			cards.forEach((c) => c.classList.remove('expanded'));
+			cards.forEach((c) => {
+				c.classList.remove('expanded');
+				c.querySelector<HTMLButtonElement>('.tf-card-header')?.setAttribute('aria-expanded', 'false');
+			});
 		}
 	});
 </script>
@@ -195,15 +209,15 @@ const cards = [
 	@use '../../styles/trendz' as *;
 
 	#trendz-top-features {
-		background: var(--web-BG, #f4f8fe);
-		padding: 32px 20px;
+		background: var(--color-trendz-surface);
+		padding: 0 20px 32px;
 		box-sizing: border-box;
 
-		@include trendz-up(sm) {
-			padding: 60px 50px;
+		@include media-up(sm) {
+			padding: 0 50px 60px;
 		}
 
-		@include trendz-up(lg) {
+		@include media-up(xl) {
 			padding: 100px 50px;
 		}
 	}
@@ -229,7 +243,7 @@ const cards = [
 		color: #212121;
 		margin: 0;
 
-		@include trendz-down(xs) {
+		@include media-down(sm) {
 			@include trendz-h3;
 		}
 	}
@@ -240,9 +254,9 @@ const cards = [
 		max-width: 720px;
 		margin: 0;
 
-		@include trendz-down(xs) {
+		@include media-down(sm) {
 			@include trendz-body-s;
-			color: var(--text-text-secondary, rgba(0, 0, 0, 0.76));
+			color: var(--color-trendz-text-secondary);
 		}
 	}
 
@@ -251,11 +265,11 @@ const cards = [
 		grid-template-columns: 1fr;
 		gap: 32px;
 
-		@include trendz-up(md) {
+		@include media-up(lg) {
 			grid-template-columns: repeat(2, 1fr);
 		}
 
-		@include trendz-up(lg) {
+		@include media-up(xl) {
 			grid-template-columns: repeat(3, 1fr);
 		}
 	}
@@ -264,7 +278,6 @@ const cards = [
 		background: #fff;
 		border-radius: 24px;
 		box-shadow: 0 10px 25px -15px rgba(0, 0, 0, 0.08);
-		cursor: pointer;
 		overflow: hidden;
 		display: flex;
 		flex-direction: column;
@@ -282,12 +295,22 @@ const cards = [
 		}
 	}
 
+	.tf-card-heading {
+		margin: 0;
+	}
+
 	.tf-card-header {
+		width: 100%;
 		padding: 24px;
 		display: flex;
 		align-items: center;
 		gap: 16px;
 		position: relative;
+		background: none;
+		border: none;
+		cursor: pointer;
+		font: inherit;
+		text-align: left;
 
 		&::after {
 			content: '';
@@ -306,8 +329,9 @@ const cards = [
 		align-items: center;
 		gap: 8px;
 		padding: 12px;
-		border: 1px solid #2a7dec;
+		border: 1px solid var(--color-trendz-accent);
 		border-radius: 10px;
+		color: var(--color-trendz-accent);
 	}
 
 	.tf-card-title {
@@ -347,7 +371,7 @@ const cards = [
 
 	.tf-card-subtitle {
 		@include trendz-body-m;
-		color: var(--text-text-secondary, rgba(0, 0, 0, 0.76));
+		color: var(--color-trendz-text-secondary);
 		margin: 0;
 	}
 
@@ -360,11 +384,11 @@ const cards = [
 
 		li {
 			@include trendz-body-s;
-			color: var(--text-text-secondary, rgba(0, 0, 0, 0.76));
+			color: var(--color-trendz-text-secondary);
 			list-style-type: disc;
 
 			&::marker {
-				color: #2a7dec;
+				color: var(--color-trendz-accent);
 			}
 		}
 	}
@@ -372,9 +396,9 @@ const cards = [
 	.tf-card-link {
 		display: block;
 		padding: 10px 24px;
-		border: 1.5px solid #2a7dec;
+		border: 1.5px solid var(--color-trendz-accent);
 		border-radius: 4px;
-		color: #2a7dec;
+		color: var(--color-trendz-accent);
 		@include trendz-body-m-medium;
 		text-decoration: none;
 		text-align: center;
@@ -390,7 +414,7 @@ const cards = [
 		display: block;
 		padding: 10px 24px;
 		@include trendz-body-m-medium;
-		color: var(--text-text-secondary, rgba(0, 0, 0, 0.76));
+		color: var(--color-trendz-text-secondary);
 		text-align: center;
 		margin-top: auto;
 	}
@@ -405,5 +429,46 @@ const cards = [
 		clip: rect(0, 0, 0, 0);
 		white-space: nowrap;
 		border: 0;
+	}
+
+	@media print {
+		#trendz-top-features {
+			padding-inline: 0;
+			background: none;
+		}
+
+		.tf-grid {
+			grid-template-columns: repeat(2, 1fr);
+			gap: 16px;
+		}
+
+		.tf-card-subtitle {
+			@include trendz-body-s;
+		}
+
+		.tf-card-list li {
+			@include trendz-body-xs;
+		}
+
+		.tf-header {
+			break-inside: avoid;
+			break-after: avoid;
+		}
+
+		.tf-card .tf-card-header {
+			padding-bottom: 12px;
+		}
+
+		.tf-card .tf-card-body,
+		.tf-card.expanded .tf-card-body {
+			max-height: none;
+			padding: 12px 24px 24px;
+			opacity: 1;
+		}
+
+		.tf-card {
+			break-inside: avoid;
+			box-shadow: inset 0 0 0 1px #d7d9e0;
+		}
 	}
 </style>

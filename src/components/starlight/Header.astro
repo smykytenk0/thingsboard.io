@@ -2,21 +2,41 @@
 import HeaderContent from '../Landing/HeaderContent.astro';
 import PromoBanner from '../PromoBanner.astro';
 import { Products } from '@models/site.models';
+import { resolveHeaderConfig, type HeaderConfig } from '@util/header-config';
 
 const pathname = Astro.url.pathname;
 
 function getGitHubPlatform(path: string): Products {
 	if (path.includes('/docs/iot-gateway/')) return Products.GW;
 	if (path.includes('/docs/edge/pe/') || path.includes('/docs/edge/')) return Products.EDGE;
-	if (path.includes('/docs/mqtt-broker/pe/') || path.includes('/docs/mqtt-broker/'))
-		return Products.TBMQ;
 	return Products.CE;
 }
 
-const gitHubPlatform = getGitHubPlatform(pathname);
+const locals = Astro.locals as unknown as Record<string, unknown>;
+
+// `BaseLayout` passes the page's product via Astro.locals so the GitHub button
+// targets the right repo; everywhere else the platform is inferred from the URL
+// (docs routes carry the product as a path prefix).
+const override = locals.bslGitHubPlatform as Products | undefined;
+const gitHubPlatform = override ?? getGitHubPlatform(pathname);
+
+// Docs / Starlight pages don't pass through BaseLayout, so no header config is
+// present → fall back to the default `docs` look.
+const headerConfig = (locals.bslHeaderConfig as HeaderConfig | undefined) ?? resolveHeaderConfig();
+
+// `BaseLayout hideHeader` drops the chrome entirely: the fixed `.header` frame
+// is hidden, and `--sl-nav-height` plus the `.main-frame` offset (header +
+// promo band, see `_starlight-overrides.scss`) are zeroed.
+const hideHeader = locals.bslHideHeader === true;
 ---
 
-{/* Docs banner hides on scroll via pure CSS (scroll-driven --promo-cur,
-    see _starlight-overrides). Marketing uses the .tb-topbar sticky unit. */}
-<PromoBanner />
-<HeaderContent gitHubPlatform={gitHubPlatform} />
+{
+	hideHeader ? (
+		<style is:inline set:html=":root { --sl-nav-height: 0px; } .page > .header { display: none !important; } .page > .main-frame { padding-top: 0; }" />
+	) : (
+		<>
+			<PromoBanner />
+			<HeaderContent gitHubPlatform={gitHubPlatform} headerConfig={headerConfig} />
+		</>
+	)
+}

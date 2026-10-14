@@ -10,7 +10,7 @@ export const data: UseCaseData = {
 		shortText:
 			'Environment monitoring plays a vital role in ensuring safety, comfort, and operational efficiency across all types of facilities — from office buildings to industrial sites. ThingsBoard is perfectly suited to address these challenges.',
 		longText: [
-			'ThingsBoard provides a scalable, reliable, and secure platform for <a href="/docs/pe/recipes/solution-templates/temperature-humidity-sensors/">environment monitoring</a>. With built-in support for LoRaWAN, NB-IoT, and Sigfox, it enables efficient integration of numerous low-power sensors over long distances, minimizing infrastructure complexity. The platform supports standard IoT protocols like HTTP, MQTT, CoAP, and LwM2M, making it easy to connect a wide range of devices and scale with your project.',
+			'ThingsBoard provides a scalable, reliable, and secure platform for <a href="/iot-hub/solution-templates/temperature-sensors/">environment monitoring</a>. With built-in support for LoRaWAN, NB-IoT, and Sigfox, it enables efficient integration of numerous low-power sensors over long distances, minimizing infrastructure complexity. The platform supports standard IoT protocols like HTTP, MQTT, CoAP, and LwM2M, making it easy to connect a wide range of devices and scale with your project.',
 			'Automated features—from real-time alerts on critical changes to forwarding data into external analytics tools—ensure proactive monitoring. Intuitive dashboards, customizable logic, and seamless integrations turn raw environmental data into actionable insights, enabling smarter and faster decisions.',
 		],
 		demoUrl:
@@ -116,7 +116,6 @@ export const data: UseCaseData = {
 				description:
 					'Monitoring air quality, noise levels, temperature, and humidity across city zones to support environmental policy, alert residents, improve urban living conditions.',
 				desktopImage: '/src/assets/images/usecases/environment-monitoring/smart-cities-1.svg',
-				mobileImage: '/src/assets/images/usecases/environment-monitoring/smart-cities-2.svg',
 				imageAlt: 'Smart city',
 				imageTitle: 'Smart cities and urban infrastructure',
 			},
@@ -125,7 +124,6 @@ export const data: UseCaseData = {
 				description:
 					'Maintaining sterile conditions and proper ventilation by tracking air quality, CO\u2082 levels, and temperature in sensitive medical or laboratory zones.',
 				desktopImage: '/src/assets/images/usecases/environment-monitoring/laboratory-1.svg',
-				mobileImage: '/src/assets/images/usecases/environment-monitoring/laboratory-2.svg',
 				imageAlt: 'Laboratory',
 				imageTitle: 'Healthcare and laboratory environments',
 			},
@@ -134,7 +132,6 @@ export const data: UseCaseData = {
 				description:
 					'Controlling environmental conditions in greenhouses and agricultural zones, scheduling based on occupancy, and ensuring sustainability targets are met.',
 				desktopImage: '/src/assets/images/usecases/environment-monitoring/agriculture-1.svg',
-				mobileImage: '/src/assets/images/usecases/environment-monitoring/agriculture-2.svg',
 				imageAlt: 'Greenhouse',
 				imageTitle: 'Agricultural and greenhouse facilities',
 			},
@@ -143,7 +140,6 @@ export const data: UseCaseData = {
 				description:
 					'Collecting long-term environmental data for scientific research, campus sustainability programs, and educational use in environmental studies.',
 				desktopImage: '/src/assets/images/usecases/environment-monitoring/education-1.svg',
-				mobileImage: '/src/assets/images/usecases/environment-monitoring/education-2.svg',
 				imageAlt: 'School',
 				imageTitle: 'Educational and research institutions',
 			},
@@ -152,7 +148,6 @@ export const data: UseCaseData = {
 				description:
 					'Monitoring temperature, humidity, and air circulation to ensure proper storage conditions for perishable goods and pharmaceutical products.',
 				desktopImage: '/src/assets/images/usecases/environment-monitoring/warehouse-1.svg',
-				mobileImage: '/src/assets/images/usecases/environment-monitoring/warehouse-2.svg',
 				imageAlt: 'Warehouse',
 				imageTitle: 'Warehouses and cold storage facilities',
 			},

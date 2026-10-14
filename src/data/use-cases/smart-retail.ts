@@ -10,7 +10,7 @@ export const data: UseCaseData = {
 		shortText:
 			'Smart retail solution by ThingsBoard is a powerful platform that helps retailers gain full visibility into store infrastructure, automate data collection, respond to incidents in real time, and make informed decisions. Leveraging the flexibility of ThingsBoard, retailers can integrate a wide range of sensors and devices, visualize key metrics through custom dashboards, and implement intelligent analytics.',
 		longText: [
-			'The <a href="/docs/pe/recipes/solution-templates/smart-retail/">smart retail solution</a> template represents a flexible, ready-to-use structure for building intelligent retail infrastructures using the ThingsBoard IoT platform. As a solution provider, you can provision multiple customers and assign each one a dedicated pool of IoT devices to monitor key assets across their supermarkets. Customers can easily upload custom floor plans, install devices on-site, and place them logically within the dashboard layout to reflect the physical environment.',
+			'The <a href="/iot-hub/solution-templates/smart-retail/">smart retail solution</a> template represents a flexible, ready-to-use structure for building intelligent retail infrastructures using the ThingsBoard IoT platform. As a solution provider, you can provision multiple customers and assign each one a dedicated pool of IoT devices to monitor key assets across their supermarkets. Customers can easily upload custom floor plans, install devices on-site, and place them logically within the dashboard layout to reflect the physical environment.',
 			'With built-in alarm logic and fully configurable thresholds per device, users can detect anomalies such as temperature fluctuations or unauthorized access without needing a complex setup. The template also includes interactive dashboards that allow both providers and customers to monitor the current and historical state of their supermarkets\u2014empowering data-driven decisions, operational efficiency, and a higher standard of safety and service.',
 		],
 		demoUrl:
@@ -92,7 +92,7 @@ export const data: UseCaseData = {
 	dashboardStructure: {
 		title: 'Smart retail dashboard structure',
 		subtitle:
-			'<a href="/docs/pe/recipes/solution-templates/smart-retail/">Smart retail solution</a> dashboards in ThingsBoard are designed to give retail operators full situational awareness, from high-level monitoring of multiple store locations down to detailed insights into individual devices. Each dashboard state provides a specific layer of visibility to support operational efficiency and safety.',
+			'<a href="/iot-hub/solution-templates/smart-retail/">Smart retail solution</a> dashboards in ThingsBoard are designed to give retail operators full situational awareness, from high-level monitoring of multiple store locations down to detailed insights into individual devices. Each dashboard state provides a specific layer of visibility to support operational efficiency and safety.',
 		panels: [
 			{
 				title: 'Supermarket map overview state',
@@ -166,7 +166,6 @@ export const data: UseCaseData = {
 				description:
 					'Smart retail solution enables pharmacy networks to ensure safe medication storage by monitoring refrigeration units, maintaining regulatory compliance, and detecting unauthorized access.',
 				desktopImage: '/src/assets/images/usecases/smart-retail/pharmacy-1.svg',
-				mobileImage: '/src/assets/images/usecases/smart-retail/pharmacy-2.svg',
 				imageAlt: 'Pharmacy',
 				imageTitle: 'Pharmacy chains',
 			},
@@ -175,7 +174,6 @@ export const data: UseCaseData = {
 				description:
 					'Convenience stores benefit from automated monitoring of refrigeration, security alarms, and predictive maintenance based on real-time telemetry data.',
 				desktopImage: '/src/assets/images/usecases/smart-retail/fuel-1.svg',
-				mobileImage: '/src/assets/images/usecases/smart-retail/fuel-1.svg',
 				imageAlt: 'Fuel station',
 				imageTitle: 'Convenience stores at fuel stations',
 			},
@@ -184,7 +182,6 @@ export const data: UseCaseData = {
 				description:
 					'The platform helps logistics operators maintain precise environmental conditions, monitor access points, and comply with food safety standards across their storage facilities.',
 				desktopImage: '/src/assets/images/usecases/smart-retail/logistics-1.svg',
-				mobileImage: '/src/assets/images/usecases/smart-retail/logistics-2.svg',
 				imageAlt: 'Warehouse',
 				imageTitle: 'Logistics and cold chain warehouses',
 			},
@@ -193,7 +190,6 @@ export const data: UseCaseData = {
 				description:
 					'Institutional kitchens use smart retail solution to ensure food safety, prevent equipment failures, and optimize stock levels through smart shelf monitoring.',
 				desktopImage: '/src/assets/images/usecases/smart-retail/cafeterias-1.svg',
-				mobileImage: '/src/assets/images/usecases/smart-retail/cafeterias-2.svg',
 				imageAlt: 'Cafeteria',
 				imageTitle: 'Hospital cafeterias and institutional kitchens',
 			},
@@ -202,7 +198,6 @@ export const data: UseCaseData = {
 				description:
 					'Restaurants and food courts can leverage ThingsBoard to track equipment health, detect fire risks, and monitor access to restricted areas in real time.',
 				desktopImage: '/src/assets/images/usecases/smart-retail/court-1.svg',
-				mobileImage: '/src/assets/images/usecases/smart-retail/court-2.svg',
 				imageAlt: 'Food court',
 				imageTitle: 'Food courts and restaurant chains',
 			},

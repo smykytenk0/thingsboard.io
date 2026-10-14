@@ -11,7 +11,7 @@ import YouTubeVideo from '../YouTubeVideo.astro';
 				hidden patterns using AI-assisted tools. Build complex business logic and metrics instantly — without writing a
 				single line of code.
 			</p>
-			<a class="me-btn" href="/docs/trendz/metric/overview/" target="_blank" rel="noopener noreferrer"
+			<a class="me-btn print:hidden" href="/docs/trendz/metric/overview/" target="_blank" rel="noopener noreferrer"
 				>More about Metric Explorer</a
 			>
 		</div>
@@ -27,14 +27,14 @@ import YouTubeVideo from '../YouTubeVideo.astro';
 
 	#trendz-metric-explorer {
 		background: #fff;
-		padding: 32px 20px;
+		padding: 0 20px 32px;
 		box-sizing: border-box;
 
-		@include trendz-up(sm) {
-			padding: 60px 50px;
+		@include media-up(sm) {
+			padding: 0 50px 60px;
 		}
 
-		@include trendz-up(lg) {
+		@include media-up(xl) {
 			padding: 100px 50px;
 		}
 	}
@@ -46,7 +46,7 @@ import YouTubeVideo from '../YouTubeVideo.astro';
 		max-width: 1400px;
 		margin: 0 auto;
 
-		@include trendz-up(lg) {
+		@include media-up(xl) {
 			flex-direction: row;
 			align-items: flex-start;
 			gap: 32px;
@@ -63,17 +63,17 @@ import YouTubeVideo from '../YouTubeVideo.astro';
 
 	.me-title {
 		@include trendz-h2;
-		color: var(--text-text-primary, rgba(0, 0, 0, 0.87));
+		color: var(--color-trendz-text-primary);
 		margin: 0;
 
-		@include trendz-down(xs) {
+		@include media-down(sm) {
 			@include trendz-h3;
 		}
 	}
 
 	.me-body {
 		@include trendz-body-s;
-		color: var(--text-text-secondary, rgba(0, 0, 0, 0.76));
+		color: var(--color-trendz-text-secondary);
 		margin: 0;
 	}
 
@@ -82,15 +82,21 @@ import YouTubeVideo from '../YouTubeVideo.astro';
 		padding: 12px 24px;
 		border-radius: 4px;
 		background: var(--color-trendz-accent);
-		color: var(--text-text-white, #fff);
+		color: #fff;
 		@include trendz-body-m-medium;
 		text-align: center;
 		text-decoration: none;
 		transition: background 0.3s;
 		white-space: nowrap;
+		width: 100%;
+
+		@include media-up(sm) {
+			width: auto;
+		}
 
 		&:hover {
 			background: var(--color-trendz-accent-hover);
+			color: #fff;
 		}
 	}
 
@@ -102,13 +108,28 @@ import YouTubeVideo from '../YouTubeVideo.astro';
 		padding: 16px;
 		box-sizing: border-box;
 
-		@include trendz-up(md) {
+		@include media-up(lg) {
 			padding: 24px;
 		}
 
-		:global(.yt-video) {
+		:global(.yt-video-wrap) {
 			margin: 0;
-			border-radius: 8px;
+		}
+
+		// The frame stays dark in both themes.
+		:global(.yt-video__notice) {
+			color: rgb(255 255 255 / 0.72);
+		}
+	}
+
+	@media print {
+		.me-text {
+			break-inside: avoid;
+		}
+
+		.me-video {
+			padding: 0;
+			background: none;
 		}
 	}
 </style>

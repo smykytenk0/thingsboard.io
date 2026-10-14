@@ -1,15 +1,47 @@
 ---
-import { mainNavItems, allSubmenus, type SubMenu, type SubMenuItem } from '../../data/navigation';
-import NavIcon from './NavIcon.astro';
+import { mainNavItems, allSubmenus, type SubMenu, type SubMenuItem } from '@data/navigation';
+import SubMenuLink from '@components/Landing/SubMenuLink.astro';
 
-interface Props {
-	platformQuery?: string;
-}
+/** Widest the Products / Docs dropdowns lay out side by side; `.group` is a nowrap flex row. */
+const MAX_SUBMENU_COLUMNS = 3;
 
-const { platformQuery = '' } = Astro.props;
+/**
+ * Spacer headings hold this, not a plain space: a normal space collapses in HTML and the
+ * `<p>` would lose its height, knocking the columns out of alignment with column 0's
+ * heading. Named so the character is visible in source and survives a formatter.
+ */
+const NBSP = ' ';
+
+/**
+ * Split a group's items into at most `MAX_SUBMENU_COLUMNS` columns of `perColumn`, with
+ * any overflow folded into the last column, emitting no empty column.
+ *
+ * Replaces fixed slice() indices, which left a blank `.column` whenever a group held
+ * fewer items than the slices assumed — and an empty column still claims its 250px
+ * min-width plus the 36px group gap. The column cap reproduces the open-ended `slice()`
+ * this replaced: `.group` has no flex-wrap, so a 4th column would push the dropdown past
+ * the viewport at the 1280px breakpoint instead of wrapping.
+ *
+ * A group with no items yields no columns — that is a data error, and it renders as an
+ * empty `.group` (which still carries its own padding), so keep every group populated.
+ */
+const toColumns = (items: SubMenuItem[], perColumn: number): SubMenuItem[][] => {
+	const columns: SubMenuItem[][] = [];
+	// Floor of 1: `perColumn` comes from nav data now, and 0 would emit empty columns
+	// until the cap stopped it rather than laying anything out.
+	const step = Math.max(1, perColumn);
+	for (let i = 0; i < items.length; i += step) {
+		if (columns.length === MAX_SUBMENU_COLUMNS) {
+			columns[MAX_SUBMENU_COLUMNS - 1]!.push(...items.slice(i));
+			break;
+		}
+		columns.push(items.slice(i, i + step));
+	}
+	return columns;
+};
 ---
 
-<nav class="head-menu">
+<nav class="head-menu print:hidden">
 	<ul>
 		{
 			mainNavItems.map((item) => (
@@ -18,29 +50,11 @@ const { platformQuery = '' } = Astro.props;
 					data-submenu-id={item.submenuId}
 				>
 					{item.href ? (
-						<a
-							class="main-menu-link"
-							id={
-								item.submenuId === 'nav-cases'
-									? 'use-cases-link'
-									: item.label === 'Device Library'
-										? 'devices-link'
-										: item.label === 'Blog'
-											? 'blog-link'
-											: undefined
-							}
-							href={
-								item.label === 'Device Library' ? `/device-library/${platformQuery}` : item.href
-							}
-							data-platform-query={item.label === 'Device Library' ? platformQuery : undefined}
-							style="cursor: pointer;"
-						>
+						<a class:list={['main-menu-link', item.linkClass]} id={item.id} href={item.href}>
 							{item.label}
 						</a>
 					) : (
-						<span class="main-menu-link" onclick={`listburg('${item.submenuId}')`}>
-							{item.label}
-						</span>
+						<span class="main-menu-link">{item.label}</span>
 					)}
 				</li>
 			))
@@ -58,210 +72,21 @@ const { platformQuery = '' } = Astro.props;
 				<div id={submenu.id} class="centered-sub">
 					<ul class={`sub-menu ${submenu.className}`}>
 						<li class="sub-groups">
-							{submenu.groups.map((group, groupIndex) => (
+							{submenu.groups.map((group) => (
 								<div class="group">
-									{submenu.className === 'products' &&
-									(submenu.id === 'nav-products' || submenu.id === 'nav-docs') ? (
-										// Products submenu has specific column layout
-										groupIndex === 0 ? (
-											<>
-												<div class="column">
-													<p class="group-name">IoT platforms</p>
-													{group.items.slice(0, 1).map((item: SubMenuItem) => (
-														<a class={item.linkClass} href={item.href}>
-															{item.icon && (
-																<NavIcon src={item.icon} size={32} alt={`${item.heading} icon`} />
-															)}
-															<div class="sub-text">
-																<span class="item-heading">{item.heading}</span>
-																{item.description && <p>{item.description}</p>}
-															</div>
-														</a>
-													))}
-												</div>
-												<div class="column">
-													<p class="group-name">&nbsp;</p>
-													{group.items.slice(1, 2).map((item: SubMenuItem) => (
-														<a class={item.linkClass} href={item.href}>
-															{item.icon && (
-																<NavIcon src={item.icon} size={32} alt={`${item.heading} icon`} />
-															)}
-															<div class="sub-text">
-																<span class="item-heading">{item.heading}</span>
-																{item.description && <p>{item.description}</p>}
-															</div>
-														</a>
-													))}
-												</div>
-												<div class="column">
-													<p class="group-name">&nbsp;</p>
-													{group.items.slice(2).map((item: SubMenuItem) => (
-														<a class={item.linkClass} href={item.href}>
-															{item.icon && (
-																<NavIcon src={item.icon} size={32} alt={`${item.heading} icon`} />
-															)}
-															<div class="sub-text">
-																<span class="item-heading">{item.heading}</span>
-																{item.description && <p>{item.description}</p>}
-															</div>
-														</a>
-													))}
-												</div>
-											</>
-										) : (
-											<>
-												<div class="column">
-													<p class="group-name">Product ecosystem</p>
-													{group.items.slice(0, 2).map((item: SubMenuItem) => (
-														<a class={item.linkClass} href={item.href}>
-															{item.icon && (
-																<NavIcon src={item.icon} size={32} alt={`${item.heading} icon`} />
-															)}
-															<div class="sub-text">
-																<span class="item-heading">{item.heading}</span>
-																{item.description && <p>{item.description}</p>}
-															</div>
-														</a>
-													))}
-												</div>
-												<div class="column">
-													<p class="group-name">&nbsp;</p>
-													{group.items.slice(2, 4).map((item: SubMenuItem) => (
-														<a class={item.linkClass} href={item.href}>
-															{item.icon && (
-																<NavIcon src={item.icon} size={32} alt={`${item.heading} icon`} />
-															)}
-															<div class="sub-text">
-																<span class="item-heading">{item.heading}</span>
-																{item.description && <p>{item.description}</p>}
-															</div>
-														</a>
-													))}
-												</div>
-												<div class="column">
-													<p class="group-name">&nbsp;</p>
-													{group.items.slice(4).map((item: SubMenuItem) => (
-														<a class={item.linkClass} href={item.href}>
-															{item.icon && (
-																<NavIcon src={item.icon} size={32} alt={`${item.heading} icon`} />
-															)}
-															<div class="sub-text">
-																<span class="item-heading">{item.heading}</span>
-																{item.description && <p>{item.description}</p>}
-															</div>
-														</a>
-													))}
-												</div>
-											</>
-										)
-									) : submenu.className === 'cases' && submenu.id === 'nav-cases' ? (
-										// Use Cases submenu has specific column layout
-										groupIndex === 0 ? (
-											<>
-												<div class="column">
-													{group.items.slice(0, 5).map((item: SubMenuItem) => (
-														<a class={item.linkClass} href={item.href}>
-															{item.icon && (
-																<NavIcon src={item.icon} size={24} alt={`${item.heading} icon`} />
-															)}
-															<div class="sub-text">
-																<span class="item-heading">{item.heading}</span>
-																{item.description && <p>{item.description}</p>}
-															</div>
-														</a>
-													))}
-												</div>
-												<div class="column">
-													{group.items.slice(5, 10).map((item: SubMenuItem) => (
-														<a class={item.linkClass} href={item.href}>
-															{item.icon && (
-																<NavIcon src={item.icon} size={24} alt={`${item.heading} icon`} />
-															)}
-															<div class="sub-text">
-																<span class="item-heading">{item.heading}</span>
-																{item.description && <p>{item.description}</p>}
-															</div>
-														</a>
-													))}
-												</div>
-												<div class="column">
-													{group.items.slice(10).map((item: SubMenuItem) => (
-														<a class={item.linkClass} href={item.href}>
-															{item.icon && (
-																<NavIcon src={item.icon} size={24} alt={`${item.heading} icon`} />
-															)}
-															<div class="sub-text">
-																<span class="item-heading">{item.heading}</span>
-																{item.description && <p>{item.description}</p>}
-															</div>
-														</a>
-													))}
-												</div>
-											</>
-										) : (
-											// SCADA group with 3 columns
-											<>
-												<div class="column">
-													<p class="group-name">{group.name}</p>
-													{group.items.slice(0, 1).map((item: SubMenuItem) => (
-														<a class={item.linkClass} href={item.href}>
-															{item.icon && (
-																<NavIcon src={item.icon} size={24} alt={`${item.heading} icon`} />
-															)}
-															<div class="sub-text">
-																<span class="item-heading">{item.heading}</span>
-																{item.description && <p>{item.description}</p>}
-															</div>
-														</a>
-													))}
-												</div>
-												<div class="column">
-													<p class="group-name">&nbsp;</p>
-													{group.items.slice(1, 2).map((item: SubMenuItem) => (
-														<a class={item.linkClass} href={item.href}>
-															{item.icon && (
-																<NavIcon src={item.icon} size={24} alt={`${item.heading} icon`} />
-															)}
-															<div class="sub-text">
-																<span class="item-heading">{item.heading}</span>
-																{item.description && <p>{item.description}</p>}
-															</div>
-														</a>
-													))}
-												</div>
-												<div class="column">
-													<p class="group-name">&nbsp;</p>
-													{group.items.slice(2).map((item: SubMenuItem) => (
-														<a class={item.linkClass} href={item.href}>
-															{item.icon && (
-																<NavIcon src={item.icon} size={24} alt={`${item.heading} icon`} />
-															)}
-															<div class="sub-text">
-																<span class="item-heading">{item.heading}</span>
-																{item.description && <p>{item.description}</p>}
-															</div>
-														</a>
-													))}
-												</div>
-											</>
-										)
-									) : (
-										// Generic submenu layout
+									{/* One shape for every submenu: columns from `perColumn`, heading from
+									    `group.name`. Spacer headings in later columns hold NBSP purely to reserve
+									    the heading's height, so they are hidden from assistive tech. */}
+									{toColumns(group.items, group.perColumn ?? group.items.length).map((columnItems, columnIndex) => (
 										<div class="column">
-											{group.name && <p class="group-name">{group.name}</p>}
-											{group.items.map((item: SubMenuItem) => (
-												<a class={item.linkClass} href={item.href}>
-													{item.icon && (
-														<NavIcon src={item.icon} size={24} alt={`${item.heading} icon`} />
-													)}
-													<div class="sub-text">
-														<span class="item-heading">{item.heading}</span>
-														{item.description && <p>{item.description}</p>}
-													</div>
-												</a>
+											{group.name && (
+												<p class="group-name" aria-hidden={columnIndex > 0 ? 'true' : undefined}>{columnIndex > 0 ? NBSP : group.name}</p>
+											)}
+											{columnItems.map((item: SubMenuItem) => (
+												<SubMenuLink item={item} iconSize={submenu.className === 'products' ? 32 : undefined} />
 											))}
 										</div>
-									)}
+									))}
 								</div>
 							))}
 						</li>
@@ -273,29 +98,26 @@ const { platformQuery = '' } = Astro.props;
 </nav>
 
 <script>
-	// Mobile submenu toggle
+	import { lockScroll, unlockScroll } from '@util/scroll-lock';
+
+	// Burger menu shows at <=1280px (single source of truth for the breakpoint).
+	const MOBILE_QUERY = window.matchMedia('(max-width: 1280px)');
+
+	// Expand/collapse one submenu section inline in the burger drawer.
 	function listburg(subMenuId: string) {
-		const burger = document.querySelector('button.burger');
-		const isMobile = burger && window.getComputedStyle(burger).display !== 'none';
+		if (!MOBILE_QUERY.matches) return;
 
-		if (isMobile) {
-			const targetSubMenu = document.querySelector(
-				`nav.head-menu > ul > li > div.centered-sub#${subMenuId} > ul.sub-menu`
-			);
-			const isOpen = targetSubMenu?.classList.contains('open-sub');
-			const subMenus = document.querySelectorAll(
-				'nav.head-menu > ul > li > div.centered-sub > ul.sub-menu'
-			);
-			subMenus.forEach((menu) => menu.classList.remove('open-sub'));
+		const targetSubMenu = document.querySelector(
+			`nav.head-menu > ul > li > div.centered-sub#${subMenuId} > ul.sub-menu`
+		);
+		const isOpen = targetSubMenu?.classList.contains('open-sub');
+		const subMenus = document.querySelectorAll('nav.head-menu > ul > li > div.centered-sub > ul.sub-menu');
+		subMenus.forEach((menu) => menu.classList.remove('open-sub'));
 
-			if (!isOpen) {
-				targetSubMenu?.classList.add('open-sub');
-			}
+		if (!isOpen) {
+			targetSubMenu?.classList.add('open-sub');
 		}
 	}
-
-	// Make function available globally
-	(window as any).listburg = listburg;
 
 	// Desktop submenu handling
 	document.addEventListener('DOMContentLoaded', () => {
@@ -341,17 +163,13 @@ const { platformQuery = '' } = Astro.props;
 			item.addEventListener('mouseenter', () => {
 				setTimeout(() => {
 					if (item.matches(':hover')) {
-						const submenus = document.querySelectorAll(
-							'nav.head-menu > div.sub-menu-container > div'
-						);
+						const submenus = document.querySelectorAll('nav.head-menu > div.sub-menu-container > div');
 						submenus.forEach((el) => el.classList.remove('open'));
 						menuItems.forEach((menuItem) => menuItem.classList.remove('active'));
 						item.classList.add('active');
 
 						if (subMenuId) {
-							const targetSubMenu = document.querySelector(
-								`nav.head-menu > div.sub-menu-container > div#${subMenuId}`
-							);
+							const targetSubMenu = document.querySelector(`nav.head-menu > div.sub-menu-container > div#${subMenuId}`);
 							targetSubMenu?.classList.add('open');
 
 							if (
@@ -424,25 +242,22 @@ const { platformQuery = '' } = Astro.props;
 		});
 
 		// Mobile submenu initialization
-		const burger = document.querySelector('button.burger');
-		let isMobile = burger && window.getComputedStyle(burger).display !== 'none';
+		let isMobile = MOBILE_QUERY.matches;
 
 		function initMobileSubmenu() {
 			const header = document.querySelector('header');
 			if (header?.classList.contains('opened-burger')) {
-				document.body.style.overflow = 'hidden';
+				lockScroll();
 			}
 
-			const targetSubMenus = document.querySelectorAll(
-				'nav.head-menu > div.sub-menu-container > div'
-			);
+			const targetSubMenus = document.querySelectorAll('nav.head-menu > div.sub-menu-container > div');
 			targetSubMenus.forEach((el) => {
 				(el as HTMLElement).style.display = 'block';
 			});
 
-			const container = document.querySelector('nav.head-menu > div.sub-menu-container');
+			const container = document.querySelector<HTMLElement>('nav.head-menu > div.sub-menu-container');
 			container?.classList.remove('active');
-			(container as HTMLElement).style.display = 'none';
+			if (container) container.style.display = 'none';
 
 			targetSubMenus.forEach((subMenu) => {
 				const subMenuId = subMenu.getAttribute('id');
@@ -452,15 +267,25 @@ const { platformQuery = '' } = Astro.props;
 		}
 
 		function restoreDesktopSubmenu() {
-			document.body.style.overflow = '';
+			// Crossing to desktop closes the burger drawer — clear its open state and
+			// release the scroll lock, but ONLY if the burger actually held it: the
+			// util's lock is shared, so unlocking unconditionally would release a
+			// lock held by another open overlay (e.g. an ImageGallery lightbox).
+			const header = document.querySelector('header.header');
+			if (header?.classList.contains('opened-burger')) {
+				header.classList.remove('opened-burger');
+				// Closed without going through `Burger()`, so the button's state is reset here too.
+				header.querySelector('.burger')?.setAttribute('aria-expanded', 'false');
+				unlockScroll();
+			}
 			const targetSubMenus = document.querySelectorAll('nav.head-menu > ul > li > div');
 			targetSubMenus.forEach((el) => {
 				(el as HTMLElement).style.display = '';
 			});
 
-			const container = document.querySelector('nav.head-menu > div.sub-menu-container');
+			const container = document.querySelector<HTMLElement>('nav.head-menu > div.sub-menu-container');
 			container?.classList.remove('active');
-			(container as HTMLElement).style.display = 'block';
+			if (container) container.style.display = 'block';
 
 			menuItems.forEach((item) => item.classList.remove('active'));
 
@@ -473,13 +298,9 @@ const { platformQuery = '' } = Astro.props;
 			initMobileSubmenu();
 		}
 
-		// Use Cases is the only top-level item that has BOTH an `href` AND a
-		// submenu. On desktop the hover/`mouseenter` handler above shows the
-		// submenu fine and the click navigates to /use-cases/ — but on mobile
-		// there is no hover, so the tap just navigates away without ever
-		// expanding the sub-list. Intercept the tap on mobile and route it
-		// through listburg() so the use-case items reveal inline like every
-		// other section.
+		// Use Cases is the only item with both an href and a submenu. On mobile
+		// (no hover) the tap would just navigate away, so intercept it and expand
+		// the section inline instead.
 		const useCasesLink = document.getElementById('use-cases-link');
 		useCasesLink?.addEventListener('click', (e) => {
 			if (!isMobile) return;
@@ -487,15 +308,22 @@ const { platformQuery = '' } = Astro.props;
 			listburg('nav-cases');
 		});
 
-		window.addEventListener('resize', () => {
-			const newIsMobile = burger && window.getComputedStyle(burger).display !== 'none';
-			if (isMobile !== newIsMobile) {
-				isMobile = newIsMobile;
-				if (isMobile) {
-					initMobileSubmenu();
-				} else {
-					restoreDesktopSubmenu();
-				}
+		// Non-href top-level items (Products / Services / …) toggle their submenu
+		// inline on mobile. Delegated click — no inline onclick / global needed.
+		menuElement?.addEventListener('click', (event) => {
+			const link = (event.target as Element).closest('span.main-menu-link');
+			if (!link) return;
+			const id = link.closest('li')?.getAttribute('data-submenu-id');
+			if (id) listburg(id);
+		});
+
+		// Re-init when crossing the mobile breakpoint (fires only on change).
+		MOBILE_QUERY.addEventListener('change', (e) => {
+			isMobile = e.matches;
+			if (isMobile) {
+				initMobileSubmenu();
+			} else {
+				restoreDesktopSubmenu();
 			}
 		});
 	});
@@ -639,36 +467,27 @@ const { platformQuery = '' } = Astro.props;
 							}
 						}
 
-						&.prof-lnk:hover .sub-text span.item-heading {
-							color: #1f8b4d;
-						}
-
-						&.com-lnk:hover .sub-text span.item-heading {
-							color: #305680;
-						}
-
-						&.edge-lnk:hover .sub-text span.item-heading {
-							color: #009688;
-						}
-
-						&.gateway-lnk:hover .sub-text span.item-heading {
-							color: #7a4dc3;
-						}
-
-						&.trendz-lnk:hover .sub-text span.item-heading {
-							color: #2696f3;
+						// Per-product heading colour on hover (theme-aware brand tokens).
+						&.prof-lnk:hover .sub-text span.item-heading,
+						&.mobile-pe-lnk:hover .sub-text span.item-heading,
+						&.mqtt-broker-lnk:hover .sub-text span.item-heading {
+							color: var(--brand-pe);
 						}
 
 						&.mobile-lnk:hover .sub-text span.item-heading {
-							color: #305680;
+							color: var(--brand-mobile);
 						}
 
-						&.mobile-pe-lnk:hover .sub-text span.item-heading {
-							color: #1f8b4d;
+						&.edge-lnk:hover .sub-text span.item-heading {
+							color: var(--brand-edge);
 						}
 
-						&.mqtt-broker-lnk:hover .sub-text span.item-heading {
-							color: #1f8b4d;
+						&.gateway-lnk:hover .sub-text span.item-heading {
+							color: var(--brand-gateway);
+						}
+
+						&.trendz-lnk:hover .sub-text span.item-heading {
+							color: var(--brand-trendz);
 						}
 
 						&:last-child {
@@ -678,7 +497,6 @@ const { platformQuery = '' } = Astro.props;
 						.sub-text {
 							max-width: 284px;
 
-							h1,
 							span.item-heading {
 								color: var(--color-text);
 								font-size: 16px;
@@ -701,47 +519,38 @@ const { platformQuery = '' } = Astro.props;
 							flex-shrink: 0;
 						}
 
-						// Tint for inline SVG icons. `currentColor` fills inside the
-						// SVG resolve from this property. The token itself switches
-						// per theme (defined in _theme.scss): light = brand blue,
-						// dark = project primary (≈ #b3c7ff). Per-product brand
-						// overrides below win in light theme; in dark theme the
-						// HeaderContent block resets them to the menu-icon-color.
+						// Default icon tint (unbranded links); `--menu-icon-color`
+						// switches per theme.
 						svg.nav-icon {
 							color: var(--menu-icon-color);
 						}
 
-						// Per-product brand colours for the Products dropdown
-						// icons in light theme. These match the existing brand
-						// hover colours below so the icon at rest already shows
-						// each product's identity hue. Dark theme overrides
-						// these to a unified primary (see HeaderContent).
-						&.com-lnk svg.nav-icon,
-						&.mobile-lnk svg.nav-icon {
-							color: #305680;
-						}
+						// Per-product icon hues. `--brand-*` tokens switch per theme
+						// (see _theme.scss), so no dark-mode override is needed.
 						&.cloud-lnk svg.nav-icon {
-							color: #5fa8e8;
+							color: var(--brand-cloud);
 						}
 						&.prof-lnk svg.nav-icon,
 						&.mobile-pe-lnk svg.nav-icon,
 						&.mqtt-broker-lnk svg.nav-icon {
-							color: #1f8b4d;
+							color: var(--brand-pe);
+						}
+						&.mobile-lnk svg.nav-icon {
+							color: var(--brand-mobile);
 						}
 						&.edge-lnk svg.nav-icon {
-							color: #009688;
+							color: var(--brand-edge);
 						}
 						&.gateway-lnk svg.nav-icon {
-							color: #7a4dc3;
+							color: var(--brand-gateway);
 						}
 						&.trendz-lnk svg.nav-icon {
-							color: #2696f3;
+							color: var(--brand-trendz);
 						}
 
 						&.small-link {
 							.sub-text {
 								padding: 0;
-								h1,
 								span.item-heading {
 									font-weight: 400;
 									white-space: nowrap;
@@ -1022,67 +831,29 @@ const { platformQuery = '' } = Astro.props;
 		}
 	}
 
-	// Page-specific navigation styles
-	#home,
-	#thingsboard-paas,
-	#thingsboard-pe,
-	#thingsboard-edge,
-	#mqtt-broker {
-		header .head-menu {
-			ul {
-				li.active {
-					a,
-					a:hover,
-					span.main-menu-link:hover {
-						color: rgba(255, 255, 255, 0.5);
-					}
-				}
-
-				a {
-					color: $color-white;
-				}
-
-				a:not([href]),
-				span.main-menu-link {
-					color: $color-white;
-
-					&:hover {
-						color: $color-white;
-					}
-				}
-
-				.centered-sub .sub-menu li {
-					a {
-						color: var(--color-text);
-					}
-
-					&:hover a {
-						color: $color-primary;
-					}
+	// Transparent-header nav text (transparent variant) — white links. Skipped
+	// in the open burger drawer (light bg) — white text would be invisible there.
+	header.header:not(.opened-burger):has([data-header-variant='transparent']) .head-menu {
+		ul {
+			li.active {
+				a,
+				a:hover,
+				span.main-menu-link:hover {
+					color: rgba(255, 255, 255, 0.5);
 				}
 			}
-		}
-	}
 
-	// Scrolled header state navigation
-	#home,
-	#thingsboard-paas,
-	#thingsboard-pe,
-	#trendz,
-	#partners,
-	#thingsboard-edge,
-	#mqtt-broker,
-	#pricing {
-		&.flip-nav header .head-menu ul {
-			li.active a,
-			li.active span.main-menu-link {
-				opacity: 1;
-				color: $color-primary;
+			a {
+				color: $color-white;
 			}
 
-			a,
+			a:not([href]),
 			span.main-menu-link {
-				color: var(--color-text);
+				color: $color-white;
+
+				&:hover {
+					color: $color-white;
+				}
 			}
 
 			.centered-sub .sub-menu li {
@@ -1097,15 +868,36 @@ const { platformQuery = '' } = Astro.props;
 		}
 	}
 
+	// Scrolled header state nav for the transparent family. Also skipped in the
+	// open drawer (see above).
+	header.header[data-header-scrolled]:not(.opened-burger):has([data-header-variant='transparent']) .head-menu ul,
+	header.header[data-header-scrolled]:not(.opened-burger):has([data-header-variant='transparent-hover']) .head-menu ul {
+		li.active a,
+		li.active span.main-menu-link {
+			opacity: 1;
+			color: $color-primary;
+		}
+
+		a,
+		span.main-menu-link {
+			color: var(--color-text);
+		}
+
+		.centered-sub .sub-menu li {
+			a {
+				color: var(--color-text);
+			}
+
+			&:hover a {
+				color: $color-primary;
+			}
+		}
+	}
+
 	// Mobile burger opened state navigation — applies on every page so the
 	// drawer looks identical regardless of the underlying nav theme.
 	.opened-burger .head-menu {
 		ul {
-			li:hover a,
-			li:hover span.main-menu-link {
-				color: $color-primary;
-			}
-
 			a,
 			a:not([href]),
 			span.main-menu-link {

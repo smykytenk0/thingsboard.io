@@ -1,3 +1,9 @@
+// Relative import on purpose: this module is pulled into the Astro config
+// chain (astro.redirects.ts), which loads before tsconfig path aliases apply.
+import { scopeToEdition } from './community-cutoff.ts';
+import type { Products } from './site.models.ts';
+import { assertNewestFirst, latestPatchPerBaseline } from './upgrade-shared.ts';
+
 export interface UpgradeVersion {
 	/** Raw version string from the YAML key, e.g. "4.3.0.1", "3.4", "3.3" */
 	version: string;
@@ -13,6 +19,8 @@ export interface UpgradeVersion {
 	releaseDatePe?: string;
 	/** "upgradable-from" value, e.g. "4.2.1.x" or "4.1.0" */
 	upgradableFrom: string;
+	/** Optional override for the in-family patch label, e.g. "4.3.x". Read by patchFamilyLabel() / patchScriptLabel() (upgrade-shared), which fall back to baseVersion / baseVersion.x when unset. */
+	patchableFrom?: string;
 	/** Anchor of the upgradable-from version on the same platform page */
 	prevVersionAnchor?: string;
 	lts: boolean;
@@ -39,7 +47,118 @@ export function getFamilySlug(family: string): string {
 	return 'v' + family.replace(/\./g, '-') + '-x';
 }
 
+/**
+ * Versions to render on an upgrade-instruction page (optionally scoped to a
+ * family). Only the newest patch of each `baseVersion` is kept — e.g. for 4.3
+ * just 4.3.1.3 (latest 4.3.1) and 4.3.0.1 (latest 4.3.0). Older patches within
+ * the same baseline only duplicate the same steps, so they are dropped even
+ * when superseded by a security patch. Entries without a `baseVersion`
+ * (non-patch releases like 4.2.0 or any 3.x) are always kept. Input is assumed
+ * newest-first, matching the ordering of `UPGRADE_VERSIONS`. Community products stop at
+ * the last Community release (see `community-cutoff.ts`).
+ */
+export function getUpgradeStepVersions(product: Products, family?: string): UpgradeVersion[] {
+	const scoped = family ? UPGRADE_VERSIONS.filter((v) => v.family === family) : UPGRADE_VERSIONS;
+	return latestPatchPerBaseline(scopeToEdition(scoped, product));
+}
+
+/**
+ * All upgrade-eligible versions, newest-first.
+ *
+ * ORDERING IS LOAD-BEARING — keep entries in descending version order, and within
+ * a baseVersion group list the newest patch first. Consumers rely on array position:
+ *   - UPGRADE_FAMILIES dedups by position to derive family order
+ *   - UpgradeTable renders rows in array order
+ *   - getUpgradeStepVersions treats the first entry per baseVersion as the latest
+ * The assertNewestFirst() call below fails the build on an out-of-order insert.
+ */
 export const UPGRADE_VERSIONS: UpgradeVersion[] = [
+	{
+		version: '4.4.0',
+		displayVersion: '4.4',
+		family: '4.4',
+		releaseDate: 'Sep 29 2026',
+		upgradableFrom: '4.3.1.x',
+		prevVersionAnchor: 'v4-3-1-6',
+		lts: true,
+		patch: false,
+		x: true,
+		upgrade: true,
+		manualVersionUpgrade: false,
+		windowsZip: true,
+		anchor: 'v4-4-0',
+	},
+	{
+		version: '4.3.1.6',
+		displayVersion: '4.3.1.6',
+		family: '4.3',
+		baseVersion: '4.3.1',
+		releaseDate: 'Sep 29 2026',
+		upgradableFrom: '4.2.1.x',
+		patchableFrom: '4.3.x',
+		prevVersionAnchor: 'v4-3-0-1',
+		lts: true,
+		patch: true,
+		x: true,
+		upgrade: true,
+		manualVersionUpgrade: false,
+		windowsZip: true,
+		anchor: 'v4-3-1-6',
+	},
+	{
+		version: '4.3.1.5',
+		displayVersion: '4.3.1.5',
+		family: '4.3',
+		baseVersion: '4.3.1',
+		releaseDate: 'Sep 14 2026',
+		upgradableFrom: '4.2.1.x',
+		patchableFrom: '4.3.x',
+		prevVersionAnchor: 'v4-3-0-1',
+		lts: true,
+		patch: true,
+		x: true,
+		upgrade: true,
+		manualVersionUpgrade: false,
+		windowsZip: true,
+		anchor: 'v4-3-1-5',
+		vulnerable: true,
+	},
+	{
+		version: '4.3.1.4',
+		displayVersion: '4.3.1.4',
+		family: '4.3',
+		baseVersion: '4.3.1',
+		releaseDate: 'Aug 27 2026',
+		upgradableFrom: '4.2.1.x',
+		patchableFrom: '4.3.x',
+		prevVersionAnchor: 'v4-3-0-1',
+		lts: true,
+		patch: true,
+		x: true,
+		upgrade: true,
+		manualVersionUpgrade: false,
+		windowsZip: true,
+		anchor: 'v4-3-1-4',
+		vulnerable: true,
+	},
+	{
+		version: '4.3.1.3',
+		displayVersion: '4.3.1.3',
+		family: '4.3',
+		baseVersion: '4.3.1',
+		releaseDate: 'Jul 1 2026',
+		upgradableFrom: '4.2.1.x',
+		patchableFrom: '4.3.x',
+		prevVersionAnchor: 'v4-3-0-1',
+		lts: true,
+		patch: true,
+		x: true,
+		upgrade: true,
+		manualVersionUpgrade: false,
+		windowsZip: true,
+		anchor: 'v4-3-1-3',
+		vulnerable: true,
+	},
 	{
 		version: '4.3.1.2',
 		displayVersion: '4.3.1.2',
@@ -47,6 +166,7 @@ export const UPGRADE_VERSIONS: UpgradeVersion[] = [
 		baseVersion: '4.3.1',
 		releaseDate: 'May 28 2026',
 		upgradableFrom: '4.2.1.x',
+		patchableFrom: '4.3.x',
 		prevVersionAnchor: 'v4-3-0-1',
 		lts: true,
 		patch: true,
@@ -55,6 +175,7 @@ export const UPGRADE_VERSIONS: UpgradeVersion[] = [
 		manualVersionUpgrade: false,
 		windowsZip: true,
 		anchor: 'v4-3-1-2',
+		vulnerable: true,
 	},
 	{
 		version: '4.3.1.1',
@@ -63,6 +184,7 @@ export const UPGRADE_VERSIONS: UpgradeVersion[] = [
 		baseVersion: '4.3.1',
 		releaseDate: 'Mar 31 2026',
 		upgradableFrom: '4.2.1.x',
+		patchableFrom: '4.3.x',
 		prevVersionAnchor: 'v4-3-0-1',
 		lts: true,
 		patch: true,
@@ -80,6 +202,7 @@ export const UPGRADE_VERSIONS: UpgradeVersion[] = [
 		baseVersion: '4.3.1',
 		releaseDate: 'Mar 10 2026',
 		upgradableFrom: '4.2.1.x',
+		patchableFrom: '4.3.x',
 		prevVersionAnchor: 'v4-3-0-1',
 		lts: true,
 		patch: true,
@@ -108,6 +231,73 @@ export const UPGRADE_VERSIONS: UpgradeVersion[] = [
 		vulnerable: true,
 	},
 	{
+		version: '4.2.2.6',
+		displayVersion: '4.2.2.6',
+		family: '4.2',
+		baseVersion: '4.2.2',
+		releaseDate: 'Sep 29 2026',
+		upgradableFrom: '4.2.0',
+		prevVersionAnchor: 'v4-2-1-2',
+		lts: true,
+		patch: true,
+		x: true,
+		upgrade: true,
+		manualVersionUpgrade: false,
+		windowsZip: true,
+		anchor: 'v4-2-2-6',
+	},
+	{
+		version: '4.2.2.5',
+		displayVersion: '4.2.2.5',
+		family: '4.2',
+		baseVersion: '4.2.2',
+		releaseDate: 'Sep 14 2026',
+		upgradableFrom: '4.2.0',
+		prevVersionAnchor: 'v4-2-1-2',
+		lts: true,
+		patch: true,
+		x: true,
+		upgrade: true,
+		manualVersionUpgrade: false,
+		windowsZip: true,
+		anchor: 'v4-2-2-5',
+		vulnerable: true,
+	},
+	{
+		version: '4.2.2.4',
+		displayVersion: '4.2.2.4',
+		family: '4.2',
+		baseVersion: '4.2.2',
+		releaseDate: 'Aug 27 2026',
+		upgradableFrom: '4.2.0',
+		prevVersionAnchor: 'v4-2-1-2',
+		lts: true,
+		patch: true,
+		x: true,
+		upgrade: true,
+		manualVersionUpgrade: false,
+		windowsZip: true,
+		anchor: 'v4-2-2-4',
+		vulnerable: true,
+	},
+	{
+		version: '4.2.2.3',
+		displayVersion: '4.2.2.3',
+		family: '4.2',
+		baseVersion: '4.2.2',
+		releaseDate: 'Jul 1 2026',
+		upgradableFrom: '4.2.0',
+		prevVersionAnchor: 'v4-2-1-2',
+		lts: true,
+		patch: true,
+		x: true,
+		upgrade: true,
+		manualVersionUpgrade: false,
+		windowsZip: true,
+		anchor: 'v4-2-2-3',
+		vulnerable: true,
+	},
+	{
 		version: '4.2.2.2',
 		displayVersion: '4.2.2.2',
 		family: '4.2',
@@ -122,6 +312,7 @@ export const UPGRADE_VERSIONS: UpgradeVersion[] = [
 		manualVersionUpgrade: false,
 		windowsZip: true,
 		anchor: 'v4-2-2-2',
+		vulnerable: true,
 	},
 	{
 		version: '4.2.2.1',
@@ -705,6 +896,8 @@ export const UPGRADE_VERSIONS: UpgradeVersion[] = [
 		anchor: 'v3-0',
 	},
 ];
+
+assertNewestFirst(UPGRADE_VERSIONS, 'UPGRADE_VERSIONS');
 
 /** Unique version families in order, e.g. ["4.3", "4.2", "4.1", ...] */
 export const UPGRADE_FAMILIES: string[] = [...new Set(UPGRADE_VERSIONS.map((v) => v.family))];

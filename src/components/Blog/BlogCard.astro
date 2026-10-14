@@ -47,7 +47,7 @@ const author = getAuthor(post.data.author);
 </a>
 
 <style lang="scss" is:global>
-	@use '~/styles/_variables.scss' as *;
+	@use '../../styles/_variables.scss' as *;
 
 	.blog-card {
 		display: flex;
@@ -185,5 +185,26 @@ const author = getAuthor(post.data.author);
 		width: 20px;
 		height: 20px;
 		border-radius: 50%;
+	}
+
+	@media print {
+		.blog-card {
+			break-inside: avoid;
+		}
+
+		.blog-card :is(.blog-card__title, .blog-card__excerpt) {
+			display: block;
+			-webkit-line-clamp: none;
+			overflow: visible;
+		}
+
+		.blog-card__meta {
+			flex-wrap: wrap;
+			row-gap: 0;
+
+			time {
+				white-space: nowrap;
+			}
+		}
 	}
 </style>

@@ -2,14 +2,14 @@
 import { getImage } from 'astro:assets';
 import ProjectScreenFrame from '../Services/ProjectScreenFrame.astro';
 import TrendzChip from './TrendzChip.astro';
-const sphereImg = await getImage({
-	src: (await import('/src/assets/images/landings/trendz/sphere.png')).default,
+const posterImg = await getImage({
+	src: (await import('/src/assets/images/landings/trendz/trendz-hero-video-preview.webp')).default,
 	quality: 85,
 });
 ---
 
 <section id="trendz-hero">
-	<div class="hero-container" style={`--sphere-url: url(${sphereImg.src})`}>
+	<div class="hero-container">
 		<div id="hero-content">
 			<h1 class="pe-heading fade-in-left">
 				<TrendzChip label="Trendz Analytics" />
@@ -19,10 +19,10 @@ const sphereImg = await getImage({
 			<p class="pe-subTitle">
 				Trendz Analytics is an add-on for ThingsBoard that turns telemetry into business KPIs and actionable insights.
 			</p>
-			<div class="btn-block">
+			<div class="btn-block print:hidden">
 				<div>
-					<a id="Products_TA_GetADemo1" href="/products/trendz/request-demo/" class="btn-accent" data-trendz-open-modal
-						>Talk to an Expert</a
+					<button type="button" id="Products_TA_GetADemo1" class="btn-accent" data-trendz-open-modal
+						>Talk to an Expert</button
 					>
 				</div>
 				<div>
@@ -40,7 +40,7 @@ const sphereImg = await getImage({
 		</div>
 
 		<div class="hero-image">
-			<ProjectScreenFrame fillColor="#E5EFFF" borderRadius="8px" class="hero-screen-frame">
+			<ProjectScreenFrame variant="hero" class="hero-screen-frame">
 				<video
 					width="857"
 					height="426"
@@ -48,23 +48,63 @@ const sphereImg = await getImage({
 					muted
 					loop
 					playsinline
-					preload="auto"
+					preload="metadata"
+					poster={posterImg.src}
 					aria-label="Trendz Analytics dashboard demo"
 				>
-					<source src="/products/trendz/hero-video.mp4" type="video/mp4" />
+					<source src="https://video.thingsboard.io/trendz-hero-video.webm" type="video/webm" />
+					<source src="https://video.thingsboard.io/trendz-hero-video.mp4" type="video/mp4" />
 				</video>
 			</ProjectScreenFrame>
 		</div>
 	</div>
 </section>
 
+<script>
+	const section = document.getElementById('trendz-hero');
+	const video = section?.querySelector('video');
+	if (section && video instanceof HTMLVideoElement) {
+		new IntersectionObserver(
+			([entry]) => {
+				if (entry.isIntersecting) {
+					video.play().catch(() => {});
+				} else {
+					video.pause();
+				}
+			},
+			{ threshold: 0 }
+		).observe(section);
+	}
+</script>
+
 <style lang="scss">
 	@use '../../styles/trendz' as *;
+
+	// Shared layout for the two hero CTA buttons; each adds its own color/border/transition.
+	@mixin hero-btn-base {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 4px;
+		height: 48px;
+		min-width: 88px;
+		width: 100%;
+		padding: 8px 48px;
+		border-radius: 6px;
+		box-sizing: border-box;
+		text-decoration: none;
+
+		@include media-down(sm) {
+			padding-left: 16px;
+			padding-right: 16px;
+		}
+	}
+
 	#trendz-hero {
 		width: 100%;
 		height: auto;
-		padding-top: 100px;
-		background-color: #f4f8fe;
+		padding-top: 40px;
+		background-color: var(--color-trendz-surface);
 		box-sizing: border-box;
 
 		.hero-container {
@@ -132,6 +172,7 @@ const sphereImg = await getImage({
 				visibility: visible;
 				padding: 5% 0 10% 0;
 				box-sizing: border-box;
+				--psf-fill: var(--color-trendz-surface-accent);
 
 				:global(video) {
 					border: 1px solid #e6e6e6;
@@ -140,68 +181,17 @@ const sphereImg = await getImage({
 						0 24px 36px 0 rgba(83, 92, 115, 0.07);
 				}
 			}
-
-			.sphere-icon {
-				position: absolute;
-				opacity: 0;
-				background: var(--sphere-url) no-repeat center / contain;
-				animation-duration: 1.2s;
-				animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-				animation-fill-mode: forwards;
-			}
-
-			#upper-icon-left {
-				display: block;
-				width: 100px;
-				height: 100px;
-				top: 50%;
-				left: -70px;
-				animation-name: fromRight;
-			}
-
-			#upper-icon-center {
-				display: block;
-				animation-name: fromTopLeft;
-			}
-
-			#upper-icon-right {
-				display: block;
-				width: 100px;
-				height: 100px;
-				right: 0;
-				top: 10%;
-				animation-name: fromBottomRight;
-			}
-
-			#down-icon-left {
-				display: none;
-				animation-name: fromBottomLeft;
-			}
-
-			#down-icon-right {
-				display: none;
-				animation-name: fromBottomRight;
-			}
 		}
 	}
 
 	.btn-accent {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		gap: 4px;
-		height: 48px;
-		min-width: 88px;
-		width: 100%;
-		padding: 8px 48px;
-		background: var(--color-trendz-accent);
-		border-radius: 6px;
+		@include hero-btn-base;
 		@include trendz-body-m-medium;
+		background: var(--color-trendz-accent);
 		color: #ffffff;
 		border: 1px solid var(--color-trendz-accent);
-		text-decoration: none;
 		transition: 0.3s;
-		box-sizing: border-box;
+		cursor: pointer;
 
 		&:hover {
 			background-color: var(--color-trendz-accent-hover);
@@ -211,22 +201,12 @@ const sphereImg = await getImage({
 	}
 
 	.btn-outline {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		gap: 4px;
-		height: 48px;
-		min-width: 88px;
-		width: 100%;
-		padding: 8px 48px;
-		box-sizing: border-box;
+		@include hero-btn-base;
 		cursor: pointer;
 		border: 1px solid var(--color-trendz-accent);
-		border-radius: 6px;
 		background-color: transparent;
 		transition: 0.6s;
 		color: var(--color-trendz-accent);
-		text-decoration: none;
 
 		&:hover {
 			background: var(--color-trendz-accent);
@@ -242,8 +222,21 @@ const sphereImg = await getImage({
 		animation-fill-mode: both;
 	}
 
-	// 600px+ — hero image visible below content, buttons go horizontal
-	@include trendz-up(sm) {
+	@include media-down(sm) {
+		#trendz-hero .hero-container #hero-content {
+			align-items: center;
+			text-align: center;
+
+			padding: 20px 0;
+
+			:global(.trendz-chip) {
+				margin-left: auto;
+				margin-right: auto;
+			}
+		}
+	}
+
+	@include media-up(sm) {
 		#trendz-hero .hero-container {
 			margin: 0 40px;
 
@@ -254,7 +247,22 @@ const sphereImg = await getImage({
 				.pe-subTitle {
 					margin-bottom: 40px;
 				}
+			}
 
+			.hero-image {
+				width: 100%;
+			}
+		}
+	}
+
+	// 1024px+ — max-width container, larger fonts
+	@include media-up(lg) {
+		#trendz-hero .hero-container {
+			margin: auto;
+			width: calc(100% - 100px);
+			max-width: 1200px;
+
+			#hero-content {
 				.btn-block {
 					padding: 0;
 					flex-direction: row;
@@ -267,28 +275,7 @@ const sphereImg = await getImage({
 			}
 
 			.hero-image {
-				width: 100%;
-			}
-
-			#upper-icon-left {
-				width: 90px;
-				height: 90px;
-				top: 30%;
-				left: 50%;
-			}
-
-			#upper-icon-right {
-				width: 90px;
-				height: 90px;
-				top: 25%;
-			}
-
-			#down-icon-left {
-				display: block;
-				width: 120px;
-				height: 120px;
-				bottom: 22%;
-				right: 10%;
+				padding: 12% 4% 10% 4%;
 			}
 		}
 
@@ -301,65 +288,16 @@ const sphereImg = await getImage({
 		}
 	}
 
-	// 960px+ — max-width container, larger fonts, more icons appear
-	@include trendz-up(md) {
-		#trendz-hero .hero-container {
-			margin: auto;
-			width: calc(100% - 100px);
-			max-width: 1200px;
-
-			.hero-image {
-				padding: 12% 4% 10% 4%;
-			}
-
-			#upper-icon-left {
-				width: 100px;
-				height: 100px;
-				left: 25%;
-				top: 20%;
-			}
-
-			#upper-icon-center {
-				width: 90px;
-				height: 90px;
-				top: 18%;
-				left: 54%;
-			}
-
-			#upper-icon-right {
-				top: 25%;
-				right: -5%;
-				width: 100px;
-				height: 100px;
-			}
-
-			#down-icon-left {
-				width: 200px;
-				height: 200px;
-				bottom: 15%;
-				left: 40%;
-			}
-
-			#down-icon-right {
-				display: block;
-				width: 200px;
-				height: 200px;
-				bottom: 20%;
-				right: 0;
-			}
-		}
-	}
-
 	// 1280px+ — side-by-side layout, max container width
-	@include trendz-up(lg) {
+	@include media-up(xl) {
 		#trendz-hero {
-			height: 100vh;
+			height: calc(min(100vh, 1000px) - var(--header-height, 80px) - var(--promo-h, 0px));
+			padding-top: unset;
 			overflow: hidden;
-			padding-top: 80px;
 		}
 
 		#trendz-hero .hero-container {
-			max-width: 1400px;
+			max-width: 1520px;
 			flex-direction: row;
 
 			#hero-content {
@@ -376,10 +314,6 @@ const sphereImg = await getImage({
 				height: 100%;
 				padding: 0 0 0 40px;
 			}
-
-			#down-icon-left {
-				bottom: 5px;
-			}
 		}
 	}
 
@@ -394,47 +328,29 @@ const sphereImg = await getImage({
 		}
 	}
 
-	@keyframes fromTopLeft {
-		from {
-			opacity: 0;
-			transform: translate(-200px, -200px);
+	@media print {
+		#trendz-hero {
+			padding-top: 16px;
+			background-color: transparent;
+
+			.hero-container .hero-image {
+				padding: 0;
+
+				:global(video) {
+					max-height: 38vh;
+				}
+			}
 		}
-		to {
-			opacity: 1;
-			transform: translate(0, 0);
+
+		.fade-in-left {
+			opacity: 1 !important;
+			transform: none !important;
 		}
 	}
 
-	@keyframes fromBottomRight {
-		from {
-			opacity: 0;
-			transform: translate(200px, 200px);
-		}
-		to {
-			opacity: 1;
-			transform: translate(0, 0);
-		}
-	}
-
-	@keyframes fromBottomLeft {
-		from {
-			opacity: 0;
-			transform: translate(-200px, 200px);
-		}
-		to {
-			opacity: 1;
-			transform: translate(0, 0);
-		}
-	}
-
-	@keyframes fromRight {
-		from {
-			opacity: 0;
-			transform: translateX(-200px);
-		}
-		to {
-			opacity: 1;
-			transform: translateX(0);
+	@media print and (max-width: 600px) {
+		#trendz-hero .hero-container .hero-image :global(video) {
+			max-height: 26vh;
 		}
 	}
 </style>

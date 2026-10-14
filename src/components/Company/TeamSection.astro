@@ -1,5 +1,7 @@
 ---
 import { teamTabs } from '~/data/company/team';
+import { CAREERS_URL } from '@models/careers';
+import { externalLinkAttrs, newTabLinkLabel } from '@util/external-links';
 ---
 
 <section class="team-section">
@@ -17,7 +19,7 @@ import { teamTabs } from '~/data/company/team';
 
 			<div class="tabs-body">
 				{teamTabs.map((tab, i) => (
-					<div class={`tab-content${i === 0 ? ' active' : ''}`} id={`team-tab-${i}`}>
+					<div class={`tab-content${i === 0 ? ' active' : ''}`} id={`team-tab-${i}`} data-tab-label={tab.label}>
 						{tab.clusters.map((cluster, ci) => (
 							<div class={`team-cluster${ci === 0 ? ' first-cluster' : ''}`}>
 								{cluster.members.map((member) => (
@@ -42,7 +44,12 @@ import { teamTabs } from '~/data/company/team';
 			</div>
 		</div>
 
-		<a class="join-link" href="/careers/">
+		<a
+			class="join-link print:hidden"
+			href={CAREERS_URL}
+			aria-label={newTabLinkLabel('Join our team', CAREERS_URL)}
+			{...externalLinkAttrs(CAREERS_URL)}
+		>
 			<span>Join our team</span>
 			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 				<path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -269,6 +276,62 @@ import { teamTabs } from '~/data/company/team';
 
 		.team-cluster {
 			gap: 32px;
+		}
+	}
+
+	@media print {
+		.tabs-nav {
+			height: 0;
+			margin: 0;
+			overflow: hidden;
+			visibility: hidden;
+		}
+
+		.tabs-body {
+			break-before: avoid;
+		}
+
+		.tab-content {
+			display: flex;
+			gap: 24px;
+			opacity: 1 !important;
+			clip-path: none !important;
+		}
+
+		.tab-content::before {
+			content: attr(data-tab-label);
+			font-size: 28px;
+			font-weight: 500;
+			color: #305680;
+			text-align: center;
+			break-after: avoid;
+		}
+
+		.team-cluster {
+			gap: 16px 14px;
+		}
+
+		.tab-item {
+			width: 6.875rem;
+			gap: 6px;
+			break-inside: avoid;
+		}
+
+		.tab-item img {
+			width: 72px;
+			height: 72px;
+			box-shadow: none;
+		}
+
+		.tab-item-title {
+			font-size: 14px;
+			line-height: 20px;
+		}
+
+		.tab-item-desc {
+			max-width: none;
+			font-size: 12px;
+			line-height: 16px;
 		}
 	}
 </style>

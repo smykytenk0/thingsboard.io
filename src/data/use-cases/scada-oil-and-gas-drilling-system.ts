@@ -12,7 +12,7 @@ export const data: UseCaseData = {
 			'SCADA (Supervisory Control and Data Acquisition) and the ThingsBoard platform play a crucial role in automating oil and gas drilling processes.',
 		longText: [
 			'The main advantage of SCADA (Supervisory Control and Data Acquisition) systems is their ability to monitor production processes in real time and respond quickly to deviations. ThingsBoard provides comprehensive tools to collect, process, and visualize data from SCADA components, such as PLCs (Programmable Logic Controllers) and RTUs (Remote Terminal Units), enabling seamless integration with various industrial processes.',
-			'To illustrate the flexibility of ThingsBoard\'s SCADA integration, we have developed the <a href="/docs/pe/recipes/solution-templates/scada-drilling-system/">drilling management system template</a>. This solution demonstrates how SCADA symbols—such as drilling rigs, rotors, hoists, pumps, and preventers—can be utilized to create an efficient and automated drilling control system. It enables the entire drilling process to be visualized on a dashboard, allowing for real-time monitoring of drilling parameters, equipment performance, and safety conditions, ensuring timely detection of anomalies and improved operational efficiency.',
+			'To illustrate the flexibility of ThingsBoard\'s SCADA integration, we have developed the <a href="/iot-hub/solution-templates/scada-drilling-system/">drilling management system template</a>. This solution demonstrates how SCADA symbols—such as drilling rigs, rotors, hoists, pumps, and preventers—can be utilized to create an efficient and automated drilling control system. It enables the entire drilling process to be visualized on a dashboard, allowing for real-time monitoring of drilling parameters, equipment performance, and safety conditions, ensuring timely detection of anomalies and improved operational efficiency.',
 		],
 		demoUrl:
 			'https://thingsboard.cloud/dashboard/febfdb90-3170-11f0-858a-67efd1bc8a87?publicId=7aa99e80-8acd-11ef-a59e-a9c993dbec14',
@@ -205,7 +205,6 @@ export const data: UseCaseData = {
 				description:
 					'Symbols like cranes, drilling rigs, and hoisting systems support underground and open-pit mining by managing heavy equipment movement, monitoring ore extraction, and ensuring operational efficiency.',
 				desktopImage: '/src/assets/images/usecases/scada-drilling-system/mining.svg',
-				mobileImage: '/src/assets/images/usecases/scada-drilling-system/mining-2.svg',
 				imageAlt: 'Mining and material extraction',
 				imageTitle: 'Mining and material extraction',
 			},
@@ -214,7 +213,6 @@ export const data: UseCaseData = {
 				description:
 					'SCADA elements including valve control, pump monitoring, and real-time scaling systems assist in managing municipal water distribution, wastewater treatment, and irrigation systems for optimal efficiency.',
 				desktopImage: '/src/assets/images/usecases/scada-drilling-system/water.svg',
-				mobileImage: '/src/assets/images/usecases/scada-drilling-system/water-2.svg',
 				imageAlt: 'Water and wastewater management',
 				imageTitle: 'Water and wastewater management',
 			},
@@ -223,7 +221,6 @@ export const data: UseCaseData = {
 				description:
 					'SCADA components such as drawworks, control panels, and dynamic monitoring scales help automate material handling, optimize assembly lines, and regulate heavy machinery operations in manufacturing plants.',
 				desktopImage: '/src/assets/images/usecases/scada-drilling-system/automation.svg',
-				mobileImage: '/src/assets/images/usecases/scada-drilling-system/automation-2.svg',
 				imageAlt: 'Industrial automation and manufacturing',
 				imageTitle: 'Industrial automation and manufacturing',
 			},
@@ -232,7 +229,6 @@ export const data: UseCaseData = {
 				description:
 					'Symbols like cranes and hoists can be used in ports, airports, and warehouses to monitor cargo handling, automate container movement, and improve operational workflow in logistics.',
 				desktopImage: '/src/assets/images/usecases/scada-drilling-system/logistics.svg',
-				mobileImage: '/src/assets/images/usecases/scada-drilling-system/logistics-2.svg',
 				imageAlt: 'Transportation and logistics',
 				imageTitle: 'Transportation and logistics',
 			},
@@ -241,7 +237,6 @@ export const data: UseCaseData = {
 				description:
 					'Equipment like cranes, drilling rigs, and hoisting lines are critical in large-scale construction projects, enabling real-time monitoring of material transport, foundation drilling, and structural stability.',
 				desktopImage: '/src/assets/images/usecases/scada-drilling-system/construction.svg',
-				mobileImage: '/src/assets/images/usecases/scada-drilling-system/construction-2.svg',
 				imageAlt: 'Construction and infrastructure development',
 				imageTitle: 'Construction and infrastructure development',
 			},

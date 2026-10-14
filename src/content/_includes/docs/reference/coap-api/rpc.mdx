@@ -1,7 +1,6 @@
 import DocLink from '@components/DocLink.astro';
 import HostCode from '~/components/HostCode.astro';
 import HostInline from '~/components/HostInline.astro';
-import { Aside } from '@astrojs/starlight/components';
 
 ThingsBoard supports both server-initiated and device-initiated RPC over CoAP. For a full explanation of the RPC model, see <DocLink product={props.product} path='user-guide/command-and-control'>Command & Control</DocLink>.
 
@@ -15,10 +14,10 @@ The device subscribes to commands using the CoAP **Observe** option. When a serv
 
 | Credential type | URL |
 |-----------------|-----|
-| Access Token | <HostInline product={props.product} code="coap(s)://{COAP_HOST_LABEL}:5683/api/v1/$ACCESS_TOKEN/rpc" /> |
+| Access Token | <HostInline product={props.product} code="coap(s)://{COAP_HOST_LABEL}/api/v1/$ACCESS_TOKEN/rpc" /> |
 | X.509 Certificate | <HostInline product={props.product} code="coaps://{COAP_HOST_LABEL}/api/v1/rpc" /> |
 
-**Access Token (observe for 60 seconds):**
+**Access Token:**
 
 <HostCode product={props.product} lang="bash" code={`coap-client -v 6 -m GET -s 60 "coap://{COAP_HOST}:5683/api/v1/$ACCESS_TOKEN/rpc"`} />
 
@@ -26,7 +25,7 @@ The device subscribes to commands using the CoAP **Observe** option. When a serv
 
 <HostCode product={props.product} lang="bash" code={`coap-client-openssl -v 6 -c cert.pem -j key.pem -m GET -s 60 "coaps://{COAP_HOST}/api/v1/rpc"`} />
 
-When a command arrives, the response body contains:
+You subscribe and observe for 60 seconds (`-s 60`). When a command arrives, the response body contains:
 
 ```json
 {
@@ -44,7 +43,12 @@ When a command arrives, the response body contains:
 
 ### Send a Reply
 
-<HostCode product={props.product} lang="" code={`POST {COAP_URL_PREFIX}:5683/api/v1/$ACCESS_TOKEN/rpc/{id}`} />
+The device sends a reply to a two-way server-side RPC call with a `POST` request:
+
+| Credential type | URL |
+|-----------------|-----|
+| Access Token | <HostInline product={props.product} code="coap(s)://{COAP_HOST_LABEL}/api/v1/$ACCESS_TOKEN/rpc/{id}" /> |
+| X.509 Certificate | <HostInline product={props.product} code="coaps://{COAP_HOST_LABEL}/api/v1/rpc/{id}" /> |
 
 **Access Token:**
 
@@ -62,7 +66,7 @@ The device initiates an RPC call to the server with a `POST` request:
 
 | Credential type | URL |
 |-----------------|-----|
-| Access Token | <HostInline product={props.product} code="coap(s)://{COAP_HOST_LABEL}:5683/api/v1/$ACCESS_TOKEN/rpc" /> |
+| Access Token | <HostInline product={props.product} code="coap(s)://{COAP_HOST_LABEL}/api/v1/$ACCESS_TOKEN/rpc" /> |
 | X.509 Certificate | <HostInline product={props.product} code="coaps://{COAP_HOST_LABEL}/api/v1/rpc" /> |
 
 **Access Token:**

@@ -2,21 +2,17 @@
 import { getCollection } from 'astro:content';
 import fs from 'node:fs';
 import path from 'node:path';
-import { allPages } from '~/content';
-import {
-	formatBlogDate,
-	getSectionLabel,
-	isAllowlistedMarketingPath,
-	truncate,
-} from '~/util/ogContext';
-import { getLanguageFromSlug } from '~/util/path-utils';
-import type { CardProps } from './Card';
-import { getDocsProductMeta } from './product-meta';
-import { getMarketingOverride, getMarketingSection } from './marketing-meta';
-import { BLOG_AUTHORS } from '~/data/blog/authors';
-import { CATEGORY_LABELS } from '~/data/blog/categories';
-import { HARDWARE_PARTNERS } from '~/data/partners/hardware-partners';
-import { jobs } from '~/data/careers/jobs';
+import { allPages } from '@root/content';
+import { formatBlogDate, getSectionLabel, isAllowlistedMarketingPath, truncate } from '@util/ogContext';
+import { getLanguageFromSlug } from '@util/path-utils';
+import type { CardProps } from '@root/pages/open-graph/_shared/Card';
+import { getDocsProductMeta } from '@root/pages/open-graph/_shared/product-meta';
+import { getMarketingOverride, getMarketingSection } from '@root/pages/open-graph/_shared/marketing-meta';
+import { BLOG_AUTHORS } from '@data/blog/authors';
+import { getAuthorsWithPosts } from '@data/blog/posts';
+import { CATEGORY_LABELS } from '@data/blog/categories';
+import { HARDWARE_PARTNERS } from '@data/partners/hardware-partners';
+import { IOT_HUB_CATEGORIES, IOT_HUB_STRINGS } from '@models/iot-hub';
 
 export interface CardInput {
 	/** URL-shaped slug used as the path parameter in the endpoint */
@@ -60,7 +56,7 @@ function authorName(slug: string): string {
 
 /** blog collection — posts + index + author landings + category landings. */
 export async function getBlogCardInputs(): Promise<CardInput[]> {
-	const posts = await getCollection('blog', ({ data }) => !data.draft);
+	const posts = await getCollection('blog');
 	const inputs: CardInput[] = [];
 
 	// /blog/{post-slug}/
@@ -91,8 +87,8 @@ export async function getBlogCardInputs(): Promise<CardInput[]> {
 		},
 	});
 
-	// /blog/author/{author-slug}/
-	for (const author of BLOG_AUTHORS) {
+	// /blog/author/{author-slug}/ — only authors that still have posts get a route
+	for (const author of await getAuthorsWithPosts()) {
 		inputs.push({
 			slug: `author/${author.slug}`,
 			props: {
@@ -116,6 +112,51 @@ export async function getBlogCardInputs(): Promise<CardInput[]> {
 			},
 		});
 	}
+
+	return inputs;
+}
+
+export async function getIotHubCardInputs(): Promise<CardInput[]> {
+	const SECTION = 'IoT Hub';
+	const inputs: CardInput[] = [
+		{
+			slug: 'index',
+			props: {
+				variant: 'logo' as const,
+				sectionName: SECTION,
+				title: 'ThingsBoard IoT Hub',
+			},
+		},
+	];
+
+	for (const cat of IOT_HUB_CATEGORIES) {
+		inputs.push({
+			slug: cat.slug,
+			props: {
+				variant: 'logo' as const,
+				sectionName: SECTION,
+				eyebrow: 'Category',
+				title: cat.label,
+			},
+		});
+	}
+
+	inputs.push(
+		{
+			slug: 'search',
+			// Same string the page's own crumb and <h1> use, so the social card
+			// can't drift back to calling the catalogue a search.
+			props: {
+				variant: 'logo' as const,
+				sectionName: SECTION,
+				title: IOT_HUB_STRINGS.searchPage.catalogueName,
+			},
+		},
+		{
+			slug: 'creator',
+			props: { variant: 'logo' as const, sectionName: SECTION, title: 'Creators' },
+		},
+	);
 
 	return inputs;
 }
@@ -150,33 +191,11 @@ export async function getUseCaseCardInputs(): Promise<CardInput[]> {
 	);
 }
 
-/** devices collection */
-export async function getDeviceCardInputs(): Promise<CardInput[]> {
-	const devices = await getCollection('devices');
-	return devices.map((device) => {
-		const [, ...slugParts] = device.id.split('/');
-		const slug = slugParts.join('/');
-		const vendor = device.data.vendor;
-		const hardware = (device.data as { hardwareType?: string }).hardwareType;
-		const eyebrowParts = [vendor, hardware].filter((s): s is string => Boolean(s));
-		return {
-			slug,
-			props: {
-				variant: 'logo' as const,
-				sectionName: 'Device Library',
-				sectionTight: true,
-				eyebrow: eyebrowParts.length > 0 ? eyebrowParts.join(' · ') : 'Hardware',
-				title: truncate(device.data.title, TITLE_MAX),
-			},
-		};
-	});
-}
-
 /** Marketing landings — allowlist of /src/pages/*.astro routes. */
 export async function getMarketingCardInputs(): Promise<CardInput[]> {
 	const root = path.resolve('src/pages');
 	const candidates: Array<{ slug: string; pathname: string }> = [];
-	walkAstroPages(root, '', candidates);
+	walkMarketingPages(root, '', candidates);
 	return candidates
 		.filter(({ pathname }) => isAllowlistedMarketingPath(pathname))
 		.map(({ slug, pathname }) => {
@@ -189,7 +208,7 @@ export async function getMarketingCardInputs(): Promise<CardInput[]> {
 					variant: 'logo' as const,
 					sectionName: section.sectionName ?? undefined,
 					sectionTight: section.tight,
-					eyebrow: override?.eyebrow ?? (isHome ? 'Open-source IoT platform' : pathnameToSubtitle(pathname)),
+					eyebrow: override?.eyebrow ?? (isHome ? 'All-in-one IoT platform' : pathnameToSubtitle(pathname)),
 					title: override?.title ?? pathnameToTitle(pathname),
 				},
 			};
@@ -205,19 +224,6 @@ export async function getPartnerCardInputs(): Promise<CardInput[]> {
 			sectionName: 'Partners',
 			eyebrow: 'Hardware Partner',
 			title: truncate(partner.name, TITLE_MAX),
-		},
-	}));
-}
-
-/** careers — `/careers/{slug}/` driven by `jobs` in src/data/careers/jobs.ts. */
-export async function getCareerCardInputs(): Promise<CardInput[]> {
-	return jobs.map((job) => ({
-		slug: job.slug,
-		props: {
-			variant: 'logo' as const,
-			sectionName: 'Careers',
-			eyebrow: job.location || 'Open Position',
-			title: truncate(job.position, TITLE_MAX),
 		},
 	}));
 }
@@ -254,16 +260,6 @@ export async function getCollectionIndexInputs(): Promise<CardInput[]> {
 				title: 'ThingsBoard Use Cases',
 			},
 		},
-		{
-			slug: 'device-library-index',
-			props: {
-				variant: 'logo' as const,
-				sectionName: 'Device Library',
-				sectionTight: true,
-				eyebrow: 'Supported hardware',
-				title: 'ThingsBoard Device Library',
-			},
-		},
 	];
 }
 
@@ -298,14 +294,14 @@ function enumerateDataModules<T extends { title: string }>(
 	return out;
 }
 
-/** Walk src/pages/ for .astro files, skipping dynamic [...] routes and known non-content dirs. */
-function walkAstroPages(
+/** Walk src/pages/ for .astro and .mdx files, skipping dynamic [...] routes and known non-content dirs. */
+function walkMarketingPages(
 	root: string,
 	rel: string,
 	out: Array<{ slug: string; pathname: string }>
 ): void {
 	const SKIP_DIRS = new Set([
-		'open-graph', 'docs', 'blog', 'case-studies', 'use-cases', 'device-library',
+		'open-graph', 'docs', 'blog', 'case-studies', 'use-cases', 'iot-hub',
 	]);
 	const dir = path.join(root, rel);
 	let entries: fs.Dirent[];
@@ -318,11 +314,11 @@ function walkAstroPages(
 		if (entry.name.startsWith('[')) continue; // dynamic routes
 		if (entry.isDirectory()) {
 			if (SKIP_DIRS.has(entry.name)) continue;
-			walkAstroPages(root, path.join(rel, entry.name), out);
+			walkMarketingPages(root, path.join(rel, entry.name), out);
 			continue;
 		}
-		if (!entry.name.endsWith('.astro')) continue;
-		const baseName = entry.name.replace(/\.astro$/, '');
+		if (!/\.(astro|mdx)$/.test(entry.name)) continue;
+		const baseName = entry.name.replace(/\.(astro|mdx)$/, '');
 		const slug = baseName === 'index'
 			? rel.replace(/\\/g, '/')
 			: path.join(rel, baseName).replace(/\\/g, '/');
@@ -333,7 +329,7 @@ function walkAstroPages(
 
 /** Fallback: derive a marketing-page title from the URL pathname. */
 function pathnameToTitle(pathname: string): string {
-	if (pathname === '/') return 'Open-source IoT platform for device data collection';
+	if (pathname === '/') return 'Build, deploy, and scale IoT solutions';
 	const segs = pathname.split('/').filter(Boolean);
 	const last = segs[segs.length - 1] ?? '';
 	return last

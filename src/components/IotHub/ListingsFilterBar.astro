@@ -1,0 +1,193 @@
+---
+import { IOT_HUB_STRINGS } from '@models/iot-hub';
+import FilterChips from './FilterChips.astro';
+import FilterToggleButton from './FilterToggleButton.astro';
+import IotHubSort from './IotHubSort.astro';
+
+interface Props {
+	totalCount: number;
+	searchText?: string;
+	searchPlaceholder?: string;
+}
+
+const T = IOT_HUB_STRINGS.listingsBar;
+const {
+	totalCount,
+	searchText = '',
+	searchPlaceholder = T.defaultSearchPlaceholder,
+} = Astro.props;
+---
+
+<div class="iot-hub-filter-bar print:hidden" data-iot-hub-search-bar>
+	<div class="iot-hub-filter-bar__row1">
+		<FilterToggleButton />
+		<div class="iot-hub-filter-bar__search">
+			<input
+				class="iot-hub-filter-bar__search-input"
+				type="search"
+				name="q"
+				value={searchText}
+				placeholder={searchPlaceholder}
+				aria-label={T.searchAriaLabel}
+				autocomplete="off"
+				data-search-input
+			/>
+			<span class="iot-hub-filter-bar__search-glyph" aria-hidden="true"></span>
+			<button
+				class="iot-hub-filter-bar__search-clear"
+				type="button"
+				aria-label="Clear search"
+				data-search-clear
+			>
+				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+					<path
+						d="M5 5 19 19M19 5 5 19"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"></path>
+				</svg>
+			</button>
+		</div>
+	</div>
+	<div class="iot-hub-filter-bar__row2">
+		<p class="iot-hub-filter-bar__count" data-search-count>
+			{totalCount} {totalCount === 1 ? T.resultSingular : T.resultPlural}
+		</p>
+		<FilterChips />
+		<IotHubSort />
+	</div>
+</div>
+
+<style lang="scss">
+	@use '../../styles/_variables.scss' as *;
+
+	.iot-hub-filter-bar {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		padding: 40px 16px 0;
+
+		@include media-down(sm) {
+			padding: 40px 12px 0;
+		}
+	}
+
+	.iot-hub-filter-bar__row1 {
+		display: flex;
+		gap: 16px;
+		align-items: center;
+
+		@include media-down(sm) {
+			gap: 8px;
+		}
+	}
+
+	.iot-hub-filter-bar__search {
+		flex: 1 1 0;
+		min-width: 0;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 16px;
+		min-height: 56px;
+		background: var(--color-bg-surface);
+		border: 1px solid var(--color-border);
+		border-radius: 8px;
+		transition: border-color $transition-fast;
+
+		&:focus-within {
+			border-color: var(--color-primary);
+		}
+
+		:global([data-theme='dark']) & {
+			border-color: #353841;
+		}
+	}
+
+	.iot-hub-filter-bar__search-input {
+		flex: 1 1 0;
+		min-width: 0;
+		border: none;
+		outline: none;
+		background: transparent;
+		font-family: inherit;
+		font-size: 16px;
+		line-height: 28px;
+		color: var(--color-text);
+
+		&::placeholder {
+			color: var(--color-text-muted);
+		}
+
+		// Hide the UA `×` so only the custom clear button below shows.
+		&::-webkit-search-cancel-button,
+		&::-webkit-search-decoration {
+			-webkit-appearance: none;
+			appearance: none;
+		}
+	}
+
+	.iot-hub-filter-bar__search-glyph {
+		flex-shrink: 0;
+		width: 24px;
+		height: 24px;
+		background-color: var(--color-text-secondary);
+		-webkit-mask: url('/icons/iot-hub-search.svg') center / contain no-repeat;
+		mask: url('/icons/iot-hub-search.svg') center / contain no-repeat;
+	}
+
+	.iot-hub-filter-bar__search-clear {
+		flex-shrink: 0;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 24px;
+		height: 24px;
+		padding: 0;
+		border: none;
+		background: transparent;
+		color: var(--color-text-secondary);
+		cursor: pointer;
+		transition: color $transition-fast;
+
+		&:hover,
+		&:focus-visible {
+			color: var(--color-text);
+		}
+
+		svg { display: block; }
+	}
+
+	// Toggle glyph vs clear button by input state (same trick as
+	// SearchFilterBar): glyph when empty, clear button when there's text.
+	.iot-hub-filter-bar__search-input:placeholder-shown ~ .iot-hub-filter-bar__search-clear {
+		display: none;
+	}
+
+	.iot-hub-filter-bar__search-input:not(:placeholder-shown) ~ .iot-hub-filter-bar__search-glyph {
+		display: none;
+	}
+
+	.iot-hub-filter-bar__row2 {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+		min-height: 40px;
+	}
+
+	.iot-hub-filter-bar__count {
+		flex-shrink: 0;
+		font-size: 14px;
+		font-weight: $font-weight-semibold;
+		line-height: 24px;
+		margin: 0;
+		color: var(--color-text);
+	}
+
+</style>
+
+<script>
+	import { initSearchBars } from './iot-hub-search-bar-init';
+	initSearchBars();
+</script>

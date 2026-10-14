@@ -53,7 +53,7 @@ export const data: UseCaseData = {
 	solutionStructure: {
 		title: 'Solution structure of smart irrigation',
 		shortText:
-			'In the <a href="/docs/pe/recipes/solution-templates/smart-irrigation/">smart irrigation solution template</a> setup, soil moisture sensors and water meters are installed in each field zone. These devices continuously collect real-time environmental data such as moisture level, temperature, and water flow. The data is transmitted via lightweight and reliable communication protocols such as MQTT, CoAP, or HTTP directly to the ThingsBoard platform.',
+			'In the <a href="/iot-hub/solution-templates/smart-irrigation/">smart irrigation solution template</a> setup, soil moisture sensors and water meters are installed in each field zone. These devices continuously collect real-time environmental data such as moisture level, temperature, and water flow. The data is transmitted via lightweight and reliable communication protocols such as MQTT, CoAP, or HTTP directly to the ThingsBoard platform.',
 		longText: [
 			'Once received, data is processed by ThingsBoard’s rule engine, stored, and visualized on dashboards. If thresholds are exceeded—like low soil moisture—the platform can automatically trigger irrigation or notify personnel, ensuring timely response and water efficiency.',
 			'With flexible device provisioning, edge processing, and a multi-tenant architecture, ThingsBoard scales seamlessly from small farms to enterprise operations, supporting both manual oversight and fully automated control.',
@@ -141,7 +141,6 @@ export const data: UseCaseData = {
 				description:
 					'Covers the need for data-driven water management by providing real-time moisture analytics, alarming, and automated irrigation, improving crop yield while reducing resource waste.',
 				desktopImage: '/src/assets/images/usecases/smart-irrigation/agriculture-1.svg',
-				mobileImage: '/src/assets/images/usecases/smart-irrigation/agriculture-2.svg',
 				imageAlt: 'Farm field',
 				imageTitle: 'Precision agriculture',
 			},
@@ -150,7 +149,6 @@ export const data: UseCaseData = {
 				description:
 					'Solves the challenge of wide-area water efficiency by offering centralized dashboard control, alarm notifications, and device management for public green spaces.',
 				desktopImage: '/src/assets/images/usecases/smart-irrigation/greenhouse-1.svg',
-				mobileImage: '/src/assets/images/usecases/smart-irrigation/greenhouse-2.svg',
 				imageAlt: 'Park',
 				imageTitle: 'Municipal parks & landscaping',
 			},
@@ -159,7 +157,6 @@ export const data: UseCaseData = {
 				description:
 					'Meets the need for accurate environmental data collection and testing flexibility by enabling detailed telemetry tracking, custom rule chains, and rapid integration of new devices.',
 				desktopImage: '/src/assets/images/usecases/smart-irrigation/parks-1.svg',
-				mobileImage: '/src/assets/images/usecases/smart-irrigation/parks-2.svg',
 				imageAlt: 'Research farm',
 				imageTitle: 'Agri-Tech research & experimental farms',
 			},
@@ -168,7 +165,6 @@ export const data: UseCaseData = {
 				description:
 					'Fulfills the demand for microclimate-based watering by supporting multi-zone sensor management and conditional scheduling, ensuring healthy plant growth with minimal manual intervention.',
 				desktopImage: '/src/assets/images/usecases/smart-irrigation/fields-1.svg',
-				mobileImage: '/src/assets/images/usecases/smart-irrigation/fields-2.svg',
 				imageAlt: 'Greenhouse',
 				imageTitle: 'Smart greenhouses',
 			},
@@ -177,7 +173,6 @@ export const data: UseCaseData = {
 				description:
 					'Addresses the requirement for uniform turf quality with zone-specific moisture monitoring, historical analytics, and rule-based irrigation triggers to maintain optimal soil conditions.',
 				desktopImage: '/src/assets/images/usecases/smart-irrigation/research-1.svg',
-				mobileImage: '/src/assets/images/usecases/smart-irrigation/research-2.svg',
 				imageAlt: 'Golf course',
 				imageTitle: 'Golf courses & sports fields',
 			},

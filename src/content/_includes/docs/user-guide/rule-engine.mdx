@@ -1,13 +1,17 @@
 import DocLink from '@components/DocLink.astro';
 import { Steps, Aside } from '@astrojs/starlight/components';
 import ImageGallery from '~/components/ImageGallery.astro';
-import Banner from '~/components/Banner.astro';
+import IoTHubBanner from '@components/IoTHubBanner.astro';
 
 The Rule Engine is the data processing backbone of ThingsBoard. Every incoming telemetry reading,
 attribute update, device lifecycle event, or RPC call becomes a **Message** that flows through a
 **Rule Chain** — a visual pipeline of **Rule Nodes** that filter, enrich, transform, or act on it.
 
 <ImageGallery images={[{ src: '/src/assets/schemas/rule-engine-overview.svg', alt: 'Rule Engine overview', caption: 'A Message (with type, payload, and metadata) flows into the Root Rule Chain, where Filter, Transform, and Action nodes route it to storage, alarms, or other systems.' }]} />
+
+<IoTHubBanner href="/iot-hub/rule-chains/">
+  Skip building a <strong>Rule Chain</strong> node by node — find a pre-built template in the <strong>ThingsBoard IoT Hub</strong> that fits your use case and plug it into your setup in just a few clicks.
+</IoTHubBanner>
 
 ## Message
 
@@ -55,9 +59,7 @@ can override routing for all its devices with two settings:
 This lets you isolate processing logic and queue priorities per device type without modifying
 the root chain.
 
-<Aside type="note">
-  The Root Rule Chain and additional Rule Chains can be created and managed only by **Tenant Administrators**.
-</Aside>
+The Root Rule Chain and additional Rule Chains can be created and managed only by **Tenant Administrators**.
 
 ## Message Processing Results
 
@@ -86,7 +88,7 @@ on that node.
 ### Create a Rule Chain
 
 <Steps>
-1. Go to **Rule chains** in the left sidebar.
+1. Go to **Data processing &#8702; Rule chains** in the left sidebar.
 2. Click **+ Add rule chain &#8702; Create new rule chain** in the top-right corner.
 3. Enter a name and click **Add**.
 4. Click the rule chain row to open the editor and configure nodes.
@@ -95,7 +97,7 @@ on that node.
 ### Export a Rule Chain
 
 <Steps>
-1. Go to **Rule chains** in the left sidebar.
+1. Go to **Data processing &#8702; Rule chains** in the left sidebar.
 2. Click the **Export rule chain** icon in the desired row.
 </Steps>
 
@@ -104,7 +106,7 @@ A JSON file is saved to your computer.
 ### Import a Rule Chain
 
 <Steps>
-1. Go to **Rule chains** in the left sidebar.
+1. Go to **Data processing &#8702; Rule chains** in the left sidebar.
 2. Click **+ Add rule chain &#8702; Import rule chain** in the top-right corner.
 3. Upload the JSON file and click **Import**.
 </Steps>
@@ -117,14 +119,14 @@ A JSON file is saved to your computer.
 ### Set a Rule Chain as Root
 
 <Steps>
-1. Go to **Rule chains**.
-2. Click the flag icon in the desired row and confirm.
+1. Go to **Data processing &#8702; Rule chains**.
+2. Click the flag icon in the row of the rule chain you want to set as root, and confirm.
 </Steps>
 
 ### Create a Nested Rule Chain
 
 <Steps>
-1. Go to **Rule chains** in the left sidebar.
+1. Go to **Data processing &#8702; Rule chains** in the left sidebar.
 2. Open the chain that contains the nodes you want to extract.
 3. Select the nodes **and** the links between them — drag a selection rectangle around the
    group, or **Ctrl-click** each node and each link individually. Without the links in the
@@ -137,7 +139,7 @@ A JSON file is saved to your computer.
 ### Forward Messages to Another Rule Chain
 
 <Steps>
-1. Go to **Rule chains** in the left sidebar.
+1. Go to **Data processing &#8702; Rule chains** in the left sidebar.
 2. Open the rule chain that will reference the target chain.
 3. From the **Flow** palette, drag a **Rule Chain** node onto the canvas.
 4. In the node's configuration, select the target rule chain.
@@ -148,7 +150,7 @@ A JSON file is saved to your computer.
 ### Delete a Rule Chain
 
 <Steps>
-1. Go to **Rule chains**.
+1. Go to **Data processing &#8702; Rule chains**.
 2. Click the **Delete** icon in the desired row — or select multiple rows and use **Delete selected**.
 </Steps>
 
@@ -199,7 +201,7 @@ A DHT22 sensor reports temperatures between −40 °C and +80 °C. Any reading o
 should be discarded and logged instead of saved.
 
 <Steps>
-1. Go to **Rule chains** and open the **Root Rule Chain**.
+1. Go to **Data processing &#8702; Rule chains** and open the **Root Rule Chain**.
 2. Drag a **Script Filter** node onto the canvas. Enter title **Temperature Validation** and
    write the script:
    ```js

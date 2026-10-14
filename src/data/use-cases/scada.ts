@@ -11,7 +11,7 @@ export const data: UseCaseData = {
 			'SCADA systems are generally divided into two types: Traditional, which focuses on basic monitoring and control, and High-Performance, emphasizing streamlined interfaces, faster decision-making, and enhanced operational efficiency.',
 		longText: [
 			'The main advantage of SCADA (Supervisory Control and Data Acquisition) systems is their ability to monitor production processes in real time and respond quickly to deviations. ThingsBoard provides comprehensive tools to collect, process, and visualize data from SCADA components, such as PLCs (Programmable Logic Controllers) and RCUs (Remote Control Units), enabling seamless integration with various industrial processes.',
-			'To illustrate the flexibility of ThingsBoard\'s SCADA integration, we have developed the <a href="/docs/pe/recipes/solution-templates/swimming-pool-scada-system/">swimming pool management system template</a>. This solution demonstrates how SCADA symbols\u2014such as valves, motors, filters and tanks\u2014can be utilized to create simple yet powerful process control systems. It enables any production process to be visualized on a dashboard, allowing for real-time monitoring of equipment operation and timely detection of alarm signals. The template is designed to accommodate both Traditional and High-Performance SCADA systems.',
+			'To illustrate the flexibility of ThingsBoard\'s SCADA integration, we have developed the <a href="/iot-hub/solution-templates/swimming-pool-scada-system/">swimming pool management system template</a>. This solution demonstrates how SCADA symbols\u2014such as valves, motors, filters and tanks\u2014can be utilized to create simple yet powerful process control systems. It enables any production process to be visualized on a dashboard, allowing for real-time monitoring of equipment operation and timely detection of alarm signals. The template is designed to accommodate both Traditional and High-Performance SCADA systems.',
 		],
 		demoUrl:
 			'https://thingsboard.cloud/dashboard/231a5800-ce96-11ef-852e-bd51c2b30fde?publicId=7aa99e80-8acd-11ef-a59e-a9c993dbec14',
@@ -275,7 +275,6 @@ export const data: UseCaseData = {
 				description:
 					'Ensuring continuous water supply and efficient wastewater treatment is made easier through precise control and management of systems.',
 				desktopImage: '/src/assets/images/usecases/scada/water-1.svg',
-				mobileImage: '/src/assets/images/usecases/scada/water-2.svg',
 				imageAlt: 'Water valve',
 			},
 			{
@@ -283,7 +282,6 @@ export const data: UseCaseData = {
 				description:
 					'From extraction to refining, SCADA symbols help manage complex processes, ensuring the safety and efficiency of operations.',
 				desktopImage: '/src/assets/images/usecases/scada/oil-1.svg',
-				mobileImage: '/src/assets/images/usecases/scada/oil-2.svg',
 				imageAlt: 'Oil pump',
 			},
 			{
@@ -291,7 +289,6 @@ export const data: UseCaseData = {
 				description:
 					'Product quality control is achieved through precise management of processes like mixing, heating, and cooling of liquids.',
 				desktopImage: '/src/assets/images/usecases/scada/food-1.svg',
-				mobileImage: '/src/assets/images/usecases/scada/food-2.svg',
 				imageAlt: 'Food conveyor',
 			},
 			{
@@ -299,7 +296,6 @@ export const data: UseCaseData = {
 				description:
 					'Filter symbols provide visualization and control over filtration processes, ensuring the cleanliness and safety of the liquids being used in the system.',
 				desktopImage: '/src/assets/images/usecases/scada/chemical-1.svg',
-				mobileImage: '/src/assets/images/usecases/scada/chemical-2.svg',
 				imageAlt: 'Chemical plant',
 			},
 			{
@@ -307,7 +303,6 @@ export const data: UseCaseData = {
 				description:
 					'Optimization of heating, ventilation, and air conditioning (HVAC) systems becomes more efficient with accurate control of flows and temperatures.',
 				desktopImage: '/src/assets/images/usecases/scada/energy-1.svg',
-				mobileImage: '/src/assets/images/usecases/scada/energy-2.svg',
 				imageAlt: 'Power plant',
 			},
 		],

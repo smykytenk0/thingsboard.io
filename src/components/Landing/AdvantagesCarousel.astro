@@ -18,7 +18,7 @@ export interface AdvantageCard {
 
 interface Props {
 	cards: AdvantageCard[];
-	/** Section title — when set, rendered in the carousel's header row alongside the arrow buttons (matches Figma layout). */
+	/** Section title — when set, rendered in the carousel's header row alongside the arrow buttons (matches the design layout). */
 	title?: string;
 	loop?: boolean;
 	class?: string;
@@ -57,7 +57,7 @@ const COLOR_CYCLE = ['blue', 'red', 'purple', 'green', 'orange'] as const;
 						</header>
 						<p class="adv-card__desc">{card.description}</p>
 						{card.href && (
-							<a class="adv-card__link" href={card.href}>
+							<a class="adv-card__link print:hidden" href={card.href}>
 								{card.linkText || 'Learn more'}
 							</a>
 						)}
@@ -76,7 +76,7 @@ const COLOR_CYCLE = ['blue', 'red', 'purple', 'green', 'orange'] as const;
 		--carousel-margin: 0;
 	}
 
-	/* Card — Figma "advantage" tile: icon-in-box + title row, then description.
+	/* Card — the design "advantage" tile: icon-in-box + title row, then description.
 	   Uses inset box-shadow as the border instead of `border: 1px` so the
 	   stroke isn't clipped by the viewport's overflow:hidden at the
 	   carousel's left/right/bottom edges. */
@@ -183,6 +183,22 @@ const COLOR_CYCLE = ['blue', 'red', 'purple', 'green', 'orange'] as const;
 		&:hover {
 			color: var(--color-primary-hover, var(--color-primary));
 			text-decoration-thickness: 2px;
+		}
+	}
+
+	@media print {
+		.adv-carousel :global(.carousel-container) {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: $spacing-4;
+		}
+
+		.adv-carousel :global(.carousel-slide) {
+			margin: 0;
+		}
+
+		.adv-card {
+			break-inside: avoid;
 		}
 	}
 </style>

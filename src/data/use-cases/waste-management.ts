@@ -61,7 +61,7 @@ export const data: UseCaseData = {
 	solutionStructure: {
 		title: 'Solution structure of waste management',
 		shortText:
-			'The ThingsBoard-powered <a href="/docs/pe/recipes/solution-templates/waste-management/">waste management solution</a> begins at the edge — where IoT sensors installed in bins monitor fill levels and battery status in real time. These devices send telemetry data to ThingsBoard using supported protocols such as MQTT, CoAP, or HTTP. Thanks to ThingsBoard gateway and built-in integration capabilities, even legacy systems and non-IP sensors can be seamlessly connected.',
+			'The ThingsBoard-powered <a href="/iot-hub/solution-templates/waste-monitoring/">waste management solution</a> begins at the edge — where IoT sensors installed in bins monitor fill levels and battery status in real time. These devices send telemetry data to ThingsBoard using supported protocols such as MQTT, CoAP, or HTTP. Thanks to ThingsBoard gateway and built-in integration capabilities, even legacy systems and non-IP sensors can be seamlessly connected.',
 		longText: [
 			'Once the data reaches the platform, it is processed and stored in a time-series database. Rule Engine chains trigger alarms based on predefined conditions such as low battery or bins nearing capacity. Finally, this structured information is presented on interactive dashboards, allowing operators to make timely decisions and optimize collection routes. All of this can be managed in a multi-tenant environment, enabling smart city operators, private contractors, and utility providers to co-manage waste operations securely.',
 		],
@@ -136,7 +136,6 @@ export const data: UseCaseData = {
 				description:
 					"Enables city authorities to optimize waste collection routes and respond faster to bin overflow alarms using ThingsBoard's real-time telemetry, automated rules, and geospatial dashboards.",
 				desktopImage: '/src/assets/images/usecases/waste-monitoring/municipal-1.svg',
-				mobileImage: '/src/assets/images/usecases/waste-monitoring/municipal-2.svg',
 				imageAlt: 'Municipal services',
 				imageTitle: 'Municipal services',
 			},
@@ -145,7 +144,6 @@ export const data: UseCaseData = {
 				description:
 					'Ensures safe and compliant handling of waste in manufacturing zones through detailed sensor insights, custom alarms, and support for legacy device integration.',
 				desktopImage: '/src/assets/images/usecases/air-quality/industrial-1.svg',
-				mobileImage: '/src/assets/images/usecases/air-quality/industrial-2.svg',
 				imageAlt: 'Industrial facilities',
 				imageTitle: 'Industrial facilities',
 			},
@@ -154,7 +152,6 @@ export const data: UseCaseData = {
 				description:
 					'Promotes sustainability goals with smart bin tracking, usage analytics, and seamless deployment across distributed locations, all from a centralized dashboard.',
 				desktopImage: '/src/assets/images/usecases/smart-energy/education-1.svg',
-				mobileImage: '/src/assets/images/usecases/smart-energy/education-2.svg',
 				imageAlt: 'University and corporate campuses',
 				imageTitle: 'University and corporate campuses',
 			},
@@ -163,7 +160,6 @@ export const data: UseCaseData = {
 				description:
 					"Maintains hygiene and safety in high-traffic zones by enabling dynamic monitoring and maintenance scheduling via ThingsBoard's event-driven automation.",
 				desktopImage: '/src/assets/images/usecases/waste-monitoring/transportation-1.svg',
-				mobileImage: '/src/assets/images/usecases/waste-monitoring/transportation-2.svg',
 				imageAlt: 'Transportation hubs (airports, ports, stations)',
 				imageTitle: 'Transportation hubs (airports, ports, stations)',
 			},
@@ -172,7 +168,6 @@ export const data: UseCaseData = {
 				description:
 					'Handles fluctuating waste loads during events with scalable sensor connectivity and predictive analytics, ensuring clean environments and resource efficiency.',
 				desktopImage: '/src/assets/images/usecases/waste-monitoring/stadium-1.svg',
-				mobileImage: '/src/assets/images/usecases/waste-monitoring/stadium-2.svg',
 				imageAlt: 'Event venues and stadiums',
 				imageTitle: 'Event venues and stadiums',
 			},

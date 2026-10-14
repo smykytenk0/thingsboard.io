@@ -10,6 +10,8 @@
 <style lang="scss">
 	.mediakit-hero {
 		text-align: center;
+		max-width: min(1400px, calc(100% - 40px));
+		margin: 0 auto;
 	}
 
 	.media-kit-title {
@@ -57,6 +59,15 @@
 			font-size: 20px;
 			line-height: 32px;
 			margin-bottom: 50px;
+		}
+	}
+
+	@media print {
+		.media-kit-title,
+		.media-kit-subtitle,
+		.media-kit-assets-title {
+			opacity: 1 !important;
+			scale: 1 !important;
 		}
 	}
 </style>

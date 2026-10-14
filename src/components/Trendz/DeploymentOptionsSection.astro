@@ -14,7 +14,7 @@ const cards = [
 	},
 	{
 		icon: iconCloud,
-		title: 'Trendz for Public Cloud',
+		title: 'Trendz for Cloud',
 		description:
 			'Seamlessly activate Trendz on your ThingsBoard Cloud and start exploring telemetry, building metrics, and detecting anomalies with no code.',
 		pricingHref: '/pricing/?section=thingsboard-pe-options&product=thingsboard-cloud',
@@ -22,7 +22,7 @@ const cards = [
 	},
 	{
 		icon: iconTrendz,
-		title: 'Trendz for Self-Hosted',
+		title: 'On-premises Trendz',
 		description:
 			'Integrate the full AI-driven Trendz experience on your server. Activate your add-on and unlock analytics, predictions, anomaly detection, and more.',
 		pricingHref: '/pricing/?section=thingsboard-pe-options&product=thingsboard-pe',
@@ -48,7 +48,7 @@ const cards = [
 						<div class="do-card-icon" set:html={card.icon} />
 						<h3 class="do-card-title">{card.title}</h3>
 						<p class="do-card-desc">{card.description}</p>
-						<div class="do-card-actions">
+						<div class="do-card-actions print:hidden">
 							<a class="do-btn do-btn--filled" href={card.pricingHref} target="_blank" rel="noopener noreferrer">
 								View Pricing
 							</a>
@@ -67,15 +67,15 @@ const cards = [
 	@use '../../styles/trendz' as *;
 
 	#trendz-deployment {
-		background: #f4f8fe;
+		background: var(--color-trendz-surface);
 		padding: 32px 20px;
 		box-sizing: border-box;
 
-		@include trendz-up(sm) {
+		@include media-up(sm) {
 			padding: 60px 50px;
 		}
 
-		@include trendz-up(lg) {
+		@include media-up(xl) {
 			padding: 100px 50px;
 		}
 	}
@@ -98,21 +98,21 @@ const cards = [
 
 	.do-title {
 		@include trendz-h2;
-		color: var(--text-text-primary, rgba(0, 0, 0, 0.87));
+		color: var(--color-trendz-text-primary);
 		margin: 0;
 
-		@include trendz-down(xs) {
+		@include media-down(sm) {
 			@include trendz-h3;
 		}
 	}
 
 	.do-subtitle {
 		@include trendz-h5;
-		color: var(--text-text-secondary, rgba(0, 0, 0, 0.76));
+		color: var(--color-trendz-text-secondary);
 		max-width: 720px;
 		margin: 0;
 
-		@include trendz-down(xs) {
+		@include media-down(sm) {
 			@include trendz-body-s;
 		}
 	}
@@ -122,7 +122,7 @@ const cards = [
 		grid-template-columns: 1fr;
 		gap: 16px;
 
-		@include trendz-up(lg) {
+		@include media-up(xl) {
 			grid-template-columns: repeat(3, 1fr);
 			gap: 24px;
 		}
@@ -141,11 +141,11 @@ const cards = [
 		width: 100%;
 		margin: 0 auto;
 
-		@include trendz-up(sm) {
+		@include media-up(sm) {
 			padding: 32px 24px;
 		}
 
-		@include trendz-up(lg) {
+		@include media-up(xl) {
 			max-width: none;
 			margin: 0;
 		}
@@ -153,24 +153,25 @@ const cards = [
 
 	.do-card-icon {
 		border-radius: 24px;
-		border: 1.5px solid #3e9af8;
+		border: 1.5px solid var(--color-trendz-accent);
 		display: flex;
 		height: 92px;
 		padding: 8px 16px;
 		align-items: center;
 		gap: 8px;
+		color: var(--color-trendz-accent);
 	}
 
 	.do-card-title {
 		@include trendz-h3;
-		color: var(--text-text-primary, rgba(0, 0, 0, 0.87));
+		color: var(--color-trendz-text-primary);
 		margin: 0;
 		text-align: center;
 	}
 
 	.do-card-desc {
 		@include trendz-body-s;
-		color: var(--text-text-secondary, rgba(0, 0, 0, 0.76));
+		color: var(--color-trendz-text-secondary);
 		margin: 0;
 		flex: 1;
 		text-align: center;
@@ -206,6 +207,7 @@ const cards = [
 			&:hover {
 				background: var(--color-trendz-accent-hover);
 				border-color: var(--color-trendz-accent-hover);
+				color: #fff;
 			}
 		}
 
@@ -216,7 +218,18 @@ const cards = [
 
 			&:hover {
 				background: rgba(0, 0, 0, 0.04);
+				color: var(--color-trendz-accent);
 			}
+		}
+	}
+
+	@media print {
+		#trendz-deployment {
+			background: none;
+		}
+
+		.do-card {
+			break-inside: avoid;
 		}
 	}
 </style>

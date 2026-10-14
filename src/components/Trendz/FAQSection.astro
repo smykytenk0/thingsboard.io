@@ -56,7 +56,7 @@ const categories = [
 				id: 'q-licensing',
 				question: 'How is Trendz licensed and priced?',
 				answer:
-					'Trendz is a separate add-on product by ThingsBoard and is charged as an add-on in the scope of the main ThingsBoard license. Pricing depends on license type and deployment model — public/private Cloud, self-hosted, or perpetual license.',
+					'Trendz is a separate add-on product by ThingsBoard and is charged as an add-on in the scope of the main ThingsBoard license. Pricing depends on license type and deployment model — public/private Cloud, on-premises, or perpetual license.',
 			},
 			{
 				id: 'q-data',
@@ -102,7 +102,7 @@ const categories = [
 							data-cat={cat.id}
 						>
 							{cat.label}
-							<svg class="faq-cat-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+							<svg class="faq-cat-chevron print:hidden" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
 								<path
 									d="M3.5 5.5L8 10L12.5 5.5"
 									stroke="currentColor"
@@ -120,7 +120,7 @@ const categories = [
 										<button class="faq-question-btn" aria-expanded="false" aria-controls={item.id}>
 											{item.question}
 											<svg
-												class="faq-chevron"
+												class="faq-chevron print:hidden"
 												width="16"
 												height="16"
 												viewBox="0 0 16 16"
@@ -154,6 +154,7 @@ const categories = [
 	const section = document.getElementById('trendz-faq');
 	if (section) {
 		const groups = Array.from(section.querySelectorAll<HTMLElement>('.faq-group'));
+		const layout = section.querySelector<HTMLElement>('.faq-layout')!;
 
 		// Category switching
 		groups.forEach((group) => {
@@ -176,7 +177,29 @@ const categories = [
 				catBtn.setAttribute('aria-expanded', 'true');
 				panel.classList.add('active');
 				panel.removeAttribute('hidden');
+				syncMinHeight();
 			});
+		});
+
+		// On desktop, panels are position:absolute so they don't affect grid row sizing.
+		// Always measure the live active panel so expanded Q&A items are accounted for.
+		// Matches media-up(xl) (1280px) in the SCSS below, where panels switch to absolute.
+		const XL_BP = 1280;
+
+		function syncMinHeight() {
+			if (window.innerWidth < XL_BP) {
+				layout.style.minHeight = '';
+				return;
+			}
+			const activePanel = section!.querySelector<HTMLElement>('.faq-panel:not([hidden])');
+			layout.style.minHeight = activePanel ? activePanel.scrollHeight + 'px' : '';
+		}
+
+		syncMinHeight();
+		let rafId = 0;
+		window.addEventListener('resize', () => {
+			cancelAnimationFrame(rafId);
+			rafId = requestAnimationFrame(syncMinHeight);
 		});
 
 		// Q&A accordion toggle
@@ -190,6 +213,7 @@ const categories = [
 				} else {
 					answer.removeAttribute('hidden');
 				}
+				syncMinHeight();
 			});
 		});
 	}
@@ -200,14 +224,14 @@ const categories = [
 
 	#trendz-faq {
 		background: #fff;
-		padding: 32px 20px;
+		padding: 0 20px 32px;
 		box-sizing: border-box;
 
-		@include trendz-up(sm) {
-			padding: 60px 50px;
+		@include media-up(sm) {
+			padding: 0 50px 60px;
 		}
 
-		@include trendz-up(lg) {
+		@include media-up(xl) {
 			padding: 100px 50px;
 		}
 	}
@@ -223,7 +247,7 @@ const categories = [
 		text-align: center;
 		margin: 0 0 56px;
 
-		@include trendz-down(xs) {
+		@include media-down(sm) {
 			@include trendz-h4;
 			margin-bottom: 32px;
 		}
@@ -231,23 +255,26 @@ const categories = [
 
 	// ── Layout ────────────────────────────────────────────────────────────────
 	//
-	// Mobile: each .faq-group stacks vertically (button → panel).
+	// Mobile: each .faq-group stacks vertically (button → panel accordion).
 	// Desktop (≥lg): CSS Grid with display:contents on .faq-group unwraps the
-	// pairs so all buttons land in col 1 (auto-placed) and all panels stack in
-	// col 2 row 1 — only the active panel is visible at any time.
+	// pairs so buttons land in col 1 and panels in col 2. Panels are
+	// position:absolute so they never inflate the button column row heights.
+	// JS sets min-height on .faq-layout to match the tallest panel.
 
 	.faq-layout {
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
 
-		@include trendz-up(lg) {
+		@include media-up(xl) {
 			display: grid;
 			grid-template-columns: 30% 1fr;
 			grid-template-rows: repeat(var(--faq-rows), auto);
 			column-gap: 40px;
 			row-gap: 0;
 			align-items: start;
+			align-content: start;
+			position: relative;
 		}
 	}
 
@@ -255,7 +282,7 @@ const categories = [
 		display: flex;
 		flex-direction: column;
 
-		@include trendz-up(lg) {
+		@include media-up(xl) {
 			display: contents;
 		}
 	}
@@ -282,7 +309,7 @@ const categories = [
 
 		@include trendz-h4;
 
-		@include trendz-down(xs) {
+		@include media-down(sm) {
 			@include trendz-body-m-medium;
 			padding: 12px 16px;
 			border-radius: 12px;
@@ -293,12 +320,12 @@ const categories = [
 		}
 
 		&.active {
-			color: var(--text-text-primary, rgba(0, 0, 0, 0.87));
-			background: #f4f8fe;
+			color: var(--color-trendz-text-primary);
+			background: var(--color-trendz-surface);
 		}
 
 		// On desktop: snap to col 1, hide the mobile chevron
-		@include trendz-up(lg) {
+		@include media-up(xl) {
 			grid-column: 1;
 
 			.faq-cat-chevron {
@@ -326,11 +353,14 @@ const categories = [
 			display: none;
 		}
 
-		// On desktop all panels sit in the same grid cell (col 2, row 1).
-		// display:none/block controlled by JS keeps only one visible.
-		@include trendz-up(lg) {
+		// On desktop: absolutely positioned in the col 2 grid area so the panel
+		// height doesn't inflate the button column rows.
+		@include media-up(xl) {
+			position: absolute;
 			grid-column: 2;
 			grid-row: 1 / -1;
+			width: 100%;
+			top: 0;
 		}
 	}
 
@@ -360,11 +390,11 @@ const categories = [
 		cursor: pointer;
 		text-align: left;
 		font-family: inherit;
-		color: var(--text-text-primary, rgba(0, 0, 0, 0.87));
+		color: var(--color-trendz-text-primary);
 
 		@include trendz-body-m-medium;
 
-		@include trendz-down(xs) {
+		@include media-down(sm) {
 			@include trendz-body-s;
 			font-weight: 500;
 			padding: 16px 20px;
@@ -394,8 +424,37 @@ const categories = [
 
 		p {
 			@include trendz-body-xs;
-			color: var(--text-text-secondary, rgba(0, 0, 0, 0.76));
+			color: var(--color-trendz-text-secondary);
 			margin: 0;
+		}
+	}
+
+	@media print {
+		.faq-panel[hidden],
+		.faq-answer[hidden] {
+			display: block;
+		}
+
+		.faq-cat {
+			color: var(--color-trendz-text-primary);
+			break-after: avoid;
+		}
+
+		.faq-cat.active {
+			background: none;
+		}
+
+		.faq-item {
+			break-inside: avoid;
+		}
+
+		#trendz-faq {
+			padding-bottom: 0;
+		}
+
+		.faq-group:last-child .faq-panel,
+		.faq-group:last-child .faq-item:last-child .faq-answer {
+			padding-bottom: 0;
 		}
 	}
 </style>

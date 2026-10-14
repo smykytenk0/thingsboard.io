@@ -1,31 +1,26 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
 ---
 
 <BaseLayout
 	title="Page Not Found"
 	description="The page you are looking for doesn't exist or has been moved."
-	pageId="common"
 	noIndex={true}
 >
-	<main class="error-page">
+	<div class="error-page">
 		<div class="error-page__container">
 			<div class="error-page__code">404</div>
 			<h1 class="error-page__title">Page Not Found</h1>
-			<p class="error-page__description">
-				The page you are looking for doesn't exist or has been moved.
-			</p>
-			<div class="error-page__actions">
+			<p class="error-page__description">The page you are looking for doesn't exist or has been moved.</p>
+			<div class="error-page__actions print:hidden">
 				<a href="/" class="error-page__button error-page__button--primary"> Go to Homepage </a>
-				<a href="/docs/" class="error-page__button error-page__button--outline">
-					Browse Documentation
-				</a>
+				<a href="/docs/pe/" class="error-page__button error-page__button--outline"> Browse Documentation </a>
 			</div>
-			<div class="error-page__links">
+			<div class="error-page__links print:hidden">
 				<p>Or try one of these:</p>
 				<ul>
 					<li>
-						<a href="/docs/why-thingsboard/">What is ThingsBoard?</a>
+						<a href="/docs/pe/why-thingsboard/">What is ThingsBoard?</a>
 					</li>
 					<li><a href="/installations/">Installation Guide</a></li>
 					<li><a href="/products/">Products</a></li>
@@ -33,16 +28,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 				</ul>
 			</div>
 		</div>
-	</main>
+	</div>
 </BaseLayout>
 
 <style lang="scss" is:global>
 	@use '../styles/variables' as *;
-
-	#common {
-		background-color: var(--sl-color-bg, $color-bg-white);
-		color: var(--sl-color-white, $color-text-primary);
-	}
 </style>
 
 <style lang="scss">
@@ -53,11 +43,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: calc($header-height + $spacing-8) $spacing-5 $spacing-8;
+		padding: $spacing-8 $spacing-5 $spacing-8;
 		background-color: var(--sl-color-bg, $color-bg-light);
 
 		@include media-down(md) {
-			padding: calc($header-height + $spacing-5) $spacing-4 $spacing-5;
+			padding: $spacing-5 $spacing-4 $spacing-5;
 		}
 
 		&__container {
@@ -177,6 +167,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 					text-decoration: underline;
 				}
 			}
+		}
+	}
+
+	@media print {
+		.error-page {
+			min-height: 0;
 		}
 	}
 </style>

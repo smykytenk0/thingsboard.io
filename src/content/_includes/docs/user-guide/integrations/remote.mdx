@@ -1,16 +1,17 @@
 import DocLink from '@components/DocLink.astro';
 import ImageGallery from '~/components/ImageGallery.astro';
-import Banner from '~/components/Banner.astro';
-import { Code } from '@astrojs/starlight/components';
-import { Steps, Aside } from '@astrojs/starlight/components';
+import { Aside, Code, Steps } from '@astrojs/starlight/components';
 import { Products } from '~/models/site.models';
-import { PE_FULL_VER } from '~/data/versions';
+import { PE_FULL_VER, PE_PKG_VER, PE_RELEASE_URL } from '~/data/versions';
 import Tabs from '@components/Tabs.astro';
 import TabItem from '@components/TabItem.astro';
 
-export const PE_VER = PE_FULL_VER.toLowerCase();
+export const PE_VER = PE_PKG_VER;
 
-<Banner variant="peFeature" product={props.product} path="user-guide/integrations/remote" />
+export const tbHost = (product) =>
+  product === Products.PAAS ? 'thingsboard.cloud' :
+  product === Products.PAAS_EU ? 'eu.thingsboard.cloud' :
+  'YOUR_THINGSBOARD_HOST';
 
 Remote Integrations allow reliable data streaming from multiple devices in the local area network (LAN) to the ThingsBoard platform in the cloud.
 They are helpful if you have, for example, a local MQTT broker or OPC-UA server with no external IP address that is unreachable from your ThingsBoard instance.
@@ -36,19 +37,21 @@ For more information, see the <DocLink product={props.product} path="user-guide/
 
 ## ThingsBoard Configuration
 
-We assume you already have a tenant administrator account on your own <DocLink product={Products.PE} path="installation">ThingsBoard PE instance</DocLink> or <a href="/installations/?product=thingsboard-cloud" target="_blank">**ThingsBoard Cloud**</a>.
+We assume you already have a tenant administrator account on your own <DocLink product={Products.PE} path="installation">self-hosted ThingsBoard instance</DocLink> or <a href="/installations/?product=thingsboard-cloud" target="_blank">**ThingsBoard Cloud**</a>.
 
 ### Create Remote Integration in ThingsBoard
 
 The following steps create a remote MQTT integration that connects to a local broker on port 1883 and subscribes to all topics.
 
 <Steps>
-1. Go to **Integrations center &#8702; Integrations** and click the **+ Add integration**.
+1. Go to **Integrations &#8702; Integrations** and click the **+ Add integration**.
 2. Select the **Integration type**: **MQTT** and set the **Name** to **MQTT remote integration**. Click **Next**.
 3. Create a default **Uplink data converter** and click **Next**.
 4. Leave the **Downlink data converter** field empty. Click **Skip**.
 5. On the **Connection** step:
-   - Set **Host** to `thingsboard.cloud` (or your ThingsBoard PE host) and **Port** to `1883`.
+   - {props.product === Products.PAAS || props.product === Products.PAAS_EU
+       ? <>Set <strong>Host</strong> to <code>{tbHost(props.product)}</code> and <strong>Port</strong> to <code>1883</code>.</>
+       : <>Set the <strong>Host</strong> parameter to the host of your ThingsBoard instance and <strong>Port</strong> to <code>1883</code>.</>}
    - Subscribe to all topics by entering `#` in the **Topic** field.
    - Select an MQTT **QoS** level (default: 0 — At most once).
    - Enable the **Execute remotely** toggle. The **Integration key** and **Integration secret** fields will appear — **copy and save both values**, as you will need them when launching the remote integration process.
@@ -56,28 +59,20 @@ The following steps create a remote MQTT integration that connects to a local br
 7. Click **Add** to create the integration.
 </Steps>
 
-<ImageGallery images={[
-  { src: '/src/assets/images/user-guide/integrations/remote/remote-integration-1-paas.png', alt: 'Add integration wizard — step 1: Basic settings — MQTT selected as integration type, name "MQTT remote integration" entered, Next button highlighted', caption: 'Navigate to Integrations center → Integrations, click the "+" icon, select MQTT as the integration type, enter the name, and click Next' },
-  { src: '/src/assets/images/user-guide/integrations/remote/remote-integration-2-paas.png', alt: 'Add integration wizard — step 2: Uplink data converter — Create new tab active, default TBEL decoder script shown, Next button highlighted', caption: 'Create a new uplink data converter with the default decoder script and click Next' },
-  { src: '/src/assets/images/user-guide/integrations/remote/remote-integration-3-paas.png', alt: 'Add integration wizard — step 3: Downlink data converter — empty Downlink data converter field, Skip button highlighted', caption: 'Leave the Downlink data converter empty and click Skip' },
-  { src: '/src/assets/images/user-guide/integrations/remote/remote-integration-4-paas.png', alt: 'Add integration wizard — step 4: Connection — host "thingsboard.cloud", port 1883, topic "#", QoS 0 (At most once), Execute remotely toggle enabled, Integration key and Integration secret fields visible', caption: 'Set the host and port, subscribe to all topics (#), enable Execute remotely, then copy and save the Integration key and Integration secret' },
-  { src: '/src/assets/images/user-guide/integrations/remote/remote-integration-5-paas.png', alt: 'Add integration wizard — step 4: Connection scrolled down — Advanced settings expanded, Clean session toggle disabled, Add button highlighted', caption: 'Expand Advanced settings, uncheck Clean session, then click Add to create the integration' },
-]} />
-
 ## Choose Your Platform and Install
 
 ThingsBoard Integration can be installed via Docker, Debian, or RPM packages.
 
 ### Docker on Linux/Mac
 
-[Install Docker CE](https://docs.docker.com/engine/installation/)
+[Install Docker Engine](https://docs.docker.com/engine/install/)
 
 <Tabs>
 <TabItem label="HTTP">
 
 Pull the Docker image:
 
-<Code code={`docker pull thingsboard/tb-pe-http-integration:${PE_FULL_VER}`} lang="bash" />
+<Code code={`docker pull thingsboard/tb-http-integration:${PE_FULL_VER}`} lang="bash" />
 
 Create a volume for the integration logs (799 is the user ID of the ThingsBoard non-root Docker user):
 
@@ -88,13 +83,13 @@ mkdir -p ~/.tb-pe-http-integration-logs && sudo chown -R 799:799 ~/.tb-pe-http-i
 Run the integration:
 
 <Code code={`docker run -it -p 8082:8082 -v ~/.tb-pe-http-integration-logs:/var/log/tb-http-integration \\
--e "RPC_HOST=thingsboard.cloud" -e "RPC_PORT=9090" \\
+-e "RPC_HOST=${tbHost(props.product)}" -e "RPC_PORT=9090" \\
 -e "INTEGRATION_ROUTING_KEY=YOUR_ROUTING_KEY" -e "INTEGRATION_SECRET=YOUR_SECRET" \\
---name my-tb-pe-http-integration --restart always thingsboard/tb-pe-http-integration:${PE_FULL_VER}`} lang="bash" />
+--name my-tb-pe-http-integration --restart always thingsboard/tb-http-integration:${PE_FULL_VER}`} lang="bash" />
 
 Where:
 
-- `thingsboard.cloud` — host name of your ThingsBoard PE instance;
+- <code>{tbHost(props.product)}</code> — host name of your ThingsBoard instance;
 - `9090` — integration gRPC port, configured via `INTEGRATIONS_RPC_PORT` in `thingsboard.yml`;
 - `YOUR_ROUTING_KEY` — **integration key** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
 - `YOUR_SECRET` — **integration secret** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
@@ -125,7 +120,7 @@ docker start my-tb-pe-http-integration
 
 Pull the Docker image:
 
-<Code code={`docker pull thingsboard/tb-pe-mqtt-integration:${PE_FULL_VER}`} lang="bash" />
+<Code code={`docker pull thingsboard/tb-mqtt-integration:${PE_FULL_VER}`} lang="bash" />
 
 Create a volume for the integration logs:
 
@@ -136,13 +131,13 @@ mkdir -p ~/.tb-pe-mqtt-integration-logs && sudo chown -R 799:799 ~/.tb-pe-mqtt-i
 Run the integration:
 
 <Code code={`docker run -it -v ~/.tb-pe-mqtt-integration-logs:/var/log/tb-mqtt-integration \\
--e "RPC_HOST=thingsboard.cloud" -e "RPC_PORT=9090" \\
+-e "RPC_HOST=${tbHost(props.product)}" -e "RPC_PORT=9090" \\
 -e "INTEGRATION_ROUTING_KEY=YOUR_ROUTING_KEY" -e "INTEGRATION_SECRET=YOUR_SECRET" \\
---name my-tb-pe-mqtt-integration --restart always thingsboard/tb-pe-mqtt-integration:${PE_FULL_VER}`} lang="bash" />
+--name my-tb-pe-mqtt-integration --restart always thingsboard/tb-mqtt-integration:${PE_FULL_VER}`} lang="bash" />
 
 Where:
 
-- `thingsboard.cloud` — host name of your ThingsBoard PE instance;
+- <code>{tbHost(props.product)}</code> — host name of your ThingsBoard instance;
 - `9090` — integration gRPC port;
 - `YOUR_ROUTING_KEY` — **integration key** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
 - `YOUR_SECRET` — **integration secret** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard).
@@ -170,7 +165,7 @@ docker start my-tb-pe-mqtt-integration
 
 Pull the Docker image:
 
-<Code code={`docker pull thingsboard/tb-pe-aws-integration:${PE_FULL_VER}`} lang="bash" />
+<Code code={`docker pull thingsboard/tb-aws-integration:${PE_FULL_VER}`} lang="bash" />
 
 Create a volume for the integration logs:
 
@@ -181,13 +176,13 @@ mkdir -p ~/.tb-pe-aws-integration-logs && sudo chown -R 799:799 ~/.tb-pe-aws-int
 Run the integration:
 
 <Code code={`docker run -it -v ~/.tb-pe-aws-integration-logs:/var/log/tb-aws-integration \\
--e "RPC_HOST=thingsboard.cloud" -e "RPC_PORT=9090" \\
+-e "RPC_HOST=${tbHost(props.product)}" -e "RPC_PORT=9090" \\
 -e "INTEGRATION_ROUTING_KEY=YOUR_ROUTING_KEY" -e "INTEGRATION_SECRET=YOUR_SECRET" \\
---name my-tb-pe-aws-integration --restart always thingsboard/tb-pe-aws-integration:${PE_FULL_VER}`} lang="bash" />
+--name my-tb-pe-aws-integration --restart always thingsboard/tb-aws-integration:${PE_FULL_VER}`} lang="bash" />
 
 Where:
 
-- `thingsboard.cloud` — host name of your ThingsBoard PE instance;
+- <code>{tbHost(props.product)}</code> — host name of your ThingsBoard instance;
 - `9090` — integration gRPC port;
 - `YOUR_ROUTING_KEY` — **integration key** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
 - `YOUR_SECRET` — **integration secret** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard).
@@ -215,7 +210,7 @@ docker start my-tb-pe-aws-integration
 
 Pull the Docker image:
 
-<Code code={`docker pull thingsboard/tb-pe-azure-integration:${PE_FULL_VER}`} lang="bash" />
+<Code code={`docker pull thingsboard/tb-azure-integration:${PE_FULL_VER}`} lang="bash" />
 
 Create a volume for the integration logs:
 
@@ -226,13 +221,13 @@ mkdir -p ~/.tb-pe-azure-integration-logs && sudo chown -R 799:799 ~/.tb-pe-azure
 Run the integration:
 
 <Code code={`docker run -it -v ~/.tb-pe-azure-integration-logs:/var/log/tb-azure-integration \\
--e "RPC_HOST=thingsboard.cloud" -e "RPC_PORT=9090" \\
+-e "RPC_HOST=${tbHost(props.product)}" -e "RPC_PORT=9090" \\
 -e "INTEGRATION_ROUTING_KEY=YOUR_ROUTING_KEY" -e "INTEGRATION_SECRET=YOUR_SECRET" \\
---name my-tb-pe-azure-integration --restart always thingsboard/tb-pe-azure-integration:${PE_FULL_VER}`} lang="bash" />
+--name my-tb-pe-azure-integration --restart always thingsboard/tb-azure-integration:${PE_FULL_VER}`} lang="bash" />
 
 Where:
 
-- `thingsboard.cloud` — host name of your ThingsBoard PE instance;
+- <code>{tbHost(props.product)}</code> — host name of your ThingsBoard instance;
 - `9090` — integration gRPC port;
 - `YOUR_ROUTING_KEY` — **integration key** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
 - `YOUR_SECRET` — **integration secret** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard).
@@ -260,7 +255,7 @@ docker start my-tb-pe-azure-integration
 
 Pull the Docker image:
 
-<Code code={`docker pull thingsboard/tb-pe-opc-ua-integration:${PE_FULL_VER}`} lang="bash" />
+<Code code={`docker pull thingsboard/tb-opc-ua-integration:${PE_FULL_VER}`} lang="bash" />
 
 Create a volume for the integration logs:
 
@@ -271,13 +266,13 @@ mkdir -p ~/.tb-pe-opc-ua-integration-logs && sudo chown -R 799:799 ~/.tb-pe-opc-
 Run the integration:
 
 <Code code={`docker run -it -v ~/.tb-pe-opc-ua-integration-logs:/var/log/tb-opc-ua-integration \\
--e "RPC_HOST=thingsboard.cloud" -e "RPC_PORT=9090" \\
+-e "RPC_HOST=${tbHost(props.product)}" -e "RPC_PORT=9090" \\
 -e "INTEGRATION_ROUTING_KEY=YOUR_ROUTING_KEY" -e "INTEGRATION_SECRET=YOUR_SECRET" \\
---name my-tb-pe-opc-ua-integration --restart always thingsboard/tb-pe-opc-ua-integration:${PE_FULL_VER}`} lang="bash" />
+--name my-tb-pe-opc-ua-integration --restart always thingsboard/tb-opc-ua-integration:${PE_FULL_VER}`} lang="bash" />
 
 Where:
 
-- `thingsboard.cloud` — host name of your ThingsBoard PE instance;
+- <code>{tbHost(props.product)}</code> — host name of your ThingsBoard instance;
 - `9090` — integration gRPC port;
 - `YOUR_ROUTING_KEY` — **integration key** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
 - `YOUR_SECRET` — **integration secret** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard).
@@ -305,7 +300,7 @@ docker start my-tb-pe-opc-ua-integration
 
 Pull the Docker image:
 
-<Code code={`docker pull thingsboard/tb-pe-tcp-udp-integration:${PE_FULL_VER}`} lang="bash" />
+<Code code={`docker pull thingsboard/tb-tcp-udp-integration:${PE_FULL_VER}`} lang="bash" />
 
 Create a volume for the integration logs:
 
@@ -316,13 +311,13 @@ mkdir -p ~/.tb-pe-tcp-udp-integration-logs && sudo chown -R 799:799 ~/.tb-pe-tcp
 Run the integration:
 
 <Code code={`docker run -it -p 10560:10560 -v ~/.tb-pe-tcp-udp-integration-logs:/var/log/tb-tcp-udp-integration \\
--e "RPC_HOST=thingsboard.cloud" -e "RPC_PORT=9090" \\
+-e "RPC_HOST=${tbHost(props.product)}" -e "RPC_PORT=9090" \\
 -e "INTEGRATION_ROUTING_KEY=YOUR_ROUTING_KEY" -e "INTEGRATION_SECRET=YOUR_SECRET" \\
---name my-tb-pe-tcp-udp-integration --restart always thingsboard/tb-pe-tcp-udp-integration:${PE_FULL_VER}`} lang="bash" />
+--name my-tb-pe-tcp-udp-integration --restart always thingsboard/tb-tcp-udp-integration:${PE_FULL_VER}`} lang="bash" />
 
 Where:
 
-- `thingsboard.cloud` — host name of your ThingsBoard PE instance;
+- <code>{tbHost(props.product)}</code> — host name of your ThingsBoard instance;
 - `9090` — integration gRPC port;
 - `YOUR_ROUTING_KEY` — **integration key** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
 - `YOUR_SECRET` — **integration secret** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
@@ -351,7 +346,7 @@ docker start my-tb-pe-tcp-udp-integration
 
 Pull the Docker image:
 
-<Code code={`docker pull thingsboard/tb-pe-coap-integration:${PE_FULL_VER}`} lang="bash" />
+<Code code={`docker pull thingsboard/tb-coap-integration:${PE_FULL_VER}`} lang="bash" />
 
 Create a volume for the integration logs:
 
@@ -362,13 +357,13 @@ mkdir -p ~/.tb-pe-coap-integration-logs && sudo chown -R 799:799 ~/.tb-pe-coap-i
 Run the integration:
 
 <Code code={`docker run -it -p 5683:5683/udp -v ~/.tb-pe-coap-integration-logs:/var/log/tb-coap-integration \\
--e "RPC_HOST=thingsboard.cloud" -e "RPC_PORT=9090" \\
+-e "RPC_HOST=${tbHost(props.product)}" -e "RPC_PORT=9090" \\
 -e "INTEGRATION_ROUTING_KEY=YOUR_ROUTING_KEY" -e "INTEGRATION_SECRET=YOUR_SECRET" \\
---name my-tb-pe-coap-integration --restart always thingsboard/tb-pe-coap-integration:${PE_FULL_VER}`} lang="bash" />
+--name my-tb-pe-coap-integration --restart always thingsboard/tb-coap-integration:${PE_FULL_VER}`} lang="bash" />
 
 Where:
 
-- `thingsboard.cloud` — host name of your ThingsBoard PE instance;
+- <code>{tbHost(props.product)}</code> — host name of your ThingsBoard instance;
 - `9090` — integration gRPC port;
 - `YOUR_ROUTING_KEY` — **integration key** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
 - `YOUR_SECRET` — **integration secret** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
@@ -390,6 +385,56 @@ docker stop my-tb-pe-coap-integration
 
 ```bash
 docker start my-tb-pe-coap-integration
+```
+
+</TabItem>
+<TabItem label="Apache Pulsar">
+
+Pull the Docker image:
+
+<Code code={`docker pull thingsboard/tb-apache-pulsar-integration:${PE_FULL_VER}`} lang="bash" />
+
+Create a volume for the integration logs (799 is the user ID of the ThingsBoard non-root Docker user):
+
+```bash
+mkdir -p ~/.tb-pe-pulsar-integration-logs && sudo chown -R 799:799 ~/.tb-pe-pulsar-integration-logs
+```
+
+Run the integration:
+
+<Code code={`docker run -it -v ~/.tb-pe-pulsar-integration-logs:/var/log/tb-pulsar-integration \\
+-e "RPC_HOST=${tbHost(props.product)}" -e "RPC_PORT=9090" \\
+-e "INTEGRATION_ROUTING_KEY=YOUR_ROUTING_KEY" -e "INTEGRATION_SECRET=YOUR_SECRET" -e "PULSAR_SERVICE_URL=pulsar://host.docker.internal:6650" -e "PULSAR_ADMIN_URL=http://host.docker.internal:8080" \\
+--name my-tb-pe-pulsar-integration --add-host=host.docker.internal:host-gateway --restart always thingsboard/tb-apache-pulsar-integration:${PE_FULL_VER}`} lang="bash" />
+
+Where:
+
+- <code>{tbHost(props.product)}</code> — host name of your ThingsBoard instance;
+- `9090` — integration gRPC port;
+- `YOUR_ROUTING_KEY` — **integration key** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
+- `YOUR_SECRET` — **integration secret** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
+- `PULSAR_SERVICE_URL` — URL of your Apache Pulsar broker service;
+- `PULSAR_ADMIN_URL` — URL of your Apache Pulsar admin REST API;
+- `--add-host=host.docker.internal:host-gateway` — lets the container reach a Pulsar broker running on the Docker host via `host.docker.internal`. If Pulsar is running on a different server, replace `host.docker.internal` in `PULSAR_SERVICE_URL` and `PULSAR_ADMIN_URL` with its IP address (e.g., `192.168.1.50`) and remove the `--add-host` flag.
+
+Logs are written to `~/.tb-pe-pulsar-integration-logs`. After startup you should see INFO log messages with the latest integration configuration received from the server.
+
+<Aside type="tip">
+  Detach from the session terminal without stopping the container: **`Ctrl-p`** + **`Ctrl-q`**.
+</Aside>
+
+**Reattach, stop, and start commands:**
+
+```bash
+docker attach my-tb-pe-pulsar-integration
+```
+
+```bash
+docker stop my-tb-pe-pulsar-integration
+```
+
+```bash
+docker start my-tb-pe-pulsar-integration
 ```
 
 </TabItem>
@@ -479,7 +524,7 @@ See the corresponding [Linux](https://developers.google.com/speed/public-dns/doc
 
 ### Docker on Windows
 
-[Install Docker Desktop for Windows](https://docker-docs.uclv.cu/toolbox/toolbox_install_windows/)
+[Install Docker Desktop for Windows](https://docs.docker.com/desktop/setup/install/windows-install/)
 
 Windows users should use Docker managed volumes for integration logs. Open **Docker Quickstart Terminal** and create the volume before running the container.
 
@@ -495,13 +540,13 @@ docker volume create tb-pe-http-integration-logs
 Run the integration:
 
 <Code code={`docker run -it -v tb-pe-http-integration-logs:/var/log/tb-http-integration \`
--e "RPC_HOST=thingsboard.cloud" -e "RPC_PORT=9090" \`
+-e "RPC_HOST=${tbHost(props.product)}" -e "RPC_PORT=9090" \`
 -e "INTEGRATION_ROUTING_KEY=YOUR_ROUTING_KEY" -e "INTEGRATION_SECRET=YOUR_SECRET" \`
---name my-tb-pe-http-integration --restart always thingsboard/tb-pe-http-integration:${PE_FULL_VER}`} lang="bash" />
+--name my-tb-pe-http-integration --restart always thingsboard/tb-http-integration:${PE_FULL_VER}`} lang="bash" />
 
 Where:
 
-- `thingsboard.cloud` — host name of your ThingsBoard PE instance;
+- <code>{tbHost(props.product)}</code> — host name of your ThingsBoard instance;
 - `9090` — integration gRPC port;
 - `YOUR_ROUTING_KEY` — **integration key** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
 - `YOUR_SECRET` — **integration secret** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard).
@@ -534,13 +579,13 @@ docker volume create tb-pe-mqtt-integration-logs
 Run the integration:
 
 <Code code={`docker run -it -v tb-pe-mqtt-integration-logs:/var/log/tb-mqtt-integration \`
--e "RPC_HOST=thingsboard.cloud" -e "RPC_PORT=9090" \`
+-e "RPC_HOST=${tbHost(props.product)}" -e "RPC_PORT=9090" \`
 -e "INTEGRATION_ROUTING_KEY=YOUR_ROUTING_KEY" -e "INTEGRATION_SECRET=YOUR_SECRET" \`
---name my-tb-pe-mqtt-integration --restart always thingsboard/tb-pe-mqtt-integration:${PE_FULL_VER}`} lang="bash" />
+--name my-tb-pe-mqtt-integration --restart always thingsboard/tb-mqtt-integration:${PE_FULL_VER}`} lang="bash" />
 
 Where:
 
-- `thingsboard.cloud` — host name of your ThingsBoard PE instance;
+- <code>{tbHost(props.product)}</code> — host name of your ThingsBoard instance;
 - `9090` — integration gRPC port;
 - `YOUR_ROUTING_KEY` — **integration key** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
 - `YOUR_SECRET` — **integration secret** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard).
@@ -573,13 +618,13 @@ docker volume create tb-pe-aws-integration-logs
 Run the integration:
 
 <Code code={`docker run -it -v tb-pe-aws-integration-logs:/var/log/tb-aws-integration \`
--e "RPC_HOST=thingsboard.cloud" -e "RPC_PORT=9090" \`
+-e "RPC_HOST=${tbHost(props.product)}" -e "RPC_PORT=9090" \`
 -e "INTEGRATION_ROUTING_KEY=YOUR_ROUTING_KEY" -e "INTEGRATION_SECRET=YOUR_SECRET" \`
---name my-tb-pe-aws-integration --restart always thingsboard/tb-pe-aws-integration:${PE_FULL_VER}`} lang="bash" />
+--name my-tb-pe-aws-integration --restart always thingsboard/tb-aws-integration:${PE_FULL_VER}`} lang="bash" />
 
 Where:
 
-- `thingsboard.cloud` — host name of your ThingsBoard PE instance;
+- <code>{tbHost(props.product)}</code> — host name of your ThingsBoard instance;
 - `9090` — integration gRPC port;
 - `YOUR_ROUTING_KEY` — **integration key** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
 - `YOUR_SECRET` — **integration secret** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard).
@@ -612,13 +657,13 @@ docker volume create tb-pe-azure-integration-logs
 Run the integration:
 
 <Code code={`docker run -it -v tb-pe-azure-integration-logs:/var/log/tb-azure-integration \`
--e "RPC_HOST=thingsboard.cloud" -e "RPC_PORT=9090" \`
+-e "RPC_HOST=${tbHost(props.product)}" -e "RPC_PORT=9090" \`
 -e "INTEGRATION_ROUTING_KEY=YOUR_ROUTING_KEY" -e "INTEGRATION_SECRET=YOUR_SECRET" \`
---name my-tb-pe-azure-integration --restart always thingsboard/tb-pe-azure-integration:${PE_FULL_VER}`} lang="bash" />
+--name my-tb-pe-azure-integration --restart always thingsboard/tb-azure-integration:${PE_FULL_VER}`} lang="bash" />
 
 Where:
 
-- `thingsboard.cloud` — host name of your ThingsBoard PE instance;
+- <code>{tbHost(props.product)}</code> — host name of your ThingsBoard instance;
 - `9090` — integration gRPC port;
 - `YOUR_ROUTING_KEY` — **integration key** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
 - `YOUR_SECRET` — **integration secret** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard).
@@ -651,13 +696,13 @@ docker volume create tb-pe-opc-ua-integration-logs
 Run the integration:
 
 <Code code={`docker run -it -v tb-pe-opc-ua-integration-logs:/var/log/tb-opc-ua-integration \`
--e "RPC_HOST=thingsboard.cloud" -e "RPC_PORT=9090" \`
+-e "RPC_HOST=${tbHost(props.product)}" -e "RPC_PORT=9090" \`
 -e "INTEGRATION_ROUTING_KEY=YOUR_ROUTING_KEY" -e "INTEGRATION_SECRET=YOUR_SECRET" \`
---name my-tb-pe-opc-ua-integration --restart always thingsboard/tb-pe-opc-ua-integration:${PE_FULL_VER}`} lang="bash" />
+--name my-tb-pe-opc-ua-integration --restart always thingsboard/tb-opc-ua-integration:${PE_FULL_VER}`} lang="bash" />
 
 Where:
 
-- `thingsboard.cloud` — host name of your ThingsBoard PE instance;
+- <code>{tbHost(props.product)}</code> — host name of your ThingsBoard instance;
 - `9090` — integration gRPC port;
 - `YOUR_ROUTING_KEY` — **integration key** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
 - `YOUR_SECRET` — **integration secret** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard).
@@ -690,13 +735,13 @@ docker volume create tb-pe-tcp-udp-integration-logs
 Run the integration:
 
 <Code code={`docker run -it -p 10560:10560 -v tb-pe-tcp-udp-integration-logs:/var/log/tb-tcp-udp-integration \`
--e "RPC_HOST=thingsboard.cloud" -e "RPC_PORT=9090" \`
+-e "RPC_HOST=${tbHost(props.product)}" -e "RPC_PORT=9090" \`
 -e "INTEGRATION_ROUTING_KEY=YOUR_ROUTING_KEY" -e "INTEGRATION_SECRET=YOUR_SECRET" \`
---name my-tb-pe-tcp-udp-integration --restart always thingsboard/tb-pe-tcp-udp-integration:${PE_FULL_VER}`} lang="bash" />
+--name my-tb-pe-tcp-udp-integration --restart always thingsboard/tb-tcp-udp-integration:${PE_FULL_VER}`} lang="bash" />
 
 Where:
 
-- `thingsboard.cloud` — host name of your ThingsBoard PE instance;
+- <code>{tbHost(props.product)}</code> — host name of your ThingsBoard instance;
 - `9090` — integration gRPC port;
 - `YOUR_ROUTING_KEY` — **integration key** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
 - `YOUR_SECRET` — **integration secret** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
@@ -730,13 +775,13 @@ docker volume create tb-pe-coap-integration-logs
 Run the integration:
 
 <Code code={`docker run -it -p 5683:5683/udp -v tb-pe-coap-integration-logs:/var/log/tb-coap-integration \`
--e "RPC_HOST=thingsboard.cloud" -e "RPC_PORT=9090" \`
+-e "RPC_HOST=${tbHost(props.product)}" -e "RPC_PORT=9090" \`
 -e "INTEGRATION_ROUTING_KEY=YOUR_ROUTING_KEY" -e "INTEGRATION_SECRET=YOUR_SECRET" \`
---name my-tb-pe-coap-integration --restart always thingsboard/tb-pe-coap-integration:${PE_FULL_VER}`} lang="bash" />
+--name my-tb-pe-coap-integration --restart always thingsboard/tb-coap-integration:${PE_FULL_VER}`} lang="bash" />
 
 Where:
 
-- `thingsboard.cloud` — host name of your ThingsBoard PE instance;
+- <code>{tbHost(props.product)}</code> — host name of your ThingsBoard instance;
 - `9090` — integration gRPC port;
 - `YOUR_ROUTING_KEY` — **integration key** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
 - `YOUR_SECRET` — **integration secret** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
@@ -759,6 +804,50 @@ docker start my-tb-pe-coap-integration
 ```
 
 </TabItem>
+<TabItem label="Apache Pulsar">
+
+Create a Docker volume:
+
+```bash
+docker volume create tb-pe-pulsar-integration-logs
+```
+
+Run the integration:
+
+<Code code={`docker run -it -d -v tb-pe-pulsar-integration-logs:/var/log/tb-pulsar-integration \`
+-e "RPC_HOST=${tbHost(props.product)}" -e "RPC_PORT=9090" \`
+-e "INTEGRATION_ROUTING_KEY=YOUR_ROUTING_KEY" -e "INTEGRATION_SECRET=YOUR_SECRET" -e "PULSAR_SERVICE_URL=pulsar://host.docker.internal:6650" -e "PULSAR_ADMIN_URL=http://host.docker.internal:8080" \`
+--name my-tb-pe-pulsar-integration --add-host=host.docker.internal:host-gateway --restart always thingsboard/tb-apache-pulsar-integration:${PE_FULL_VER}`} lang="bash" />
+
+Where:
+
+- <code>{tbHost(props.product)}</code> — host name of your ThingsBoard instance;
+- `9090` — integration gRPC port;
+- `YOUR_ROUTING_KEY` — **integration key** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
+- `YOUR_SECRET` — **integration secret** obtained in [Create remote integration in ThingsBoard](#create-remote-integration-in-thingsboard);
+- `PULSAR_SERVICE_URL` — URL of your Apache Pulsar broker service;
+- `PULSAR_ADMIN_URL` — URL of your Apache Pulsar admin REST API;
+- `--add-host=host.docker.internal:host-gateway` — lets the container reach a Pulsar broker running on the Docker host via `host.docker.internal`. If Pulsar is running on a different server, replace `host.docker.internal` in `PULSAR_SERVICE_URL` and `PULSAR_ADMIN_URL` with its IP address (e.g., `192.168.1.50`) and remove the `--add-host` flag.
+
+<Aside type="tip">
+  Detach from the session terminal without stopping the container: **`Ctrl-p`** + **`Ctrl-q`**.
+</Aside>
+
+**Reattach, stop, and start commands:**
+
+```bash
+docker attach my-tb-pe-pulsar-integration
+```
+
+```bash
+docker stop my-tb-pe-pulsar-integration
+```
+
+```bash
+docker start my-tb-pe-pulsar-integration
+```
+
+</TabItem>
 </Tabs>
 
 **Advanced configuration**
@@ -773,10 +862,10 @@ If you observe errors related to DNS issues, for example `127.0.1.1:53: cannot u
 
 ### Ubuntu Server
 
-Install Java 17 (OpenJDK):
+Install Java 25 (OpenJDK):
 
 ```bash
-sudo apt update && sudo apt install openjdk-17-jdk-headless
+sudo apt update && sudo apt install openjdk-25-jdk-headless
 ```
 
 Configure the default Java version:
@@ -794,7 +883,7 @@ java -version
 Expected output:
 
 ```text
-openjdk version "17.x.xx"
+openjdk version "25.x.xx"
 OpenJDK Runtime Environment (...)
 OpenJDK 64-Bit Server VM (...)
 ```
@@ -804,7 +893,7 @@ OpenJDK 64-Bit Server VM (...)
 
 Download the installation package:
 
-<Code code={`wget https://dist.thingsboard.io/tb-http-integration-${PE_VER}.deb`} lang="bash" />
+<Code code={`wget ${PE_RELEASE_URL}/tb-http-integration-${PE_VER}.deb`} lang="bash" />
 
 Install the integration as a service:
 
@@ -818,13 +907,11 @@ sudo nano /etc/tb-http-integration/conf/tb-http-integration.conf
 
 Locate the following block and set your connection parameters (uncomment the `export` statements):
 
-```bash
-# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
-export RPC_HOST=thingsboard.cloud
+<Code code={`# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
+export RPC_HOST=${tbHost(props.product)}
 export RPC_PORT=9090
 export INTEGRATION_ROUTING_KEY=YOUR_INTEGRATION_KEY
-export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET
-```
+export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET`} lang="bash" />
 
 Start the integration:
 
@@ -839,7 +926,7 @@ Logs are written to `/var/log/tb-http-integration/`.
 
 Download the installation package:
 
-<Code code={`wget https://dist.thingsboard.io/tb-mqtt-integration-${PE_VER}.deb`} lang="bash" />
+<Code code={`wget ${PE_RELEASE_URL}/tb-mqtt-integration-${PE_VER}.deb`} lang="bash" />
 
 Install the integration as a service:
 
@@ -853,13 +940,11 @@ sudo nano /etc/tb-mqtt-integration/conf/tb-mqtt-integration.conf
 
 Locate the following block and set your connection parameters:
 
-```bash
-# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
-export RPC_HOST=thingsboard.cloud
+<Code code={`# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
+export RPC_HOST=${tbHost(props.product)}
 export RPC_PORT=9090
 export INTEGRATION_ROUTING_KEY=YOUR_INTEGRATION_KEY
-export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET
-```
+export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET`} lang="bash" />
 
 Start the integration:
 
@@ -874,7 +959,7 @@ Logs are written to `/var/log/tb-mqtt-integration/`.
 
 Download the installation package:
 
-<Code code={`wget https://dist.thingsboard.io/tb-aws-integration-${PE_VER}.deb`} lang="bash" />
+<Code code={`wget ${PE_RELEASE_URL}/tb-aws-integration-${PE_VER}.deb`} lang="bash" />
 
 Install the integration as a service:
 
@@ -888,13 +973,11 @@ sudo nano /etc/tb-aws-integration/conf/tb-aws-integration.conf
 
 Locate the following block and set your connection parameters:
 
-```bash
-# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
-export RPC_HOST=thingsboard.cloud
+<Code code={`# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
+export RPC_HOST=${tbHost(props.product)}
 export RPC_PORT=9090
 export INTEGRATION_ROUTING_KEY=YOUR_INTEGRATION_KEY
-export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET
-```
+export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET`} lang="bash" />
 
 Start the integration:
 
@@ -909,7 +992,7 @@ Logs are written to `/var/log/tb-aws-integration/`.
 
 Download the installation package:
 
-<Code code={`wget https://dist.thingsboard.io/tb-azure-integration-${PE_VER}.deb`} lang="bash" />
+<Code code={`wget ${PE_RELEASE_URL}/tb-azure-integration-${PE_VER}.deb`} lang="bash" />
 
 Install the integration as a service:
 
@@ -923,13 +1006,11 @@ sudo nano /etc/tb-azure-integration/conf/tb-azure-integration.conf
 
 Locate the following block and set your connection parameters:
 
-```bash
-# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
-export RPC_HOST=thingsboard.cloud
+<Code code={`# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
+export RPC_HOST=${tbHost(props.product)}
 export RPC_PORT=9090
 export INTEGRATION_ROUTING_KEY=YOUR_INTEGRATION_KEY
-export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET
-```
+export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET`} lang="bash" />
 
 Start the integration:
 
@@ -944,7 +1025,7 @@ Logs are written to `/var/log/tb-azure-integration/`.
 
 Download the installation package:
 
-<Code code={`wget https://dist.thingsboard.io/tb-opc-ua-integration-${PE_VER}.deb`} lang="bash" />
+<Code code={`wget ${PE_RELEASE_URL}/tb-opc-ua-integration-${PE_VER}.deb`} lang="bash" />
 
 Install the integration as a service:
 
@@ -958,13 +1039,11 @@ sudo nano /etc/tb-opc-ua-integration/conf/tb-opc-ua-integration.conf
 
 Locate the following block and set your connection parameters:
 
-```bash
-# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
-export RPC_HOST=thingsboard.cloud
+<Code code={`# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
+export RPC_HOST=${tbHost(props.product)}
 export RPC_PORT=9090
 export INTEGRATION_ROUTING_KEY=YOUR_INTEGRATION_KEY
-export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET
-```
+export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET`} lang="bash" />
 
 Start the integration:
 
@@ -979,7 +1058,7 @@ Logs are written to `/var/log/tb-opc-ua-integration/`.
 
 Download the installation package:
 
-<Code code={`wget https://dist.thingsboard.io/tb-tcp-udp-integration-${PE_VER}.deb`} lang="bash" />
+<Code code={`wget ${PE_RELEASE_URL}/tb-tcp-udp-integration-${PE_VER}.deb`} lang="bash" />
 
 Install the integration as a service:
 
@@ -993,13 +1072,11 @@ sudo nano /etc/tb-tcp-udp-integration/conf/tb-tcp-udp-integration.conf
 
 Locate the following block and set your connection parameters:
 
-```bash
-# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
-export RPC_HOST=thingsboard.cloud
+<Code code={`# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
+export RPC_HOST=${tbHost(props.product)}
 export RPC_PORT=9090
 export INTEGRATION_ROUTING_KEY=YOUR_INTEGRATION_KEY
-export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET
-```
+export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET`} lang="bash" />
 
 Start the integration:
 
@@ -1014,7 +1091,7 @@ Logs are written to `/var/log/tb-tcp-udp-integration/`.
 
 Download the installation package:
 
-<Code code={`wget https://dist.thingsboard.io/tb-coap-integration-${PE_VER}.deb`} lang="bash" />
+<Code code={`wget ${PE_RELEASE_URL}/tb-coap-integration-${PE_VER}.deb`} lang="bash" />
 
 Install the integration as a service:
 
@@ -1028,13 +1105,11 @@ sudo nano /etc/tb-coap-integration/conf/tb-coap-integration.conf
 
 Locate the following block and set your connection parameters:
 
-```bash
-# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
-export RPC_HOST=thingsboard.cloud
+<Code code={`# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
+export RPC_HOST=${tbHost(props.product)}
 export RPC_PORT=9090
 export INTEGRATION_ROUTING_KEY=YOUR_INTEGRATION_KEY
-export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET
-```
+export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET`} lang="bash" />
 
 Start the integration:
 
@@ -1045,14 +1120,49 @@ sudo service tb-coap-integration start
 Logs are written to `/var/log/tb-coap-integration/`.
 
 </TabItem>
+<TabItem label="Apache Pulsar">
+
+Download the installation package:
+
+<Code code={`wget ${PE_RELEASE_URL}/tb-apache-pulsar-integration-${PE_VER}.deb`} lang="bash" />
+
+Install the integration as a service:
+
+<Code code={`sudo dpkg -i tb-apache-pulsar-integration-${PE_VER}.deb`} lang="bash" />
+
+Open the configuration file:
+
+```bash
+sudo nano /etc/tb-apache-pulsar-integration/conf/tb-apache-pulsar-integration.conf
+```
+
+Locate the following block and set your connection parameters:
+
+<Code code={`# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
+export RPC_HOST=${tbHost(props.product)}
+export RPC_PORT=9090
+export INTEGRATION_ROUTING_KEY=YOUR_INTEGRATION_KEY
+export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET
+export PULSAR_SERVICE_URL=pulsar://localhost:6650
+export PULSAR_ADMIN_URL=http://localhost:8080`} lang="bash" />
+
+Start the integration:
+
+```bash
+sudo service tb-apache-pulsar-integration start
+```
+
+Logs are written to `/var/log/tb-apache-pulsar-integration/`.
+
+</TabItem>
 </Tabs>
 
 ### CentOS/RHEL Server
 
-Install Java 17 (OpenJDK):
+Install Java 25 (OpenJDK):
 
 ```bash
-sudo dnf install java-17-openjdk-headless
+sudo dnf install java-25-openjdk-headless
 ```
 
 Configure the default Java version:
@@ -1070,7 +1180,7 @@ java -version
 Expected output:
 
 ```text
-openjdk version "17.x.xx"
+openjdk version "25.x.xx"
 OpenJDK Runtime Environment (...)
 OpenJDK 64-Bit Server VM (build ...)
 ```
@@ -1080,7 +1190,7 @@ OpenJDK 64-Bit Server VM (build ...)
 
 Download the installation package:
 
-<Code code={`wget https://dist.thingsboard.io/tb-http-integration-${PE_VER}.rpm`} lang="bash" />
+<Code code={`wget ${PE_RELEASE_URL}/tb-http-integration-${PE_VER}.rpm`} lang="bash" />
 
 Install the integration as a service:
 
@@ -1094,13 +1204,11 @@ sudo nano /etc/tb-http-integration/conf/tb-http-integration.conf
 
 Locate the following block and set your connection parameters:
 
-```bash
-# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
-export RPC_HOST=thingsboard.cloud
+<Code code={`# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
+export RPC_HOST=${tbHost(props.product)}
 export RPC_PORT=9090
 export INTEGRATION_ROUTING_KEY=YOUR_INTEGRATION_KEY
-export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET
-```
+export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET`} lang="bash" />
 
 Start the integration:
 
@@ -1115,7 +1223,7 @@ Logs are written to `/var/log/tb-http-integration/`.
 
 Download the installation package:
 
-<Code code={`wget https://dist.thingsboard.io/tb-mqtt-integration-${PE_VER}.rpm`} lang="bash" />
+<Code code={`wget ${PE_RELEASE_URL}/tb-mqtt-integration-${PE_VER}.rpm`} lang="bash" />
 
 Install the integration as a service:
 
@@ -1129,13 +1237,11 @@ sudo nano /etc/tb-mqtt-integration/conf/tb-mqtt-integration.conf
 
 Locate the following block and set your connection parameters:
 
-```bash
-# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
-export RPC_HOST=thingsboard.cloud
+<Code code={`# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
+export RPC_HOST=${tbHost(props.product)}
 export RPC_PORT=9090
 export INTEGRATION_ROUTING_KEY=YOUR_INTEGRATION_KEY
-export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET
-```
+export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET`} lang="bash" />
 
 Start the integration:
 
@@ -1150,7 +1256,7 @@ Logs are written to `/var/log/tb-mqtt-integration/`.
 
 Download the installation package:
 
-<Code code={`wget https://dist.thingsboard.io/tb-aws-integration-${PE_VER}.rpm`} lang="bash" />
+<Code code={`wget ${PE_RELEASE_URL}/tb-aws-integration-${PE_VER}.rpm`} lang="bash" />
 
 Install the integration as a service:
 
@@ -1164,13 +1270,11 @@ sudo nano /etc/tb-aws-integration/conf/tb-aws-integration.conf
 
 Locate the following block and set your connection parameters:
 
-```bash
-# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
-export RPC_HOST=thingsboard.cloud
+<Code code={`# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
+export RPC_HOST=${tbHost(props.product)}
 export RPC_PORT=9090
 export INTEGRATION_ROUTING_KEY=YOUR_INTEGRATION_KEY
-export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET
-```
+export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET`} lang="bash" />
 
 Start the integration:
 
@@ -1185,7 +1289,7 @@ Logs are written to `/var/log/tb-aws-integration/`.
 
 Download the installation package:
 
-<Code code={`wget https://dist.thingsboard.io/tb-azure-integration-${PE_VER}.rpm`} lang="bash" />
+<Code code={`wget ${PE_RELEASE_URL}/tb-azure-integration-${PE_VER}.rpm`} lang="bash" />
 
 Install the integration as a service:
 
@@ -1199,13 +1303,11 @@ sudo nano /etc/tb-azure-integration/conf/tb-azure-integration.conf
 
 Locate the following block and set your connection parameters:
 
-```bash
-# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
-export RPC_HOST=thingsboard.cloud
+<Code code={`# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
+export RPC_HOST=${tbHost(props.product)}
 export RPC_PORT=9090
 export INTEGRATION_ROUTING_KEY=YOUR_INTEGRATION_KEY
-export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET
-```
+export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET`} lang="bash" />
 
 Start the integration:
 
@@ -1220,7 +1322,7 @@ Logs are written to `/var/log/tb-azure-integration/`.
 
 Download the installation package:
 
-<Code code={`wget https://dist.thingsboard.io/tb-opc-ua-integration-${PE_VER}.rpm`} lang="bash" />
+<Code code={`wget ${PE_RELEASE_URL}/tb-opc-ua-integration-${PE_VER}.rpm`} lang="bash" />
 
 Install the integration as a service:
 
@@ -1234,13 +1336,11 @@ sudo nano /etc/tb-opc-ua-integration/conf/tb-opc-ua-integration.conf
 
 Locate the following block and set your connection parameters:
 
-```bash
-# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
-export RPC_HOST=thingsboard.cloud
+<Code code={`# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
+export RPC_HOST=${tbHost(props.product)}
 export RPC_PORT=9090
 export INTEGRATION_ROUTING_KEY=YOUR_INTEGRATION_KEY
-export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET
-```
+export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET`} lang="bash" />
 
 Start the integration:
 
@@ -1255,7 +1355,7 @@ Logs are written to `/var/log/tb-opc-ua-integration/`.
 
 Download the installation package:
 
-<Code code={`wget https://dist.thingsboard.io/tb-tcp-udp-integration-${PE_VER}.rpm`} lang="bash" />
+<Code code={`wget ${PE_RELEASE_URL}/tb-tcp-udp-integration-${PE_VER}.rpm`} lang="bash" />
 
 Install the integration as a service:
 
@@ -1269,13 +1369,11 @@ sudo nano /etc/tb-tcp-udp-integration/conf/tb-tcp-udp-integration.conf
 
 Locate the following block and set your connection parameters:
 
-```bash
-# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
-export RPC_HOST=thingsboard.cloud
+<Code code={`# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
+export RPC_HOST=${tbHost(props.product)}
 export RPC_PORT=9090
 export INTEGRATION_ROUTING_KEY=YOUR_INTEGRATION_KEY
-export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET
-```
+export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET`} lang="bash" />
 
 Start the integration:
 
@@ -1290,7 +1388,7 @@ Logs are written to `/var/log/tb-tcp-udp-integration/`.
 
 Download the installation package:
 
-<Code code={`wget https://dist.thingsboard.io/tb-coap-integration-${PE_VER}.rpm`} lang="bash" />
+<Code code={`wget ${PE_RELEASE_URL}/tb-coap-integration-${PE_VER}.rpm`} lang="bash" />
 
 Install the integration as a service:
 
@@ -1304,13 +1402,11 @@ sudo nano /etc/tb-coap-integration/conf/tb-coap-integration.conf
 
 Locate the following block and set your connection parameters:
 
-```bash
-# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
-export RPC_HOST=thingsboard.cloud
+<Code code={`# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
+export RPC_HOST=${tbHost(props.product)}
 export RPC_PORT=9090
 export INTEGRATION_ROUTING_KEY=YOUR_INTEGRATION_KEY
-export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET
-```
+export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET`} lang="bash" />
 
 Start the integration:
 
@@ -1319,6 +1415,41 @@ sudo service tb-coap-integration start
 ```
 
 Logs are written to `/var/log/tb-coap-integration/`.
+
+</TabItem>
+<TabItem label="Apache Pulsar">
+
+Download the installation package:
+
+<Code code={`wget ${PE_RELEASE_URL}/tb-apache-pulsar-integration-${PE_VER}.rpm`} lang="bash" />
+
+Install the integration as a service:
+
+<Code code={`sudo rpm -Uvh tb-apache-pulsar-integration-${PE_VER}.rpm`} lang="bash" />
+
+Open the configuration file:
+
+```bash
+sudo nano /etc/tb-apache-pulsar-integration/conf/tb-apache-pulsar-integration.conf
+```
+
+Locate the following block and set your connection parameters:
+
+<Code code={`# UNCOMMENT NEXT LINES AND PUT YOUR CONNECTION PARAMETERS:
+export RPC_HOST=${tbHost(props.product)}
+export RPC_PORT=9090
+export INTEGRATION_ROUTING_KEY=YOUR_INTEGRATION_KEY
+export INTEGRATION_SECRET=YOUR_INTEGRATION_SECRET
+export PULSAR_SERVICE_URL=pulsar://localhost:6650
+export PULSAR_ADMIN_URL=http://localhost:8080`} lang="bash" />
+
+Start the integration:
+
+```bash
+sudo service tb-apache-pulsar-integration start
+```
+
+Logs are written to `/var/log/tb-apache-pulsar-integration/`.
 
 </TabItem>
 </Tabs>

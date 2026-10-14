@@ -1,10 +1,15 @@
 import DocLink from '@components/DocLink.astro';
-import DocImage from '~/components/DocImage.astro';
+import DocImage from '@components/DocImage.astro';
 import { Steps, Aside } from '@astrojs/starlight/components';
+import IoTHubBanner from '@components/IoTHubBanner.astro';
 
 Custom widgets let you build tailored UI components — cards, charts, control panels, tables — that plug directly into ThingsBoard dashboards. You write HTML, CSS, and JavaScript in the built-in **Widget Editor**; no external build tools or IDE required.
 
 Every widget lives inside a **widget bundle** (a folder-like container in the Widget Library). ThingsBoard ships with dozens of bundles for charts, maps, controls, and more. When the built-in widgets don't fit your use case, you create a custom widget type inside your own bundle.
+
+<IoTHubBanner href="/iot-hub/widgets/">
+  Skip custom widget development — find a pre-built <strong>Widget</strong> template in the <strong>ThingsBoard IoT Hub</strong> that fits your visualization needs, and drop it into your dashboard in just a few clicks.
+</IoTHubBanner>
 
 ## Widget Types
 
@@ -18,7 +23,7 @@ Every widget lives inside a **widget bundle** (a folder-like container in the Wi
 
 ## Widget Editor Tour
 
-Open **Widget Library** from the left menu, then click any widget type to open the Widget Editor. The editor has the following sections:
+Open **Resources &#8702; Widgets** from the left menu, then click any widget type to open the Widget Editor. The editor has the following sections:
 
 **Toolbar** — Save, Undo, Redo, and Run buttons. Click **Save** (or `Ctrl+S`) to save your widget. Click **Run** (or `Ctrl+Enter`) to preview your widget without saving.
 
@@ -59,12 +64,10 @@ Build a minimal static widget that displays a configurable greeting message.
 <DocImage src="/src/assets/images/user-guide/widgets/development/hello-world-widget.png" alt="Hello World widget preview showing the greeting message" />
 
 <Steps>
-1. Navigate to **Widget Library** → click **+** (Create new widget bundle) → name it "My Widgets" → save.
-
-2. Open the bundle → click **+** (Create new widget type) → select **Static** as the type.
-
-3. In the **HTML** tab, paste:
-
+1. Navigate to **Resources &#8702; Widgets &#8702; Widgets bundles** tab.
+2. Click **+ Add widgets bundle &#8702; Create new widgets bundle**. Name it `My Widgets` and click **Add**.
+3. Open the bundle, click **+ Add new widget &#8702; Create new widget**, and select **Static widget** as the widget type.
+4. In the **HTML** tab, paste:
    ```html
    <div class="hello-container">
      <div class="hello-icon">
@@ -73,9 +76,7 @@ Build a minimal static widget that displays a configurable greeting message.
      <div class="hello-text" id="greeting"></div>
    </div>
    ```
-
-4. In the **CSS** tab, paste:
-
+5. In the **CSS** tab, paste:
    ```css
    .hello-container {
      width: 100%;
@@ -99,9 +100,7 @@ Build a minimal static widget that displays a configurable greeting message.
      color: #344054;
    }
    ```
-
-5. In the **JavaScript** tab, paste:
-
+6. In the **JavaScript** tab, paste:
    ```javascript
    self.onInit = function() {
      let settings = self.ctx.settings || {};
@@ -120,13 +119,9 @@ Build a minimal static widget that displays a configurable greeting message.
      };
    };
    ```
-
    This reads the `greetingMessage` from widget settings and writes it into the DOM. The `typeParameters` function tells ThingsBoard that this widget doesn't require a datasource.
-
-6. In the **Settings form** tab, add a field using one of two methods:
-
+7. In the **Settings form** tab, add a field using one of two methods:
    - **Import from JSON** — click the **Import from JSON** button, select the **JSON content** tab, and paste:
-
      ```json
      [
        {
@@ -139,16 +134,11 @@ Build a minimal static widget that displays a configurable greeting message.
        }
      ]
      ```
-
    - **Manually** — click the add button, select `text` as the field type, and fill in the `id`, `name`, `group`, and `default` properties in the form.
-
    This creates a text field in the widget settings dialog where users can customize the greeting.
-
-7. Click **Run** to preview — you should see "Hello, ThingsBoard!" centered in the preview panel.
-
-8. Click **Save** (or `Ctrl+S`) → name the widget "Hello World".
-
-9. Open any dashboard → click **Add widget** → find your "My Widgets" bundle → add the "Hello World" widget. Open its settings to change the greeting message and verify it updates.
+8. Click **Run** to preview — you should see "Hello, ThingsBoard!" centered in the preview panel.
+9. Click **Save** (or `Ctrl+S`) &#8702; name the widget "Hello World".
+10. Open any dashboard &#8702; click **Add widget** &#8702; find your "My Widgets" bundle &#8702; add the "Hello World" widget. Open its settings to change the greeting message and verify it updates.
 </Steps>
 
 ### How It Works

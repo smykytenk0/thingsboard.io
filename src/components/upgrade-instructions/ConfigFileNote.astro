@@ -1,0 +1,30 @@
+---
+// Shared "config file handling" note for package-based (.deb / .rpm) upgrades.
+// Single source of truth for this guidance, rendered by LinuxUpgradeSteps,
+// TrendzUpgradeSteps, and the CE-to-PE upgrade page. There is no "merge" option
+// in the package managers; the recommended flow is to base off the new file and
+// carry custom values over.
+import { Aside } from '@astrojs/starlight/components';
+
+interface Props {
+	platform: 'ubuntu' | 'centos';
+}
+
+const { platform } = Astro.props;
+const isUbuntu = platform === 'ubuntu';
+---
+
+<Aside type="caution" title="Configuration files">
+	{isUbuntu ? (
+		<>
+			<p><code>dpkg</code> asks about a configuration file (<code>[Y/I/N/O/D/Z]</code>) only if you changed that file and the new package ships a different version of it. If no prompt appears, your configuration files were kept as they are and there is nothing to merge.</p>
+			<p>If it does prompt, there is no "merge" option. The recommended approach is to use the new file as the base: press <strong>Y</strong> to install the package maintainer's version (your previous file is kept as <code>.dpkg-old</code>), then copy your custom values from the <code>.dpkg-old</code> file into the new one.</p>
+		</>
+	) : (
+		<>
+			<p><code>rpm</code> does not prompt about configuration files. If you changed a configuration file and the new package ships a different version of it, <code>rpm</code> keeps your file in place and writes the new default alongside it as <code>.rpmnew</code>. If no <code>.rpmnew</code> file appears, there is nothing to merge.</p>
+			<p>The recommended approach is to use the new file as the base: copy your custom values into the <code>.rpmnew</code> file, then replace your current configuration file with it.</p>
+		</>
+	)}
+	<p>Do this <strong>before running the upgrade script</strong> — the script reads the configuration file for your database connection settings and fails without them. If this version needs no upgrade script, do it before starting the service.</p>
+</Aside>

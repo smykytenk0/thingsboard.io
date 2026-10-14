@@ -1,0 +1,225 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import CategoryFaq from '@components/IotHub/CategoryFaq.astro';
+import CategoryHero from '@components/IotHub/CategoryHero.astro';
+import CreatorCTA from '@components/IotHub/CreatorCTA.astro';
+import FilterPanel from '@components/IotHub/FilterPanel.astro';
+import FilterBackdrop from '@components/IotHub/FilterBackdrop.astro';
+import IotHubFetchError from '@components/IotHub/IotHubFetchError.astro';
+import IotHubNoResults from '@components/IotHub/IotHubNoResults.astro';
+import IotHubRuntimeConfig from '@components/IotHub/IotHubRuntimeConfig.astro';
+import IotHubSearchLoading from '@components/IotHub/IotHubSearchLoading.astro';
+import ListingCard from '@components/IotHub/ListingCard.astro';
+import ListingCardTemplate from '@components/IotHub/ListingCardTemplate.astro';
+import ListingGrid from '@components/IotHub/ListingGrid.astro';
+import ListingsFilterBar from '@components/IotHub/ListingsFilterBar.astro';
+import PaginationBar from '@components/Pagination/PaginationBar.astro';
+import { getCategoryFaq } from '@data/iot-hub/sections';
+import { getCollection } from 'astro:content';
+import {
+	IOT_HUB_CATEGORIES,
+	IOT_HUB_STRINGS,
+	PAGE_SIZE,
+	getCardVariant,
+	type ItemTypeFilterInfo,
+	type IotHubItemType,
+} from '@models/iot-hub';
+import { recordSitemapLastmod } from '@util/sitemap-lastmod';
+
+export const getStaticPaths = (async ({ paginate }) => {
+	const categories = await getCollection('iotHubCategories');
+	return categories.flatMap((catEntry) =>
+		paginate(
+			catEntry.data.items.filter((item) => !/^\d+$/.test(item.slug)),
+			{
+				params: { category: catEntry.id },
+				pageSize: PAGE_SIZE,
+				props: {
+					itemType: catEntry.data.itemType,
+					filterInfo: catEntry.data.filterInfo,
+				},
+			}
+		)
+	);
+}) satisfies GetStaticPaths;
+
+interface Props {
+	page: import('astro').Page;
+	itemType: IotHubItemType;
+	filterInfo: ItemTypeFilterInfo;
+}
+
+const { page, itemType, filterInfo } = Astro.props as Props;
+const { category } = Astro.params;
+const basePath = `/iot-hub/${category}/`;
+
+// <lastmod> from the most recent API `updatedTime` among this page's listings.
+recordSitemapLastmod(
+	Astro.url.pathname,
+	page.data.map((item: { updatedTime?: number | null }) => item.updatedTime)
+);
+const variant = getCardVariant(itemType);
+const catConfig = IOT_HUB_CATEGORIES.find((c) => c.slug === category);
+const tileLabel = catConfig?.tileLabel ?? '';
+const heroTitle = catConfig?.heroTitle ?? tileLabel;
+// SEO title stem can differ from the H1 (heroTitle) — e.g. add a keyword segment.
+const seoTitleStem =
+	catConfig && 'seoTitleStem' in catConfig ? catConfig.seoTitleStem : heroTitle;
+
+// Pages 2+ get a distinct title and drop the page-1 marketing content + FAQ
+// (and its JSON-LD) so identical metadata and structured data aren't emitted
+// across the self-canonical paginated URLs.
+const isFirstPage = page.currentPage === 1;
+const title = isFirstPage
+	? `${seoTitleStem} | IoT Hub | ThingsBoard`
+	: `${seoTitleStem} | Page ${page.currentPage} | IoT Hub | ThingsBoard`;
+const baseDescription =
+	catConfig?.seoDescription ??
+	`Browse ${tileLabel.toLowerCase()} published to the ThingsBoard IoT Hub.`;
+// Differentiate the meta description on paginated pages too — otherwise every
+// self-canonical page 2+ would repeat page 1's description (duplicate metadata).
+const description = isFirstPage ? baseDescription : `${baseDescription} (page ${page.currentPage})`;
+const searchPlaceholder = tileLabel
+	? `Search ${tileLabel.toLowerCase()}...`
+	: 'Search...';
+
+const hasFaq = !!getCategoryFaq(category);
+---
+
+<BaseLayout title={title} description={description}>
+	<div
+		class="iot-hub-cat"
+		data-iot-hub-search-root
+		data-item-type={itemType}
+		data-base-path={basePath}
+		data-back-label={tileLabel}
+		data-page-size={PAGE_SIZE}
+	>
+		<div class="iot-hub-cat__center">
+			<div class="iot-hub-cat__container">
+				<CategoryHero categorySlug={category!} />
+			</div>
+		</div>
+		<div class="iot-hub-cat__divider"></div>
+		<div class="iot-hub-cat__center">
+			<div class="iot-hub-cat__container">
+				<div
+					class="iot-hub-cat__listings-wrap"
+					data-iot-hub-listings-wrap
+					data-filter-open="false"
+				>
+					<FilterPanel itemType={itemType} filterInfo={filterInfo} />
+					<FilterBackdrop />
+					<div class="iot-hub-cat__listings" data-search-items>
+						<ListingsFilterBar
+							totalCount={page.total}
+							searchPlaceholder={searchPlaceholder}
+						/>
+						<div class="iot-hub-cat__results-container">
+							<div class="iot-hub-cat__results" data-search-results>
+								{page.data.length > 0 && (
+									<ListingGrid variant={variant}>
+										{page.data.map((item) => (
+											<ListingCard item={item} categorySlug={category!} titleAs="h2" />
+										))}
+									</ListingGrid>
+								)}
+							</div>
+							<IotHubNoResults clearHref={basePath} />
+							<IotHubFetchError />
+							<IotHubSearchLoading />
+						</div>
+						{
+							page.data.length === 0 ? (
+								<p class="iot-hub-cat__empty">{IOT_HUB_STRINGS.emptyState}</p>
+							) : (
+								page.lastPage > 1 && (
+									<PaginationBar
+										currentPage={page.currentPage}
+										totalPages={page.lastPage}
+										basePath={basePath}
+										perPage={PAGE_SIZE}
+										idBase={basePath}
+									/>
+								)
+							)
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="iot-hub-cat__divider print:hidden"></div>
+		<div class="iot-hub-cat__center">
+			<div class="iot-hub-cat__container">
+				<CreatorCTA category={category} />
+			</div>
+		</div>
+		{
+			hasFaq && isFirstPage && (
+				<>
+					<div class="iot-hub-cat__divider" />
+					<div class="iot-hub-cat__center">
+						<div class="iot-hub-cat__container">
+							<CategoryFaq categorySlug={category!} />
+						</div>
+					</div>
+				</>
+			)
+		}
+		<ListingCardTemplate variant="preview" titleAs="h2" />
+		<ListingCardTemplate variant="compact" titleAs="h2" />
+		<IotHubRuntimeConfig />
+	</div>
+</BaseLayout>
+
+<style lang="scss">
+	@use '../../../styles/_variables.scss' as *;
+	@use '../../../styles/_iot-hub.scss' as *;
+
+	.iot-hub-cat {
+		@include iot-hub-hairline-token;
+	}
+
+	.iot-hub-cat__center {
+		@include iot-hub-center;
+	}
+
+	.iot-hub-cat__container {
+		@include iot-hub-container;
+	}
+
+	.iot-hub-cat__divider {
+		@include iot-hub-divider;
+	}
+
+	.iot-hub-cat__listings-wrap {
+		@include iot-hub-filter-row;
+	}
+
+	.iot-hub-cat__listings {
+		@include iot-hub-listing-column;
+		// Sits beside the filter panel, so it also needs to flex within that row.
+		flex: 1 1 0;
+		min-width: 0;
+	}
+
+	.iot-hub-cat__results-container {
+		position: relative;
+	}
+
+
+	.iot-hub-cat__empty {
+		text-align: center;
+		color: var(--color-text-muted);
+		padding: 4rem 1rem;
+	}
+</style>
+
+<script>
+	import { initDynamicSearch } from '@components/IotHub/iot-hub-dynamic-search';
+	import { initFilterDrawer } from '@components/IotHub/iot-hub-filter-drawer';
+
+	initDynamicSearch();
+	initFilterDrawer();
+</script>

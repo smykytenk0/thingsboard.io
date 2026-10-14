@@ -5,15 +5,16 @@ import SectionBadge from '../SectionBadge.astro';
 interface Props {
 	badge?: string;
 	companyName: string;
+	heading?: string;
 	blocks: PowerBlock[];
 }
 
-const { badge, companyName, blocks } = Astro.props;
+const { badge, companyName, heading, blocks } = Astro.props;
 ---
 
 <section class="cs-power cs-section">
 	<SectionBadge text={badge || 'How it works'} color="var(--sl-color-blue-high)" borderColor="var(--sl-color-blue-high)" />
-	<h2>How ThingsBoard powers {companyName}?</h2>
+	<h2>{heading ?? `How ThingsBoard powers ${companyName}?`}</h2>
 	{blocks.map((block) => (
 		<div class="cs-power-block">
 			<div class="cs-power-text">
@@ -121,6 +122,29 @@ const { badge, companyName, blocks } = Astro.props;
 
 			@include media-down(lg) {
 				width: 100%;
+			}
+		}
+	}
+
+	@media print {
+		.cs-power-block {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) 42%;
+			align-items: start;
+
+			.cs-power-text {
+				grid-area: 1 / 1;
+			}
+
+			img {
+				grid-area: 1 / 2;
+				width: 100%;
+			}
+		}
+
+		@media (min-height: 900px) {
+			.cs-power-block:not(:has(li:nth-child(3))) {
+				break-inside: avoid;
 			}
 		}
 	}
