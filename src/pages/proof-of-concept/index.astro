@@ -3,7 +3,7 @@ import UseCaseLayout from '../../layouts/UseCaseLayout.astro';
 import NButton from '../../components/Landing/NButton.astro';
 import ImageComparison from '../../components/UseCase/ImageComparison.astro';
 import SmartImage from '../../components/SmartImage.astro';
-import ContactModal from '../../components/Services/ContactModal.astro';
+import ContactModal from '@components/ContactModal.astro';
 import leadGlow from '~/assets/images/proof-of-concept/custom-dev-lead-bg.svg';
 import glowPurple from '~/assets/images/proof-of-concept/audience-glow-purple.svg';
 import glowBlue from '~/assets/images/proof-of-concept/audience-glow-blue.svg';
@@ -285,7 +285,7 @@ const deliveredCases = [
 		<div class="poc-hero__content">
 			<h1 class="usecase-title poc-title">{title}</h1>
 			<p class="poc-description">{description}</p>
-			<NButton data-contact-modal-open class="poc-cta">Talk to an expert</NButton>
+			<NButton data-contact-modal-open="poc-contact" class="poc-cta">Talk to an expert</NButton>
 		</div>
 		<div class="poc-hero__media">
 			<img class="poc-hero__glow" src={leadGlow.src} alt="" aria-hidden="true" />
@@ -498,7 +498,7 @@ const deliveredCases = [
 		<p class="poc-cta-banner__text">
 			Tell us what you need to get working. We will say plainly whether ten days is enough for it.
 		</p>
-		<NButton data-contact-modal-open class="poc-cta poc-cta--light">Talk to an expert</NButton>
+		<NButton data-contact-modal-open="poc-contact" class="poc-cta poc-cta--light">Talk to an expert</NButton>
 	</section>
 
 	<section class="poc-section">
@@ -543,7 +543,7 @@ const deliveredCases = [
 				<ul class="poc-price__highlights">
 					{priceHighlights.map((item) => <li>{item}</li>)}
 				</ul>
-				<NButton data-contact-modal-open class="poc-cta poc-price__button" fullWidth>
+				<NButton data-contact-modal-open="poc-contact" class="poc-cta poc-price__button" fullWidth>
 					Talk to an expert
 				</NButton>
 			</div>
@@ -610,7 +610,7 @@ const deliveredCases = [
 						))
 					}
 				</ul>
-				<NButton data-contact-modal-open class="poc-cta poc-fit-card__button">Discover other options</NButton>
+				<NButton data-contact-modal-open="poc-contact" class="poc-cta poc-fit-card__button">Discover other options</NButton>
 			</div>
 		</div>
 		<aside class="poc-note">
@@ -741,7 +741,7 @@ const deliveredCases = [
 				Before anyone signs, we check that a fixed scope fits your use case. In 30 minutes we confirm
 				the fit, walk through what you already have, and agree a kickoff date.
 			</p>
-			<NButton data-contact-modal-open class="poc-cta poc-cta--workshop">Talk to an expert</NButton>
+			<NButton data-contact-modal-open="poc-contact" class="poc-cta poc-cta--workshop">Talk to an expert</NButton>
 		</div>
 		<aside class="poc-contact" aria-label="Your contact">
 			<p class="poc-contact__label">Talk to</p>
@@ -760,7 +760,7 @@ const deliveredCases = [
 			</div>
 		</aside>
 	</section>
-	<ContactModal formId="poc_sales_modal" tags="sales" />
+	<ContactModal id="poc-contact" title="Let's talk about your project" formId="poc_sales_modal" tags="sales" />
 </UseCaseLayout>
 
 <style lang="scss">
