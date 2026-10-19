@@ -2044,16 +2044,17 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 				transform: scale(1.2);
 			}
 
-			.poc-case__footer {
-				padding-bottom: 45px;
-			}
-
 			.poc-case__short {
 				opacity: 0;
 			}
 
 			.poc-case__long {
+				max-height: 120px;
 				opacity: 1;
+
+				@media (max-width: 599px) {
+					max-height: none;
+				}
 			}
 		}
 
@@ -2077,13 +2078,6 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 			height: auto;
 			min-height: 299px;
 			border-radius: $radius-xl;
-
-			&:hover,
-			&:focus-visible {
-				.poc-case__footer {
-					padding-bottom: 0;
-				}
-			}
 		}
 	}
 
@@ -2152,7 +2146,6 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 	.poc-case__footer {
 		display: block;
 		width: 100%;
-		transition: padding 0.5s;
 	}
 
 	.poc-case__title {
@@ -2179,19 +2172,24 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		}
 	}
 
+	// The short and long labels share one grid cell. On hover the long one opens to its own height, so the
+	// footer grows by exactly what the data's label needs instead of a fixed lift.
 	.poc-case__stat {
-		position: relative;
-		flex-shrink: 0;
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		align-content: start;
+		flex: 1 1 0;
 		@include text-s;
-		width: 129px;
+		padding-right: $spacing-2;
 		color: inherit;
 
 		&:last-child {
-			width: auto;
+			padding-right: 0;
 		}
 
 		@media (max-width: 599px) {
 			width: auto;
+			padding-right: 0;
 		}
 	}
 
@@ -2204,25 +2202,29 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 
 	.poc-case__short,
 	.poc-case__long {
-		position: absolute;
-		white-space: nowrap;
+		grid-area: 2 / 1;
 		transition: opacity 0.5s linear;
+	}
 
-		@media (max-width: 599px) {
-			position: static;
-			white-space: normal;
-		}
+	.poc-case__short {
+		white-space: nowrap;
 	}
 
 	// The data's labels are full phrases, so they wrap within the stat column instead of running on.
 	.poc-case__long {
-		width: 120px;
-		white-space: normal;
+		max-height: 24px;
+		overflow: hidden;
 		opacity: 0;
+		transition:
+			opacity 0.5s linear,
+			max-height 0.5s;
+
+		@media (prefers-reduced-motion: reduce) {
+			transition: opacity 0.5s linear;
+		}
 
 		@media (max-width: 599px) {
-			display: block;
-			width: auto;
+			max-height: none;
 			opacity: 1;
 		}
 	}
