@@ -7,9 +7,6 @@ import ContactModal from '@components/ContactModal.astro';
 import { Icon } from 'astro-icon/components';
 import { caseStudyBySlug } from '@data/case-studies';
 import { devServicesFeedback } from '@data/clients-feedback';
-import iconDeviceData from '@root/assets/images/proof-of-concept/audience-icon-device-data.svg';
-import iconEquipment from '@root/assets/images/proof-of-concept/audience-icon-equipment.svg';
-import iconProduct from '@root/assets/images/proof-of-concept/audience-icon-product.svg';
 
 const title = 'A working IoT application in 10 business days — for a fixed price';
 const description =
@@ -44,7 +41,7 @@ const audience = [
 		text: 'Your hardware already produces the data. We turn it into a working application where customers or operators can see readings, review history, receive alerts and access the information they need.',
 		glow: 'purple',
 		glowCorner: 'bottom-left',
-		icon: iconDeviceData,
+		icon: 'tabler:tool',
 	},
 	{
 		label: 'You operate equipment or assets',
@@ -52,7 +49,7 @@ const audience = [
 		text: 'Bring the data from your machines, sites or assets into one application. See current conditions, spot problems, review what happened and give the right people access.',
 		glow: 'blue',
 		glowCorner: 'bottom-right',
-		icon: iconEquipment,
+		icon: 'tabler:user-cog',
 	},
 	{
 		label: 'You are building a connected product',
@@ -60,7 +57,7 @@ const audience = [
 		text: 'You know what the product should let people see, know or do. We establish the data flow and build the application around that use case — so you can put a complete, working experience in front of customers or stakeholders.',
 		glow: 'yellow',
 		glowCorner: 'bottom-right',
-		icon: iconProduct,
+		icon: 'tabler:topology-star-3',
 	},
 ];
 
@@ -251,7 +248,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 });
 ---
 
-<UseCaseLayout title={title} description={metaDescription} pageSlug="poc" hideHeader hideFooter>
+<UseCaseLayout title={title} description={metaDescription} pageSlug="poc" chrome="minimal">
 	<section class="poc-hero">
 		<div class="poc-hero__content">
 			<h1 class="usecase-title poc-title">{title}</h1>
@@ -267,7 +264,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 					</blockquote>
 					<SmartImage
 						class="poc-lead__avatar"
-						src="/src/assets/images/proof-of-concept/nizar-ali.png"
+						src="/images/company/thingsboard-team-photos/solutions-team/nizar-ali.webp"
 						alt="Nizar Ali"
 						width={52}
 						height={52}
@@ -339,7 +336,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 					>
 						<div class="poc-audience-card__head">
 							<p class="poc-audience-card__label">{card.label}</p>
-							<img class="poc-audience-card__icon" src={card.icon.src} alt="" width="24" height="24" />
+							<Icon name={card.icon} size={24} class="poc-audience-card__icon" />
 						</div>
 						<h3 class="poc-audience-card__title">{card.title}</h3>
 						<p class="poc-audience-card__text">{card.text}</p>
@@ -702,7 +699,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 			<div class="poc-contact__person">
 				<SmartImage
 					class="poc-contact__avatar"
-					src="/src/assets/images/proof-of-concept/nizar-ali.png"
+					src="/images/company/thingsboard-team-photos/solutions-team/nizar-ali.webp"
 					alt="Nizar Ali"
 					width={52}
 					height={52}
@@ -1072,6 +1069,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		flex-shrink: 0;
 		width: 24px;
 		height: 24px;
+		color: var(--sl-color-accent);
 	}
 
 	.poc-audience-card__title {
@@ -1699,14 +1697,14 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 	}
 
 	.poc-price__amount {
-		font-size: 48px;
+		font-size: $font-size-6xl;
 		font-weight: $font-weight-semibold;
 		line-height: 1.2;
 		color: var(--color-text);
 		margin: 0 0 $spacing-5;
 
 		@include media-down(md) {
-			font-size: 40px;
+			font-size: $font-size-5xl;
 		}
 	}
 
@@ -1853,7 +1851,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 	}
 
 	.poc-stat__value {
-		font-size: 40px;
+		font-size: $font-size-6xl;
 		font-weight: $font-weight-semibold;
 		line-height: 1.2;
 		color: var(--sl-color-accent);
@@ -1910,6 +1908,12 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		color: rgba(var(--color-primary-rgb), 0.13);
 		pointer-events: none;
 		user-select: none;
+
+		// The primary indigo at 13% disappears on the dark card; a faint light accent stays visible
+		// without competing with the quote text over it.
+		:global([data-theme='dark']) & {
+			color: color-mix(in srgb, var(--sl-color-accent-high) 25%, transparent);
+		}
 	}
 
 	.poc-testimonial--open .poc-testimonial__mark {
@@ -1982,6 +1986,15 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 
 		@include media-down(md) {
 			display: none;
+		}
+
+		// Brand-coloured logos (Awake's is solid black) sit on a light chip in dark mode, as on the
+		// development-services feedback cards. content-box keeps the padding from shrinking the logo.
+		:global([data-theme='dark']) & {
+			box-sizing: content-box;
+			background: rgba(255, 255, 255, 0.9);
+			padding: 6px 10px;
+			border-radius: $radius-md;
 		}
 	}
 
@@ -2330,6 +2343,9 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		flex-shrink: 0;
 		width: 52px;
 		height: 52px;
+		// The team photo is a transparent cutout; keep the white backdrop in both themes.
+		background-color: $color-white;
+		border-radius: $radius-lg;
 	}
 
 	.poc-contact__name {
@@ -2401,6 +2417,6 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 	}
 
 	:global([data-theme='dark']) .poc-deliverables {
-		--poc-number-color: rgba(var(--color-primary-rgb), 0.55);
+		--poc-number-color: var(--sl-color-accent-high);
 	}
 </style>
