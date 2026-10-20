@@ -213,6 +213,17 @@ const overlayCaption = overlayImageTitle || Astro.props.overlayImageAlt;
 		// `$breakpoint-md - 1px`, the `media-down(md)` edge where `--stacked` drops the slider.
 		const stackedQuery = matchMedia('(max-width: 749px)');
 
+		// A drag before the layout stacked leaves its clip inline; clear it so the stacked overlay shows in
+		// full, and the slider starts from the middle again when the layout widens.
+		stackedQuery.addEventListener('change', (e) => {
+			if (!e.matches) return;
+			containers.forEach((c) => {
+				if (!c.classList.contains('uc-img-comparison--stacked')) return;
+				c.querySelector<HTMLElement>('.uc-img-overlay')?.style.removeProperty('clip-path');
+				c.querySelector<HTMLElement>('.uc-img-slider')?.style.removeProperty('left');
+			});
+		});
+
 		containers.forEach((container) => {
 			const overlay = container.querySelector<HTMLElement>('.uc-img-overlay');
 			const slider = container.querySelector<HTMLElement>('.uc-img-slider');
