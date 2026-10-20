@@ -643,6 +643,9 @@ const caseSlugs = ['schwarz', 'super-bock', 'awake', 'senseing'];
 		margin-inline: calc(-1 * #{$poc-bleed});
 	}
 
+	// The page's pale accent tint: 5% of the brand color over the surface, as one plain color.
+	$poc-tint-bg: color-mix(in srgb, rgb(var(--color-primary-rgb)) 5%, var(--color-bg-surface));
+
 	.poc-title {
 		max-width: 596px;
 	}
@@ -1083,8 +1086,7 @@ const caseSlugs = ['schwarz', 'super-bock', 'awake', 'senseing'];
 		.poc-journey__marker,
 		.poc-journey__note {
 			border-color: var(--sl-color-accent);
-			background: linear-gradient(rgba(var(--color-primary-rgb), 0.05), rgba(var(--color-primary-rgb), 0.05)),
-				var(--color-bg-surface);
+			background: $poc-tint-bg;
 		}
 
 		.poc-journey__marker {
@@ -1122,11 +1124,8 @@ const caseSlugs = ['schwarz', 'super-bock', 'awake', 'senseing'];
 	}
 
 	.poc-timeline {
-		--poc-timeline-bg: linear-gradient(rgba(var(--color-primary-rgb), 0.05), rgba(var(--color-primary-rgb), 0.05)),
-			var(--color-bg-surface);
-
 		overflow-x: auto;
-		background: var(--poc-timeline-bg);
+		background: $poc-tint-bg;
 		border-radius: $radius-lg-plus;
 	}
 
@@ -1150,7 +1149,7 @@ const caseSlugs = ['schwarz', 'super-bock', 'awake', 'senseing'];
 			padding: 0 $spacing-4 0 0;
 			text-align: right;
 			white-space: nowrap;
-			background: var(--poc-timeline-bg);
+			background: $poc-tint-bg;
 		}
 
 		thead th {
@@ -1339,8 +1338,7 @@ const caseSlugs = ['schwarz', 'super-bock', 'awake', 'senseing'];
 		gap: $spacing-5;
 		margin-top: $spacing-6;
 		padding: $spacing-6;
-		background: linear-gradient(rgba(var(--color-primary-rgb), 0.05), rgba(var(--color-primary-rgb), 0.05)),
-			var(--color-bg-surface);
+		background: $poc-tint-bg;
 		border: 1px solid var(--sl-color-accent);
 		border-radius: $radius-lg-plus;
 
@@ -1502,8 +1500,7 @@ const caseSlugs = ['schwarz', 'super-bock', 'awake', 'senseing'];
 		transform: translateX(-50%);
 		@include card-title-sm;
 		color: var(--sl-color-accent);
-		background: linear-gradient(rgba(var(--color-primary-rgb), 0.05), rgba(var(--color-primary-rgb), 0.05)),
-			var(--color-bg-surface);
+		background: $poc-tint-bg;
 		border: 1px solid var(--sl-color-accent);
 		border-radius: $radius-lg;
 	}
@@ -1525,8 +1522,7 @@ const caseSlugs = ['schwarz', 'super-bock', 'awake', 'senseing'];
 		grid-template-columns: 348px 1px minmax(0, 1fr);
 		column-gap: $spacing-6;
 		padding: $spacing-12;
-		background: linear-gradient(rgba(var(--color-primary-rgb), 0.05), rgba(var(--color-primary-rgb), 0.05)),
-			var(--color-bg-surface);
+		background: $poc-tint-bg;
 		border: 1px solid var(--sl-color-accent);
 		border-radius: $radius-xl;
 

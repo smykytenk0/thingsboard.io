@@ -83,7 +83,7 @@ export const caseStudyCards: Record<string, CaseStudyCardData> = {
 		],
 	},
 	senseing: {
-		tag: 'Logistic & supply-chain',
+		tag: 'Logistics & supply chain',
 		title: 'Transforming food logistics with IoT-powered temperature monitoring',
 		image: '/images/case-studies/senseing.webp',
 		logo: { src: '/images/case-studies/senseing.svg', name: 'SenseING GmbH', width: 240, height: 56, displayHeight: 24 },
