@@ -5,7 +5,7 @@ import ImageComparison from '@components/UseCase/ImageComparison.astro';
 import SmartImage from '@components/SmartImage.astro';
 import ContactModal from '@components/ContactModal.astro';
 import { Icon } from 'astro-icon/components';
-import { caseStudyBySlug } from '@data/case-studies';
+import CaseStudyCard from '@components/CaseStudy/CaseStudyCard.astro';
 import { devServicesFeedback } from '@data/clients-feedback';
 
 const title = 'A working IoT application in 10 business days — for a fixed price';
@@ -147,16 +147,12 @@ const gettingStarted = [
 
 const priceHighlights = ['Fixed price', '10 business days', 'One complete use case'];
 const priceIncluded = [
-	[
-		{ text: 'A working application covering one complete use case' },
-		{ text: 'Kickoff workshop with the scope locked in writing' },
-		{ text: 'Direct line to the engineers building it, with progress you can see as it lands' },
-	],
-	[
-		{ text: 'White-labeling: your colors, logo and login screen', footnote: true },
-		{ text: 'Validated / not-validated summary and documented limitations' },
-		{ text: 'Handover of configs, rule chains and dashboards' },
-	],
+	{ text: 'A working application covering one complete use case' },
+	{ text: 'Kickoff workshop with the scope locked in writing' },
+	{ text: 'Direct line to the engineers building it, with progress you can see as it lands' },
+	{ text: 'White-labeling: your colors, logo and login screen', footnote: true },
+	{ text: 'Validated / not-validated summary and documented limitations' },
+	{ text: 'Handover of configs, rule chains and dashboards' },
 ];
 
 const fitGood = [
@@ -214,38 +210,8 @@ const testimonials = testimonialPicks.map((pick) => {
 	};
 });
 
-// Tag, title, images and stats come from the case-study data. Only the one-word stat labels (one per
-// statistic, in the data's order) and the logo's display height belong to this page.
-const caseCards = [
-	{ slug: 'schwarz', shortLabels: ['Devices', 'Countries', 'Stores'] },
-	{ slug: 'super-bock', shortLabels: ['Visibility', 'Automation', 'Solutions'] },
-	{ slug: 'awake', shortLabels: ['Experience', 'Retailers', 'Challenges'], logoDisplayHeight: 20 },
-	{ slug: 'senseing', shortLabels: ['Automation', 'Accuracy', 'Units'], logoDisplayHeight: 24 },
-];
-const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) => {
-	const data = caseStudyBySlug[slug];
-	if (!data) throw new Error(`[proof-of-concept] No case study "${slug}".`);
-	const statistics = data.statistics ?? [];
-	if (statistics.length !== shortLabels.length) {
-		throw new Error(`[proof-of-concept] "${slug}" has ${statistics.length} statistics but ${shortLabels.length} labels.`);
-	}
-	return {
-		slug,
-		tag: data.categories[0],
-		title: data.hero.heading,
-		image: data.hero.backgroundImage,
-		logo: data.hero.logo,
-		logoAlt: data.hero.logoAlt,
-		logoWidth: data.hero.logoWidth,
-		logoHeight: data.hero.logoHeight,
-		logoDisplayHeight,
-		stats: statistics.map((stat, i) => ({
-			value: `${stat.prefix ?? ''}${stat.value.toLocaleString('en-US')}${stat.suffix ?? ''}`,
-			short: shortLabels[i],
-			long: stat.label.charAt(0).toUpperCase() + stat.label.slice(1),
-		})),
-	};
-});
+// Case studies shown as cards, in order; `CaseStudyCard` renders each from `@data/case-study-cards`.
+const caseSlugs = ['schwarz', 'super-bock', 'awake', 'senseing'];
 ---
 
 <UseCaseLayout title={title} description={metaDescription} pageSlug="poc" chrome="minimal">
@@ -255,24 +221,22 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 			<p class="poc-description">{description}</p>
 			<NButton data-contact-modal-open="poc-contact" class="poc-cta">Talk to an expert</NButton>
 		</div>
-		<div class="poc-hero__media">
-			<figure class="poc-lead">
-				<figcaption class="poc-lead__name">Nizar Ali — Unit Lead</figcaption>
-				<div class="poc-lead__row">
-					<blockquote class="poc-lead__bubble">
-						<p>You bring the product knowledge. We bring the IoT implementation experience.</p>
-					</blockquote>
-					<SmartImage
-						class="poc-lead__avatar"
-						src="/images/company/thingsboard-team-photos/solutions-team/nizar-ali.webp"
-						alt="Nizar Ali"
-						width={52}
-						height={52}
-						loading="eager"
-					/>
-				</div>
-			</figure>
-		</div>
+		<figure class="poc-lead">
+			<figcaption class="poc-lead__name">Nizar Ali — Unit Lead</figcaption>
+			<div class="poc-lead__row">
+				<blockquote class="poc-lead__bubble">
+					<p>You bring the product knowledge. We bring the IoT implementation experience.</p>
+				</blockquote>
+				<SmartImage
+					class="poc-lead__avatar"
+					src="/images/company/thingsboard-team-photos/solutions-team/nizar-ali.webp"
+					alt="Nizar Ali"
+					width={52}
+					height={52}
+					loading="eager"
+				/>
+			</div>
+		</figure>
 	</section>
 
 	<ImageComparison
@@ -281,27 +245,16 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		baseImageAlt="ThingsBoard weather station dashboard with temperature, humidity, pressure and rainfall"
 		width={1440}
 		height={900}
+		stackOnMobile
 	>
 		<div slot="overlay" class="poc-compare__brief">
-			<div class="poc-brief">
-				<p class="poc-brief__subtitle">{brief.day0} → {brief.day10}</p>
-				<p class="poc-brief__quote">{brief.quote}</p>
-			</div>
+			<p class="poc-brief__subtitle">
+				{brief.day0}<span class="poc-brief__desktop-only"> → {brief.day10}</span>
+			</p>
+			<p class="poc-brief__quote">{brief.quote}</p>
+			<p class="poc-brief__subtitle poc-brief__result">{brief.day10}</p>
 		</div>
 	</ImageComparison>
-
-	<section class="poc-compare-mobile">
-		<p class="poc-brief__subtitle">{brief.day0}</p>
-		<p class="poc-brief__quote">{brief.quote}</p>
-		<p class="poc-brief__subtitle poc-compare-mobile__result">{brief.day10}</p>
-		<SmartImage
-			class="poc-compare-mobile__image"
-			src="/src/assets/images/proof-of-concept/poc-dashboard.png"
-			alt="ThingsBoard weather station dashboard with temperature, humidity, pressure and rainfall"
-			width={1440}
-			height={900}
-		/>
-	</section>
 
 	<section class="poc-clients">
 		<p class="poc-clients__caption">We created solutions for</p>
@@ -322,7 +275,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		<p class="poc-clients__caption">…and 200+ more companies</p>
 	</section>
 
-	<section class="poc-audience">
+	<section class="poc-section poc-audience">
 		<h2 class="poc-section-title">Who is this proposal for?</h2>
 		<div class="poc-audience__cards">
 			{
@@ -346,7 +299,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		</div>
 	</section>
 
-	<section class="poc-journey">
+	<section class="poc-section poc-journey">
 		<h2 class="poc-section-title">A simple IoT use case turns into a software project</h2>
 		<ol class="poc-journey__steps">
 			<li class="poc-journey__step poc-journey__step--start">
@@ -386,7 +339,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		</ol>
 	</section>
 
-	<section class="poc-schedule">
+	<section class="poc-section poc-schedule">
 		<h2 class="poc-section-title">Ten business days, from kickoff to handover</h2>
 		<p class="poc-schedule__intro">
 			We work through the key decisions with you, in regular contact across the ten days.
@@ -438,7 +391,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		</div>
 	</section>
 
-	<section class="poc-deliverables">
+	<section class="poc-section poc-deliverables">
 		<h2 class="poc-section-title">What you get on day 10</h2>
 		<p class="poc-deliverables__intro">
 			One complete use case, working end to end — described by what it does for the people using
@@ -468,7 +421,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 	</section>
 
 	<section class="poc-section">
-		<h2 class="poc-section-title poc-section-title--with-intro">Three things to get started</h2>
+		<h2 class="poc-section-title">Three things to get started</h2>
 		<p class="poc-section-intro" style="--intro-width: 640px">
 			You don’t need to arrive with an IoT architecture or a ThingsBoard specification. Bring what
 			already exists and the outcome you want — we’ll work out the technical path together.
@@ -500,7 +453,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 	</section>
 
 	<section class="poc-section">
-		<h2 class="poc-section-title poc-section-title--with-intro">Fixed price, agreed before we start</h2>
+		<h2 class="poc-section-title">Fixed price, agreed before we start</h2>
 		<p class="poc-section-intro">You approve the scope on day 0 and the price stops moving.</p>
 		<div class="poc-price">
 			<div class="poc-price__package">
@@ -516,23 +469,19 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 			<div class="poc-price__divider" aria-hidden="true"></div>
 			<div class="poc-price__included">
 				<h3 class="poc-price__heading">What’s included</h3>
-				<div class="poc-price__lists">
+				<ul class="poc-checklist poc-checklist--price">
 					{
-						priceIncluded.map((column) => (
-							<ul class="poc-checklist poc-checklist--price">
-								{column.map((item) => (
-									<li>
-										<Icon name="tabler:check" class="poc-checklist__icon" size={24} aria-hidden="true" />
-										<span>
-											{item.text}
-											{item.footnote && <span class="poc-price__star">*</span>}
-										</span>
-									</li>
-								))}
-							</ul>
+						priceIncluded.map((item) => (
+							<li>
+								<Icon name="tabler:check" class="poc-checklist__icon" size={24} aria-hidden="true" />
+								<span>
+									{item.text}
+									{item.footnote && <span class="poc-price__star">*</span>}
+								</span>
+							</li>
 						))
 					}
-				</div>
+				</ul>
 				<p class="poc-price__footnote">
 					<span class="poc-price__star">*</span> White-labeling is configured inside the base sprint when
 					your ThingsBoard license includes it. The price excludes your ThingsBoard subscription or license,
@@ -543,7 +492,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 	</section>
 
 	<section class="poc-section">
-		<h2 class="poc-section-title poc-section-title--with-intro">Designed for one use case</h2>
+		<h2 class="poc-section-title">Designed for one use case</h2>
 		<p class="poc-section-intro" style="--intro-width: 672px">
 			The 10-business-day package works best when there is one clear outcome to make real. For
 			anything larger we scope it separately.
@@ -591,7 +540,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 	</section>
 
 	<section class="poc-section">
-		<h2 class="poc-section-title poc-scope__title">The scope comes from work already delivered</h2>
+		<h2 class="poc-section-title">The scope comes from work already delivered</h2>
 		<ul class="poc-scope">
 			{
 				scopeStats.map((stat) => (
@@ -644,40 +593,9 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		<h2 class="poc-cases__title">Where it has already been delivered</h2>
 		<ul class="poc-cases__grid">
 			{
-				deliveredCases.map((item) => (
+				caseSlugs.map((slug) => (
 					<li class="poc-case">
-						<a
-							class="poc-case__link"
-							href={`/case-studies/${item.slug}/`}
-							style={`background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.3) 100%), url('${item.image}')`}
-						>
-							<span class="poc-case__content">
-								<span class="poc-case__header">
-									<span class="poc-case__tag">{item.tag}</span>
-									<img
-										class="poc-case__logo"
-										src={item.logo}
-										alt={item.logoAlt}
-										width={item.logoWidth}
-										height={item.logoHeight}
-										style={item.logoDisplayHeight && `height: ${item.logoDisplayHeight}px`}
-										loading="lazy"
-									/>
-								</span>
-								<span class="poc-case__footer">
-									<span class="poc-case__title">{item.title}</span>
-									<span class="poc-case__stats">
-										{item.stats.map((stat) => (
-											<span class="poc-case__stat">
-												<span class="poc-case__value">{stat.value}</span>
-												<span class="poc-case__short">{stat.short}</span>
-												<span class="poc-case__long">{stat.long}</span>
-											</span>
-										))}
-									</span>
-								</span>
-							</span>
-						</a>
+						<CaseStudyCard slug={slug} />
 					</li>
 				))
 			}
@@ -716,6 +634,14 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 
 <style lang="scss">
 	@use '../../styles/variables' as *;
+
+	// `UseCaseLayout` pads the page by $spacing-5 inside a 1px side border. Full-bleed blocks pull out
+	// by both, so they reach the border; this is the one place that knows about it.
+	$poc-bleed: calc(#{$spacing-5} + 1px);
+
+	@mixin poc-bleed {
+		margin-inline: calc(-1 * #{$poc-bleed});
+	}
 
 	.poc-title {
 		max-width: 596px;
@@ -756,36 +682,34 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		}
 	}
 
-	.poc-hero__media {
-		position: relative;
-		flex-shrink: 0;
-		max-width: 100%;
-	}
-
-	.poc-hero__media::before {
-		content: '';
-		position: absolute;
-		top: calc(50% - 249px);
-		right: -$spacing-5;
-		width: 550px;
-		height: 460px;
-		background: radial-gradient(
-			41% 57% at 56% 54%,
-			rgba(var(--color-primary-rgb), 0.14),
-			rgba(var(--color-primary-rgb), 0.06) 55%,
-			transparent
-		);
-		pointer-events: none;
-	}
-
 	.poc-lead {
 		position: relative;
+		// Keeps the glow below the figure's content without sending it behind the page.
+		isolation: isolate;
+		flex-shrink: 0;
 		width: 418px;
 		max-width: 100%;
 		margin: 0;
 
 		@include media-down(md) {
 			width: 100%;
+		}
+
+		&::before {
+			content: '';
+			position: absolute;
+			top: calc(50% - 249px);
+			right: -$spacing-5;
+			z-index: -1;
+			width: 550px;
+			height: 460px;
+			background: radial-gradient(
+				41% 57% at 56% 54%,
+				rgba(var(--color-primary-rgb), 0.14),
+				rgba(var(--color-primary-rgb), 0.06) 55%,
+				transparent
+			);
+			pointer-events: none;
 		}
 	}
 
@@ -809,7 +733,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		background: linear-gradient(rgba(var(--color-primary-rgb), 0.2), rgba(var(--color-primary-rgb), 0.2)),
 			var(--color-bg-surface);
 		border: 0;
-		border-radius: 12px 12px 0 12px;
+		border-radius: $radius-lg-plus $radius-lg-plus 0 $radius-lg-plus;
 
 		&::after {
 			content: '';
@@ -835,74 +759,72 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 
 	.poc-lead__avatar {
 		flex-shrink: 0;
-		width: 44px;
-		height: 44px;
+		width: 52px;
+		height: 52px;
 		object-fit: cover;
 		border: 1px solid var(--color-border-light);
 		border-radius: $radius-md;
 	}
 
 	.poc-cta {
-		font-family: inherit;
 		font-weight: $font-weight-medium;
-		line-height: 1.5;
 	}
 
 	.poc-compare {
 		margin: 0 0 $spacing-12;
 
-		@media (max-width: 1079px) {
-			margin-right: calc(-1 * #{$spacing-5} - 1px);
-			margin-left: calc(-1 * #{$spacing-5} - 1px);
+		@include media-down(lg) {
+			@include poc-bleed;
 			max-width: none;
 		}
 
 		@include media-down(md) {
-			display: none;
+			margin-bottom: $spacing-8;
 		}
-	}
-
-	.poc-compare-mobile {
-		display: none;
-		margin: 0 calc(-1 * #{$spacing-5} - 1px) $spacing-8;
-		padding-top: $spacing-5;
-		background: var(--color-bg-light);
-
-		@include media-down(md) {
-			display: block;
-		}
-
-		.poc-brief__subtitle,
-		.poc-brief__quote {
-			padding: 0 calc(#{$spacing-5} + 1px);
-		}
-
-		.poc-brief__quote {
-			@include card-title-sm;
-		}
-	}
-
-	.poc-compare-mobile .poc-compare-mobile__result {
-		margin: $spacing-6 0 $spacing-4;
-	}
-
-	.poc-compare-mobile__image {
-		display: block;
-		width: 100%;
-		height: auto;
 	}
 
 	.poc-compare__brief {
 		display: flex;
-		align-items: center;
+		flex-direction: column;
+		justify-content: center;
 		width: 100%;
 		height: 100%;
+		padding-left: $spacing-8;
 		background: var(--color-bg-light);
+
+		> p {
+			max-width: min(450px, calc(50% - 60px));
+		}
+
+		// Stacked above the image on mobile: "Day 0" over the quote, "Day 10" right above the image.
+		@include media-down(md) {
+			height: auto;
+			padding: $spacing-5 $poc-bleed 0;
+
+			> p {
+				max-width: none;
+			}
+
+			.poc-brief__desktop-only {
+				display: none;
+			}
+
+			.poc-brief__quote {
+				@include card-title-sm;
+			}
+		}
 	}
 
-	.poc-brief {
-		max-width: min(450px, calc(50% - 60px));
-		margin-left: 35px;
+	.poc-brief__result {
+		display: none;
+
+		@include media-down(md) {
+			display: block;
+		}
+	}
+
+	.poc-compare__brief .poc-brief__result {
+		margin: $spacing-6 0 $spacing-4;
 	}
 
 	.poc-brief__subtitle {
@@ -962,17 +884,22 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		}
 	}
 
-	.poc-audience {
+	// Space above each section. The banner and the workshop paint their own background, so theirs is
+	// outside them.
+	.poc-section {
 		padding-top: $spacing-30;
 
-		.poc-section-title {
-			@include media-down(md) {
-				margin-bottom: $spacing-6;
-			}
+		@include media-down(md) {
+			padding-top: $spacing-14;
 		}
+	}
+
+	.poc-cta-banner,
+	.poc-workshop {
+		margin-top: $spacing-30;
 
 		@include media-down(md) {
-			padding-top: $spacing-12;
+			margin-top: $spacing-14;
 		}
 	}
 
@@ -983,7 +910,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		margin: 0 0 $spacing-12;
 
 		@include media-down(md) {
-			margin-bottom: $spacing-8;
+			margin-bottom: 36px;
 		}
 	}
 
@@ -1012,30 +939,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 			radial-gradient(circle 171px at var(--glow-at), rgba(var(--glow-rgb), 0.21), transparent),
 			var(--color-bg-surface);
 		border: 1px solid var(--color-border);
-		border-radius: 12px;
-	}
-
-	.poc-audience-card,
-	.poc-deliverable,
-	.poc-start-card,
-	.poc-fit-card,
-	.poc-testimonial {
-		transition:
-			transform 0.2s,
-			box-shadow 0.2s;
-
-		&:hover {
-			transform: translateY(-2px);
-			box-shadow: var(--shadow-card-hover, 0 4px 12px rgba(0, 0, 0, 0.15));
-		}
-
-		@media (prefers-reduced-motion: reduce) {
-			transition: box-shadow 0.2s;
-
-			&:hover {
-				transform: none;
-			}
-		}
+		border-radius: $radius-lg-plus;
 	}
 
 	.poc-audience-card--purple {
@@ -1092,16 +996,6 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		--poc-question-bg: var(--sl-color-orange-low);
 		--poc-question-border: var(--sl-color-orange-high);
 		--poc-outcome-bg: var(--sl-color-green-low);
-
-		padding-top: $spacing-30;
-
-		@include media-down(md) {
-			padding-top: $spacing-10;
-		}
-
-		.poc-section-title {
-			margin-bottom: $spacing-8;
-		}
 	}
 
 	.poc-journey__steps {
@@ -1219,18 +1113,6 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		}
 	}
 
-	.poc-schedule {
-		padding-top: $spacing-20;
-
-		@include media-down(md) {
-			padding-top: $spacing-10;
-		}
-
-		.poc-section-title {
-			margin-bottom: $spacing-5;
-		}
-	}
-
 	.poc-schedule__intro {
 		@include text-m;
 		color: var(--color-text-secondary);
@@ -1245,7 +1127,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 
 		overflow-x: auto;
 		background: var(--poc-timeline-bg);
-		border-radius: 12px;
+		border-radius: $radius-lg-plus;
 	}
 
 	.poc-timeline__table {
@@ -1385,20 +1267,6 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		);
 	}
 
-	.poc-deliverables {
-		--poc-number-color: #b3c7ff;
-
-		padding-top: $spacing-20;
-
-		@include media-down(md) {
-			padding-top: $spacing-10;
-		}
-
-		.poc-section-title {
-			margin-bottom: $spacing-5;
-		}
-	}
-
 	.poc-deliverables__intro {
 		@include text-m;
 		color: var(--color-text-secondary);
@@ -1429,7 +1297,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		padding: $spacing-6;
 		background: var(--color-bg-surface);
 		border: 1px solid var(--color-border-light);
-		border-radius: 12px;
+		border-radius: $radius-lg-plus;
 	}
 
 	.poc-deliverable__number {
@@ -1437,7 +1305,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		font-size: $font-size-4xl;
 		font-weight: $font-weight-medium;
 		line-height: 1.2;
-		color: var(--poc-number-color);
+		color: $color-brand-dark;
 		margin-bottom: $spacing-3;
 	}
 
@@ -1451,18 +1319,6 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		@include text-m;
 		color: var(--color-text-secondary);
 		margin: 0;
-	}
-
-	.poc-section {
-		padding-top: $spacing-20;
-
-		@include media-down(md) {
-			padding-top: $spacing-10;
-		}
-	}
-
-	.poc-section-title--with-intro {
-		margin-bottom: $spacing-5;
 	}
 
 	.poc-section-intro {
@@ -1486,7 +1342,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		background: linear-gradient(rgba(var(--color-primary-rgb), 0.05), rgba(var(--color-primary-rgb), 0.05)),
 			var(--color-bg-surface);
 		border: 1px solid var(--sl-color-accent);
-		border-radius: 12px;
+		border-radius: $radius-lg-plus;
 
 		@include media-down(md) {
 			flex-direction: column;
@@ -1546,10 +1402,6 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 	.poc-dotlist__icon {
 		flex-shrink: 0;
 		align-self: flex-start;
-	}
-
-	.poc-checklist__icon,
-	.poc-dotlist__icon {
 		margin-top: 2px;
 
 		@include media-down(md) {
@@ -1566,7 +1418,6 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 	}
 
 	.poc-cta-banner {
-		margin-top: $spacing-20;
 		padding: $spacing-12 $spacing-6;
 		text-align: center;
 		color: var(--color-white);
@@ -1574,7 +1425,6 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		border-radius: $radius-xl;
 
 		@include media-down(md) {
-			margin-top: $spacing-10;
 			padding: $spacing-10 $spacing-5;
 		}
 	}
@@ -1626,7 +1476,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 			radial-gradient(ellipse 75% 110px at var(--glow-x) 100%, rgba(var(--glow-rgb), var(--glow-alpha)), transparent),
 			var(--color-bg-surface);
 		border: 1px solid var(--color-border-light);
-		border-radius: 12px;
+		border-radius: $radius-lg-plus;
 	}
 
 	.poc-start-card--yellow {
@@ -1754,22 +1604,21 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		margin: 0 0 $spacing-4;
 	}
 
-	.poc-price__lists {
+	// One list of six, laid out as two columns of three.
+	.poc-checklist.poc-checklist--price {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
+		grid-template-rows: repeat(3, auto);
+		grid-auto-flow: column;
 		gap: $spacing-2 $spacing-6;
 		padding-bottom: $spacing-3;
 		border-bottom: 1px solid var(--color-border-light);
 
 		@include media-down(md) {
 			grid-template-columns: 1fr;
+			grid-template-rows: none;
+			grid-auto-flow: row;
 			row-gap: $spacing-4;
-		}
-	}
-
-	.poc-checklist--price {
-		@include media-down(md) {
-			gap: $spacing-4;
 		}
 
 		li {
@@ -1802,7 +1651,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		background: var(--color-bg-surface);
 		border: 1px solid var(--color-border-light);
 		border-left-width: 2px;
-		border-radius: 12px;
+		border-radius: $radius-lg-plus;
 	}
 
 	.poc-fit-card--good {
@@ -1823,10 +1672,6 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		margin-top: $spacing-6;
 	}
 
-	.poc-section-title.poc-scope__title {
-		margin-bottom: $spacing-16;
-	}
-
 	.poc-scope {
 		display: grid;
 		grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1835,7 +1680,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		padding: 0;
 		list-style: none;
 
-		@media (max-width: 1079px) {
+		@include media-down(lg) {
 			grid-template-columns: repeat(2, minmax(0, 1fr));
 			row-gap: $spacing-8;
 		}
@@ -1867,7 +1712,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 	}
 
 	.poc-testimonials {
-		padding-top: 56px;
+		padding-top: $spacing-14;
 
 		@include media-down(md) {
 			padding-top: $spacing-6;
@@ -1899,7 +1744,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		padding: $spacing-6;
 		background: var(--color-bg-surface);
 		border: 1px solid var(--color-border-light);
-		border-radius: 12px;
+		border-radius: $radius-lg-plus;
 	}
 
 	.poc-testimonial__mark {
@@ -1927,7 +1772,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 
 	.poc-testimonial__quote {
 		position: relative;
-		margin: 0 0 44px;
+		margin: 0 0 $spacing-10;
 		padding: 0;
 		border: 0;
 
@@ -1999,7 +1844,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 	}
 
 	.poc-cases {
-		padding-top: 56px;
+		padding-top: $spacing-14;
 
 		@include media-down(md) {
 			padding-top: $spacing-6;
@@ -2016,12 +1861,12 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 	.poc-cases__grid {
 		display: grid;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 32px;
+		gap: $spacing-6;
 		margin: 0;
 		padding: 0;
 		list-style: none;
 
-		@media (max-width: 959px) {
+		@include media-down(lg) {
 			grid-template-columns: 1fr;
 		}
 	}
@@ -2030,244 +1875,21 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		margin: 0;
 	}
 
-	.poc-case__link {
-		position: relative;
-		display: block;
-		height: 299px;
-		overflow: hidden;
-		color: var(--color-white);
-		text-decoration: none;
-		background-position: center;
-		background-size: cover;
-		border-radius: 24px;
-
-		&::after {
-			content: '';
-			position: absolute;
-			inset: 0;
-			background: inherit;
-			background-size: cover;
-			transform-origin: center;
-			transition: transform 0.5s;
-		}
-
-		&:hover,
-		&:focus-visible {
-			&::after {
-				transform: scale(1.2);
-			}
-
-			.poc-case__short {
-				opacity: 0;
-			}
-
-			.poc-case__long {
-				max-height: 120px;
-				opacity: 1;
-
-				@media (max-width: 599px) {
-					max-height: none;
-				}
-			}
-		}
-
-		&:focus-visible {
-			outline: 2px solid var(--sl-color-accent);
-			outline-offset: 2px;
-		}
-
-		@media (prefers-reduced-motion: reduce) {
-			&::after {
-				transition: none;
-			}
-
-			&:hover::after,
-			&:focus-visible::after {
-				transform: none;
-			}
-		}
-
-		@media (max-width: 599px) {
-			height: auto;
-			min-height: 299px;
-			border-radius: $radius-xl;
-		}
-	}
-
-	.poc-case__content {
-		position: relative;
-		z-index: 1;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		align-items: flex-start;
-		gap: $spacing-10;
-		height: 100%;
-		min-height: inherit;
-		padding: 20px;
-
-		@media (max-width: 599px) {
-			padding: $spacing-4;
-		}
-	}
-
-	.poc-case__header {
-		display: flex;
-		justify-content: space-between;
-		width: 100%;
-	}
-
-	.poc-case__tag {
-		position: relative;
-		overflow: hidden;
-		@include text-s;
-		font-weight: $font-weight-medium;
-		padding: $spacing-1 $spacing-2;
-		color: #1c1c1b;
-		background: rgba(255, 255, 255, 0.6);
-		border: 1px solid rgba(255, 255, 255, 0.3);
-		border-radius: 6px;
-		backdrop-filter: blur(5px);
-		-webkit-backdrop-filter: blur(5px);
-
-		&::before {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			height: 1px;
-			background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
-		}
-
-		&::after {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 1px;
-			height: 100%;
-			background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), transparent, rgba(255, 255, 255, 0.3));
-		}
-	}
-
-	.poc-case__logo {
-		width: auto;
-		height: 36px;
-	}
-
-	.poc-case__footer {
-		display: block;
-		width: 100%;
-	}
-
-	.poc-case__title {
-		display: block;
-		@include text-overlay;
-		padding-bottom: $spacing-3;
-		margin-bottom: $spacing-3;
-		border-bottom: 1px solid #b9c0c5;
-
-		@media (max-width: 599px) {
-			line-height: 24px;
-		}
-	}
-
-	.poc-case__stats {
-		display: flex;
-		min-height: 60px;
-
-		@media (max-width: 599px) {
-			display: grid;
-			grid-template-columns: repeat(3, minmax(0, 1fr));
-			gap: $spacing-2;
-			min-height: 0;
-		}
-	}
-
-	// The short and long labels share one grid cell. On hover the long one opens to its own height, so the
-	// footer grows by exactly what the data's label needs instead of a fixed lift.
-	.poc-case__stat {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr);
-		align-content: start;
-		flex: 1 1 0;
-		@include text-s;
-		padding-right: $spacing-2;
-		color: inherit;
-
-		&:last-child {
-			padding-right: 0;
-		}
-
-		@media (max-width: 599px) {
-			width: auto;
-			padding-right: 0;
-		}
-	}
-
-	.poc-case__value {
-		display: block;
-		font-size: $font-size-2xl;
-		font-weight: $font-weight-medium;
-		line-height: 36px;
-	}
-
-	.poc-case__short,
-	.poc-case__long {
-		grid-area: 2 / 1;
-		transition: opacity 0.5s linear;
-	}
-
-	.poc-case__short {
-		white-space: nowrap;
-	}
-
-	// The data's labels are full phrases, so they wrap within the stat column instead of running on.
-	.poc-case__long {
-		max-height: 24px;
-		overflow: hidden;
-		opacity: 0;
-		transition:
-			opacity 0.5s linear,
-			max-height 0.5s;
-
-		@media (prefers-reduced-motion: reduce) {
-			transition: opacity 0.5s linear;
-		}
-
-		@media (max-width: 599px) {
-			max-height: none;
-			opacity: 1;
-		}
-	}
-
-	.poc-case__short {
-		@media (max-width: 599px) {
-			display: none;
-		}
-	}
-
 	.poc-workshop {
 		--poc-dark-bg: #1e1f23;
 		--poc-dark-card: #262830;
 		--poc-dark-border: #63656c;
 		--poc-dark-text: #e4e5e7;
 		--poc-dark-muted: #a1a2a8;
-		--poc-dark-accent: #b3c7ff;
+		--poc-dark-accent: #{$color-brand-dark};
 
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) 452px;
 		gap: $spacing-5;
-		margin: $spacing-20 calc(-1 * #{$spacing-5} - 1px) 0;
+		@include poc-bleed;
 		padding: $spacing-10;
 		color: var(--color-white);
 		background: var(--poc-dark-bg);
-
-		@media (max-width: 1079px) {
-			grid-template-columns: minmax(0, 1fr) 396px;
-			gap: $spacing-6;
-		}
 
 		@include media-down(lg) {
 			grid-template-columns: 1fr;
@@ -2275,7 +1897,6 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		}
 
 		@include media-down(md) {
-			margin-top: $spacing-6;
 			padding: $spacing-10 $spacing-5;
 		}
 	}
@@ -2316,7 +1937,7 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 		padding: $spacing-6;
 		background: var(--poc-dark-card);
 		border: 1px solid var(--poc-dark-border);
-		border-radius: 12px;
+		border-radius: $radius-lg-plus;
 	}
 
 	.poc-contact__label {
@@ -2385,38 +2006,5 @@ const deliveredCases = caseCards.map(({ slug, shortLabels, logoDisplayHeight }) 
 			font-size: $font-size-sm;
 			line-height: 24px;
 		}
-	}
-
-	.poc-title {
-		@media (max-width: 1079px) {
-			font-size: $font-size-5xl;
-		}
-
-		@include media-down(md) {
-			font-size: $font-size-3xl;
-		}
-	}
-
-	.poc-section-title {
-		@media (max-width: 1079px) {
-			font-size: $font-size-4xl;
-			line-height: 1.2;
-		}
-
-		@include media-down(md) {
-			font-size: $font-size-2xl;
-		}
-	}
-
-	.poc-cta-banner__title,
-	.poc-workshop__title {
-		@include media-down(md) {
-			font-size: $font-size-4xl;
-			line-height: 1.2;
-		}
-	}
-
-	:global([data-theme='dark']) .poc-deliverables {
-		--poc-number-color: var(--sl-color-accent-high);
 	}
 </style>

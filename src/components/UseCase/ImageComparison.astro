@@ -15,6 +15,8 @@ interface Props {
 	overlayImageTitle?: string;
 	width?: number;
 	height?: number;
+	/** Below `md`, show the overlay above the base image instead of behind the slider. */
+	stackOnMobile?: boolean;
 	class?: string;
 }
 
@@ -27,6 +29,7 @@ const {
 	overlayImageTitle,
 	width = 1920,
 	height = 1080,
+	stackOnMobile = false,
 	class: className,
 } = Astro.props;
 
@@ -35,7 +38,7 @@ const baseCaption = baseImageTitle || Astro.props.baseImageAlt;
 const overlayCaption = overlayImageTitle || Astro.props.overlayImageAlt;
 ---
 
-<section class:list={['uc-img-comparison', className]}>
+<section class:list={['uc-img-comparison', stackOnMobile && 'uc-img-comparison--stacked', className]}>
 	<SmartImage
 		src={baseImage}
 		alt={baseImageAlt}
@@ -144,6 +147,29 @@ const overlayCaption = overlayImageTitle || Astro.props.overlayImageAlt;
 			}
 
 			&::after {
+				display: none;
+			}
+		}
+	}
+
+	// The overlay moves into the flow above the base image, with no slider. `!important` beats the
+	// clip-path the drag script writes inline.
+	.uc-img-comparison--stacked {
+		@include media-down(md) {
+			display: flex;
+			flex-direction: column;
+			cursor: auto;
+			user-select: auto;
+			touch-action: auto;
+
+			.uc-img-overlay {
+				position: static;
+				order: -1;
+				height: auto;
+				clip-path: none !important;
+			}
+
+			.uc-img-slider {
 				display: none;
 			}
 		}
